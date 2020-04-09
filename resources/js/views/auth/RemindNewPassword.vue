@@ -42,7 +42,7 @@
         this.goodToken = true;
       }).catch(error => {
         this.hasError = true;
-        this.message = $t(error.response.data.message);
+        this.message = this.$t(error.response.data.message);
       })
     },
     methods: {
@@ -60,18 +60,18 @@
           }
         )
         .then(response => {
-          this.message = $t(response.data.message);
+          this.message = this.$t(response.data.message);
         }).catch(error => {
           this.hasError = true
           this.errors = error.response.data.errors || {}
           this.wait = false;
           if (error.response.status == 422) {
             if (this.errors.token || this.errors.email) 
-              this.message = $t(this.errors.token[0]) || $t(this.errors.email[0]);
+              this.message = this.$t(this.errors.token[0]) || this.$t(this.errors.email[0]);
             else
-              this.message = $t('errors.validation');
+              this.message = this.$t('errors.validation');
           } else
-            this.message = $t(error.response.data.message);
+            this.message = this.$t(error.response.data.message);
         });
       }
     }

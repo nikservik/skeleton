@@ -43,16 +43,16 @@
         )
         .then(response => {
             this.hasError = (response.data.status == 'error');
-            this.message = $t(response.data.message);
+            this.message = this.$t(response.data.message);
             this.wait = false;
         }).catch(error => {
             this.hasError = true;
             this.errors = error.response.data.errors || {};
             this.wait = false;
             if (error.response.status == 422) {
-              this.message = $t('errors.validation');
+              this.message = this.$t('errors.validation');
             } else
-              this.message = $t(error.response.data.message);
+              this.message = this.$t(error.response.data.message);
         });
       }
     }
