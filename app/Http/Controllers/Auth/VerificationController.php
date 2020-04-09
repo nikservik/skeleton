@@ -16,7 +16,7 @@ class VerificationController extends Controller
 
     public static function apiRoutes() 
     {
-        Route::prefix('auth')->namespace('Auth')->group(function () {
+        Route::namespace('Auth')->group(function () {
             Route::get('email/resend', 'VerificationController@resend')
             ->middleware('auth:api');
         });
