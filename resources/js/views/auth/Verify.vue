@@ -35,11 +35,11 @@
         this.$http.get('/email/resend')
         .then(response => {
             this.wait = false;
-            this.message = $t('messages.newLinkSent');
+            this.message = this.$t('messages.newLinkSent');
         }).catch(error => {
             this.wait = false;
             this.hasError = true;
-            this.message = $t('errors.connection');
+            this.message = this.$t('errors.connection');
         });
       }
     }
