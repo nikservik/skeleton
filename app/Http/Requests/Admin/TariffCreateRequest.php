@@ -32,4 +32,24 @@ class TariffCreateRequest extends FormRequest
             'prolongable' => 'boolean'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'name_required',
+            'name.string' => 'name_string',
+            'name.min' => 'name_min',
+            'short_name.required' => 'short_name_required',
+            'short_name.string' => 'short_name_string',
+            'short_name.min' => 'short_name_min',
+            'short_name.max' => 'short_name_max',
+            'price.required' => 'price_required',
+            'price.numeric' => 'price_numeric',
+            'currency.required' => 'currency_required',
+            'currency.string' => 'currency_string',
+            'currency.size' => 'currency_size',
+            'period.required' => 'period_required',
+            'prolongable.boolean' => 'prolongable_boolean',
+        ];
+    }
 }

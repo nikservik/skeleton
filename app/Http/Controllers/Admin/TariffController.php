@@ -17,7 +17,6 @@ class TariffController extends Controller
     {
         Route::domain('admin.'.Str::after(config('app.url'),'//'))
             ->resource('tariffs', 'Admin\TariffController');
-        
     }
 
     public function __construct()
