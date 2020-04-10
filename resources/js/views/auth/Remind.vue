@@ -4,7 +4,7 @@
         <div :class="hasError?'error':'info'" v-if="hasError || message">
             <p>{{ message }}</p>
         </div>
-        <form autocomplete="off" @submit.prevent="remind" method="post">
+        <form @submit.prevent="remind" method="post">
             <div class="form-group">
                 <label for="email">{{ $t('email') }}</label>
                 <input type="email" id="email" placeholder="user@example.com" v-model="email" required>
