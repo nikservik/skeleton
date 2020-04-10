@@ -18,16 +18,22 @@
     @endif
     <div class="px-3">{{ $user->email }} </div>
 </div> 
-<p>@lang('admin/users.registered') {{ $user->created_at->format('d.m.Y') }}</p>
+<p class="my-4">@lang('admin/users.registered') {{ $user->created_at->format('d.m.Y') }}</p>
+
+<p class="my-4">@lang('admin/users.role'): @lang('app.role'.$user->role)</p>
 
 <div class="mt-8 text-right">
-    <a class="button mr-4" href="/users/{{ $user->id }}/edit">
+    <a class="button small mr-4" href="/users/{{ $user->id }}/edit">
         @lang('admin/users.modify')
     </a>
-    <a class="button" href="/users/{{ $user->id }}/delete" onclick="return confirm('@lang('admin/users.confirmDelete')')">
+    <a class="button small" href="javascript:document.user_delete.submit()" onclick="return confirm('@lang('admin/users.confirmDelete')')">
         @lang('admin/users.delete')
     </a>
 </div>
+    <form name="user_delete" action="/users/{{ $user->id }}" method="POST">
+        @csrf 
+        @method('DELETE')
+    </form>
 
 <h2 class="sub-title">@lang('admin/users.subscription')</h2>
 

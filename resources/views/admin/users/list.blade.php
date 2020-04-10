@@ -2,6 +2,11 @@
 
 @section('content')
     <h1 class="page-header mb-6">@lang('admin/users.listTitle')</h1>
+<div class="my-4 text-right">
+    <a class="button small mr-4" href="/users/create">
+        @lang('admin/users.create')
+    </a>
+</div>
 
 <div class="text-center flex flex-col sm:flex-row justify-between mx-4">
     <div class="text-center">
