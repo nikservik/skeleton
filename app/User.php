@@ -4,6 +4,7 @@ namespace App;
 
 use App\Mail\PasswordReset;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLocalePreference
 {
     use Notifiable;
 
@@ -60,5 +61,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         $settings['locale'] = $locale;
         $this->settings = $settings;
     }   
-
+    
+    public function preferredLocale()
+    {
+        return $this->locale;
+    }
 }
