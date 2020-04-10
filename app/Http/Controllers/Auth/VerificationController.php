@@ -47,6 +47,6 @@ class VerificationController extends Controller
         $message = (new VerifyEmail(Auth::user()))->onQueue('emails');
         Mail::to(Auth::user()->email)->queue($message);
 
-        return response()->json([ 'status' => 'success' ]);
+        return [ 'status' => 'success' ];
     }
 }
