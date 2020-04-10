@@ -44,8 +44,8 @@ class VerificationController extends Controller
 
     public function resend()
     {
-        $message = (new VerifyEmail(Auth::user()))->onQueue('emails');
-        Mail::to(Auth::user()->email)->queue($message);
+        
+        Mail::to(Auth::user()->email)->queue(new VerifyEmail(Auth::user()));
 
         return [ 'status' => 'success' ];
     }
