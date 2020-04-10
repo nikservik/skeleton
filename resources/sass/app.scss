@@ -37,14 +37,20 @@ h4 {
             @apply px-0 w-3 ml-3; }
         .form-group input:disabled {
             @apply border-0; }
+    .form-group select {
+        @apply p-3 text-xl outline-none w-full border-2 rounded-lg appearance-none; }
     .form-group.has-error label {
         @apply text-red-800; }
     .form-group.has-error input {
+        @apply border-red-400; }
+    .form-group.has-error select {
         @apply border-red-400; }
     .form-group .error-description {
         @apply text-red-800 mx-4; }
 .button {
     @apply px-6 py-3 text-xl text-white font-bold bg-blue-600 shadow-xl rounded-lg; }
+    .button.small {
+        @apply px-4 py-2 text-lg shadow-md; }
     .button:focus {
         @apply outline-none; }
     .button:hover {
