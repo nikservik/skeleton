@@ -1,13 +1,13 @@
 @extends('emails.layout')
 {{-- subject('Изменение пароля') --}}
 @section('preheader')
-    Ссылка для установки нового пароля.
+    @lang('emails/password-reset.preheader')
 @endsection
 @section('content')
-    @include('emails.parts.line', ['text' => '<b>Здравствуйте, '.$user->name.'!</b>'])
-    @include('emails.parts.line', ['text' => 'Вы получили это письмо, потому что запросили изменение пароля для Вашего входа в личный кабинет «'.__('app.name').'».'])
-    @include('emails.parts.line', ['text' => 'Чтобы изменить пароль, нажмите на кнопку ниже и введите новый пароль.'])
-    @include('emails.parts.button', ['text' => 'Изменить пароль', 'link' => url('/remind/new?token='.$token.'&email='.$user->email)])
-    @include('emails.parts.line', ['text' => 'Если Вы не запрашивали изменение пароля – ничего делать не нужно. Без Вашего ведома пароль никто не сможет изменить.'])
-    @include('emails.parts.line', ['text' => '<i>С любовью,<br>Ваш гуру</i>'])
+    @include('emails.parts.line', ['text' => __('emails/password-reset.hello', ['name' => $user->name])])
+    @include('emails.parts.line', ['text' => __('emails/password-reset.line1', ['app' => __('app.name')])])
+    @include('emails.parts.line', ['text' => __('emails/password-reset.line2')])
+    @include('emails.parts.button', ['text' => __('emails/password-reset.button'), 'link' => url('/remind/new?token='.$token.'&email='.$user->email)])
+    @include('emails.parts.line', ['text' => __('emails/password-reset.line3')])
+    @include('emails.parts.line', ['text' => __('emails/password-reset.signature', ['name' => __('app.name')])])
 @endsection
