@@ -154,6 +154,10 @@
           this.message += ' ' + this.$t('messages.' + response.data.message);
           this.wait = false;
           this.edit.email = false;
+          if (response.data.needVerification) {
+            this.$auth.user().email_verified_at = '';
+            this.$router.push({name: 'verify'});
+          }
         })
         .catch(this.errorCatcher);
       },

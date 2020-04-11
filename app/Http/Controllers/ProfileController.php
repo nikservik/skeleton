@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileEmailSaveRequest;
 use App\Http\Requests\ProfileNameSaveRequest;
 use App\Http\Requests\ProfilePasswordSaveRequest;
+use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 class ProfileController extends Controller
@@ -34,10 +36,15 @@ class ProfileController extends Controller
 
     public function email(ProfileEmailSaveRequest $request) 
     {
+        $reverify = Auth::user()->email != $request->email;
+
         Auth::user()->email = $request->email;
         Auth::user()->save();
 
-        return ['status' => 'success', 'message' => 'emailSaved'];
+        if ($reverify) 
+            Mail::to(Auth::user()->email)->queue(new VerifyEmail(Auth::user()));
+
+        return ['status' => 'success', 'message' => 'emailSaved', 'needVerification' => $reverify];
     }
 
     public function password(ProfilePasswordSaveRequest $request) 
