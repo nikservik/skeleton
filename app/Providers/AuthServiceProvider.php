@@ -13,7 +13,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\User' => 'App\Policies\UserPolicy',
+        'App\Subscriptions\Tariff' => 'App\Policies\TariffPolicy',
+        'App\Subscriptions\Feature' => 'App\Policies\FeaturePolicy',
     ];
 
     /**
@@ -25,6 +27,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('see-sky', 'App\Policies\FeaturePolicy@use');
     }
 }

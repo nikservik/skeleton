@@ -20,14 +20,15 @@ class UserController extends Controller
     static function routes()
     {
         Route::domain('admin.'.Str::after(config('app.url'),'//'))->namespace('Admin')->group(function () {
-            Route::get('users/search', 'UserController@search');
+            Route::get('users/search', 'UserController@search')->middleware('can:viewAny,App\User');
             Route::resource('users', 'UserController');
         });
     }
 
     public function __construct()
     {
-        $this->middleware(['auth:web']);
+        $this->middleware(['auth:web', 'isAdmin']);
+        $this->authorizeResource(User::class, 'user');
     }
     /**
      * Display a listing of the resource.
@@ -72,13 +73,15 @@ class UserController extends Controller
     public function store(UserCreateRequest $request)
     {
         $request->merge(['password' => Hash::make($request->password)]);
-        if ($request->has('dontVerify')) 
-            $request->merge(['email_verified_at' => Carbon::now()]);
         
         $user = User::create($request->all());
 
-        if (!$request->has('dontVerify')) 
+        if ($request->has('dontVerify')) {
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+        } else {
             Mail::to($user->email)->queue(new VerifyEmail($user));
+        }
 
         return redirect('/users');
     }

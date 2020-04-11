@@ -31,6 +31,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
     
     protected $appends = ['locale'];
 
+    public const ROLE_USER = 1;
+    public const ROLE_EDITOR = 2;
+    public const ROLE_ADMIN = 3;
+    public const ROLE_SUPERADMIN = 4;
+
+    public static $roles = [
+        self::ROLE_USER,
+        self::ROLE_EDITOR,
+        self::ROLE_ADMIN,
+        self::ROLE_SUPERADMIN,
+    ];
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

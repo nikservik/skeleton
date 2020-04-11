@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->role === 2) {
+        if(Auth::user()->role >= User::ROLE_EDITOR) {
             return $next($request);
         }
         else {
