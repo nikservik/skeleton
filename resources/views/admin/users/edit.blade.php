@@ -4,7 +4,7 @@
 <h1 class="page-header">
     <a href="/users" class="text-white">@lang('admin/users.listTitle')</a> 
 </h1>
-<h2 class="sub-header">{{ $user->name }}</h2>
+<h2 class="sub-header"><a href="/users/{{ $user->id }}">{{ $user->name }}</a></h2>
 
 <form autocomplete="off" method="post" action="/users/{{ $user->id }}">
     @csrf
