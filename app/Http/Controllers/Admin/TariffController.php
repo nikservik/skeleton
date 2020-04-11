@@ -58,6 +58,7 @@ class TariffController extends Controller
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
         $tariff = Tariff::create($request->all());
 
+        $tariff->visible = $request->has('visible') ? true : false;
         $tariff->features = $request->features;
         $tariff->save();
 
