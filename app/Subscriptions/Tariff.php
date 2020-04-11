@@ -3,6 +3,7 @@
 namespace App\Subscriptions;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Tariff extends Model
 {
@@ -22,5 +23,28 @@ class Tariff extends Model
     {
         return 'period'.str_replace(' ', '', $this->period);
     }   
+
+    public function getDefaultAttribute() 
+    {
+        return Arr::get($this->availability, 'default', false);
+    }   
+
+    public function setDefaultAttribute($default) 
+    {
+        $availability = $this->availability;
+        $availability['default'] = (boolean) $default;
+        $this->availability = $availability;
+    }   
     
+    public function getVisibleAttribute() 
+    {
+        return Arr::get($this->availability, 'visible', false);
+    }   
+
+    public function setVisibleAttribute($visible) 
+    {
+        $availability = $this->availability;
+        $availability['visible'] = (boolean) $visible;
+        $this->availability = $availability;
+    }   
 }

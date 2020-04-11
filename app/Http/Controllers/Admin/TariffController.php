@@ -15,13 +15,16 @@ class TariffController extends Controller
 
     static function routes()
     {
-        Route::domain('admin.'.Str::after(config('app.url'),'//'))
-            ->resource('tariffs', 'Admin\TariffController');
+        Route::domain('admin.'.Str::after(config('app.url'),'//'))->namespace('Admin')->group(function () {
+            Route::get('tariffs/{tariff}/default', 'TariffController@default')->middleware('can:update,tariff');
+            Route::resource('tariffs', 'TariffController');
+        });
     }
 
     public function __construct()
     {
-        $this->middleware(['auth:web']);
+        $this->middleware(['auth:web', 'isAdmin']);
+        $this->authorizeResource(Tariff::class, 'tariff');
     }
     /**
      * Display a listing of the resource.
@@ -54,6 +57,10 @@ class TariffController extends Controller
     {
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
         $tariff = Tariff::create($request->all());
+
+        $tariff->features = $request->features;
+        $tariff->save();
+
         return redirect('/tariffs');
     }
 
@@ -90,7 +97,10 @@ class TariffController extends Controller
     {
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
         $tariff->fill($request->all());
+        $tariff->features = $request->features;
+        $tariff->visible = $request->has('visible') ? true : false;
         $tariff->save();
+        
         return redirect('/tariffs/'.$tariff->id);
     }
 
@@ -103,6 +113,20 @@ class TariffController extends Controller
     public function destroy(Tariff $tariff)
     {
         $tariff->delete();
+        return redirect('/tariffs');
+    }
+
+    public function default(Tariff $tariff)
+    {
+        if ($tariff->price > 0) 
+            return redirect('/tariffs');
+
+        $tariffs = Tariff::all();
+        foreach ($tariffs as $eachTariff) {
+            $eachTariff->default = ($eachTariff->id == $tariff->id) ? true : false;
+            $eachTariff->save();
+        }
+
         return redirect('/tariffs');
     }
 }

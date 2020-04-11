@@ -62,6 +62,20 @@
             <label for="prolongable">@lang('admin/tariffs.prolongable')</label>
         </div>
     </div>
+    <div class="form-group pb-4">
+        <input type="checkbox" name="visible" value="1" @if(old('visible'))checked=""@endif>
+        <label for="visible">@lang('admin/tariffs.visible')</label>
+    </div>
+
+    <h2 class="sub-title">@lang('admin/tariffs.features')</h2>
+
+    @foreach(\App\Subscriptions\Feature::LIST as $feature)
+        <div class="form-group  pb-4">
+            <input type="checkbox" name="features[]" value="{{ $feature }}" 
+                @if(old('features') and in_array($feature, old('features')))checked=""@endif>
+            <label for="prolongable">@lang('features.'.$feature)</label>
+        </div>
+    @endforeach
     <div class="form-group text-center">
         <button type="submit" class="button">@lang('admin/tariffs.save')</button>
     </div>
