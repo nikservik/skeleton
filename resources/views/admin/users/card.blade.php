@@ -15,13 +15,15 @@
                     @lang('app.role'.$user->role) /
                     @lang('admin/users.registered') {{ $user->created_at->format('d.m.Y') }}
                 </div>
-                <div class="text-sm text-gray-500">
-                    @lang('admin/users.tariff') {{ $user->subscription()->name }}
-                    @if($user->subscription()->isTrial())
-                        @lang('admin/users.till') 
-                        {{ $user->subscription()->next_transaction_date->format('d.m.Y') }}
-                    @endif
-                </div>
+                @if($user->subscription())
+                    <div class="text-sm text-gray-500">
+                        @lang('admin/users.tariff') {{ $user->subscription()->name }}
+                        @if($user->subscription()->isTrial())
+                            @lang('admin/users.till') 
+                            {{ $user->subscription()->next_transaction_date->format('d.m.Y') }}
+                        @endif
+                    </div>
+                @endif
             </div>
             <div class="ml-auto">
                 <a href="/users/{{ $user->id }}/edit">
