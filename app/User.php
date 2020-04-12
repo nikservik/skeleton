@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Mail\PasswordReset;
+use App\Subscriptions\Subscription;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -43,6 +44,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
         self::ROLE_SUPERADMIN,
     ];
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function subscription()
+    {
+        return $this->subscriptions()->where('status', 'Active')->first();
+    }
+    
     public function getJWTIdentifier()
     {
         return $this->getKey();

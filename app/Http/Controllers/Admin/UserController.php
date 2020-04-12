@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserCreateRequest;
 use App\Http\Requests\Admin\UserEditRequest;
 use App\Mail\VerifyEmail;
+use App\Subscriptions\Manager;
+use App\Subscriptions\Tariff;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ class UserController extends Controller
     static function routes()
     {
         Route::domain('admin.'.Str::after(config('app.url'),'//'))->namespace('Admin')->group(function () {
+            Route::post('users/{user}/subscription', 'UserController@subscription')->middleware('can:update,user');
             Route::get('users/search', 'UserController@search')->middleware('can:viewAny,App\User');
             Route::resource('users', 'UserController');
         });
@@ -82,13 +85,15 @@ class UserController extends Controller
         } else {
             Mail::to($user->email)->queue(new VerifyEmail($user));
         }
+        Manager::activateDefault($user);
 
         return redirect('/users');
     }
 
     public function show(User $user)
     {
-        return view('admin.users.show', ['user' => $user]);
+        $tariffs = Tariff::where('price', 0)->where('id', '<>', $user->subscription()->tariff_id)->get();
+        return view('admin.users.show', ['user' => $user, 'tariffs' => $tariffs]);
     }
 
     public function edit(User $user)
@@ -112,6 +117,17 @@ class UserController extends Controller
         $user->delete();
 
         return redirect('/users');
+    }
+
+    public function subscription(Request $request, User $user)
+    {
+        $this->validate($request, ['tariff' => 'required|exists:tariffs,id']);
+
+        $tariff = Tariff::findOrFail($request->tariff);
+
+        Manager::activate($user, $tariff);
+
+        return redirect('/users/'.$user->id);
     }
 
     protected function stats()

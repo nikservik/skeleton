@@ -11,11 +11,16 @@
             <div class="">
                 <a href="/users/{{ $user->id }}">{{ $user->name }}</a>
                 <span class="text-sm ml-2">{{ $user->email }}</span>
-                <div>
-                    <span class="text-sm text-gray-500">
-                        @lang('app.role'.$user->role) /
-                        @lang('admin/users.registered') {{ $user->created_at->format('d.m.Y') }}
-                    </span>
+                <div  class="text-sm text-gray-500 mb-2">
+                    @lang('app.role'.$user->role) /
+                    @lang('admin/users.registered') {{ $user->created_at->format('d.m.Y') }}
+                </div>
+                <div class="text-sm text-gray-500">
+                    @lang('admin/users.tariff') {{ $user->subscription()->name }}
+                    @if($user->subscription()->isTrial())
+                        @lang('admin/users.till') 
+                        {{ $user->subscription()->next_transaction_date->format('d.m.Y') }}
+                    @endif
                 </div>
             </div>
             <div class="ml-auto">

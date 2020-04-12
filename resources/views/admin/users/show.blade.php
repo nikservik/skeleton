@@ -37,6 +37,34 @@
 
 <h2 class="sub-title">@lang('admin/users.subscription')</h2>
 
+<p class="my-4 mx-10 font-bold">@lang('admin/users.tariff') {{ $user->subscription()->name }}</p>
 
+<p class="my-2 mx-10">
+    @foreach($user->subscription()->features as $feature)
+        - @lang('features.'.$feature)<br>
+    @endforeach
+</p>
+
+<form autocomplete="off" method="post" action="/users/{{ $user->id }}/subscription">
+    @csrf
+    <div class="flex items-end">
+        <div class="form-group flex-grow mt-8 @error('tariff') has-error @enderror">
+            <label for="tariff">@lang('admin/users.changeTariff')</label>
+            <select name="tariff" class="block">
+                @foreach($tariffs as $tariff)
+                    <option value="{{ $tariff->id }}" @if(old('tariff')==$tariff->id)selected=""@endif>{{ $tariff->name }}</option>
+                @endforeach
+            </select>
+            @error('tariff')
+                <div class="error-description">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        <div class="form-group text-center">
+            <button type="submit" class="button">@lang('admin/users.save')</button>
+        </div>
+    </div>
+</form>
 
 @endsection
