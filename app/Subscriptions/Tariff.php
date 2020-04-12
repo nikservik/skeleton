@@ -19,6 +19,26 @@ class Tariff extends Model
 
     public static $periods = ['15 days', '1 month', '1 year', 'endless'];
 
+    public function getNameTranslation($locale)
+    {
+        if ($locale == config('app.locale'))
+            return $this->name;
+        else
+            return Arr::get($this->texts, 'name.'.$locale, $this->name);
+    }
+
+    public function setNameTranslation($name, $locale)
+    {
+        $texts = $this->texts;
+        if ($locale == config('app.locale')) {
+            $texts['name']['locale'] = $locale;
+        } else {
+            $texts['name'][$locale] = $name;
+        }
+        $this->texts = $texts;
+        return $name;
+    }
+
     public function getPeriodLocaleAttribute() 
     {
         return 'period'.str_replace(' ', '', $this->period);

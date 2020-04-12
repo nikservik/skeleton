@@ -8,22 +8,24 @@
 
 <form autocomplete="off" method="post" action="/tariffs">
     @csrf
-    <div class="form-group @error('name') has-error @enderror">
-        <label for="name">@lang('admin/tariffs.name')</label>
-        <input type="text" name="name" value="{{ old('name') }}" placeholder="" required>
-        @error('name')
-            <div class="error-description">
-                {{ $message }}
-            </div>
-        @enderror
-    </div>
+    @foreach(config('app.locales') as $locale)
+        <div class="form-group @error('name_'.$locale) has-error @enderror">
+            <label for="name_{{ $locale }}">@lang('admin/tariffs.name') ({{ $locale }})</label>
+            <input type="text" name="name_{{ $locale }}" value="{{ old('name_'.$locale) }}" placeholder="" required>
+            @error('name_'.$locale)
+                <div class="error-description">
+                    @lang('admin/tariffs.'.$message)
+                </div>
+            @enderror
+        </div>
+    @endforeach
     <div class="flex">
         <div class="form-group w-1/2 @error('short_name') has-error @enderror">
             <label for="short_name">@lang('admin/tariffs.shortName')</label>
             <input type="text" name="short_name" value="{{ old('short_name') }}" placeholder="" required>
             @error('short_name')
                 <div class="error-description">
-                    {{ $message }}
+                    @lang('admin/tariffs.'.$message)
                 </div>
             @enderror
         </div>
@@ -38,7 +40,7 @@
             </div>
             @error('price')
                 <div class="error-description">
-                    {{ $message }}
+                    @lang('admin/tariffs.'.$message)
                 </div>
             @enderror
         </div>
@@ -53,7 +55,7 @@
             </select>
             @error('period')
                 <div class="error-description">
-                    {{ $message }}
+                    @lang('admin/tariffs.'.$message)
                 </div>
             @enderror
         </div>

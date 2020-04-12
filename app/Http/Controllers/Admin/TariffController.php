@@ -58,6 +58,9 @@ class TariffController extends Controller
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
         $tariff = Tariff::create($request->all());
 
+        foreach (config('app.locales') as $locale) {
+            $tariff->setNameTranslation($request->get('name_'.$locale), $locale);
+        }
         $tariff->visible = $request->has('visible') ? true : false;
         $tariff->features = $request->features;
         $tariff->save();
@@ -98,6 +101,9 @@ class TariffController extends Controller
     {
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
         $tariff->fill($request->all());
+        foreach (config('app.locales') as $locale) {
+            $tariff->setNameTranslation($request->get('name_'.$locale), $locale);
+        }
         $tariff->features = $request->features;
         $tariff->visible = $request->has('visible') ? true : false;
         $tariff->save();
