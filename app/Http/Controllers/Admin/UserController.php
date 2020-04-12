@@ -92,7 +92,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $tariffs = Tariff::where('price', 0)->where('id', '<>', $user->subscription()->tariff_id)->get();
+        $tariffs = Tariff::where('price', 0)->get();
         return view('admin.users.show', ['user' => $user, 'tariffs' => $tariffs]);
     }
 
