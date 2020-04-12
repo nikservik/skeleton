@@ -15,7 +15,7 @@ class TariffControllerTest extends TestCase
 
     public function testTariffsList()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create(['role' => 3]);
         $tariffs = factory(Tariff::class, 3)->create();
 
         $this->actingAs($user, 'web')
@@ -27,8 +27,10 @@ class TariffControllerTest extends TestCase
 
     public function testTariffsShow()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create(['role' => 3]);
         $tariff = factory(Tariff::class)->create();
+        $tariff->features = [];
+        $tariff->save();
 
         $this->actingAs($user, 'web')
             ->get('http://admin.'.Str::after(config('app.url'),'//').'/tariffs/'.$tariff->id)
