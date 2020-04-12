@@ -37,13 +37,15 @@
 
 <h2 class="sub-title">@lang('admin/users.subscription')</h2>
 
-<p class="my-4 mx-10 font-bold">@lang('admin/users.tariff') {{ $user->subscription()->name }}</p>
+@if($user->subscription())
+    <p class="my-4 mx-10 font-bold">@lang('admin/users.tariff') {{ $user->subscription()->name }}</p>
 
-<p class="my-2 mx-10">
-    @foreach($user->subscription()->features as $feature)
-        - @lang('features.'.$feature)<br>
-    @endforeach
-</p>
+    <p class="my-2 mx-10">
+        @foreach($user->subscription()->features as $feature)
+            - @lang('features.'.$feature)<br>
+        @endforeach
+    </p>
+@endif
 
 <form autocomplete="off" method="post" action="/users/{{ $user->id }}/subscription">
     @csrf
