@@ -29,8 +29,6 @@ class SendVerificationEmail
      */
     public function handle(Registered $event)
     {
-        Log::debug('registered');
-        $message = (new VerifyEmail($event->user))->onQueue('emails');
-        Mail::to($event->user->email)->queue($message);
+        Mail::to($event->user->email)->queue(new VerifyEmail($event->user));
     }
 }
