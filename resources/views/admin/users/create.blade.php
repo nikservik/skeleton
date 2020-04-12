@@ -13,7 +13,7 @@
         <input type="text" name="name" value="{{ old('name') }}" placeholder="" required>
         @error('name')
             <div class="error-description">
-                {{ $message }}
+                @lang('admin/users.'.$message)
             </div>
         @enderror
     </div>
@@ -22,7 +22,7 @@
         <input type="text" name="email" value="{{ old('email') }}" placeholder="" required>
         @error('email')
             <div class="error-description">
-                {{ $message }}
+                @lang('admin/users.'.$message)
             </div>
         @enderror
     </div>
@@ -35,7 +35,7 @@
         <input type="password" name="password" value="{{ old('password') }}" required>
         @error('password')
             <div class="error-description">
-                {{ $message }}
+                @lang('admin/users.'.$message)
             </div>
         @enderror
     </div>
@@ -52,7 +52,7 @@
         </select>
         @error('role')
             <div class="error-description">
-                {{ $message }}
+                @lang('admin/users.'.$message)
             </div>
         @enderror
     </div>
