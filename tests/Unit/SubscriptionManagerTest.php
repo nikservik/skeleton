@@ -48,6 +48,22 @@ class SubscriptionManagerTest extends TestCase
         return $tariffTrial;
     }
 
+    protected function createTariffPaid()
+    {
+        $tariffPaid = new Tariff([
+            'name' => 'Платный',
+            'short_name' => 'paid',
+            'price' => 100,
+            'currency' => 'RUB',
+            'period' => '1 month',
+            'prolongable' => true,
+        ]);
+        $tariffPaid->features = ['read-books','earn-money'];
+        $tariffPaid->save();
+
+        return $tariffPaid;
+    }
+
     public function testSubscribe()
     {
         $user = factory(User::class)->create();
@@ -139,7 +155,7 @@ class SubscriptionManagerTest extends TestCase
         $subscription->next_transaction_date = Carbon::now()->sub('1 day');
         $subscription->save();
 
-        Manager::endOutdatedSubscriptions();
+        Manager::endOutdated();
 
         $subscription->refresh();
         $this->assertEquals('Ended', $subscription->status);
