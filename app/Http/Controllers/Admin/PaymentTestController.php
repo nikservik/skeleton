@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class PaymentTestController extends Controller
 {
-    use Notifications; 
+    // use Notifications; 
 
     static function routes()
     {
