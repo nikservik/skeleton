@@ -15,6 +15,7 @@
     <div class="mx-10 my-4 p-4 border border-gray-500 rounded-lg">
         Статус: {{ $payment->status }}<br>
         Токен: {{ $payment->card_last_digits }}<br>
+        <a class="button small" href="/test/charge/{{ $payment->card_last_digits }}">Повторить</a>
     </div>
 @endforeach
 

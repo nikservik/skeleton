@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Albakov\LaravelCloudPayments\LaravelCloudPayments;
 use Albakov\LaravelCloudPayments\Notifications;
 use App\Http\Controllers\Controller;
 use App\Subscriptions\Payment;
@@ -17,6 +18,7 @@ class PaymentTestController extends Controller
     {
         Route::domain('admin.'.Str::after(config('app.url'),'//'))->middleware(['auth:web', 'isAdmin'])->namespace('Admin')->group(function () {
             Route::get('test', 'PaymentTestController@test');
+            Route::get('test/charge/{token}', 'PaymentTestController@chargeByToken');
         });
     }
     static function apiRoutes()
@@ -36,8 +38,8 @@ class PaymentTestController extends Controller
     public function pay(Request $request)
     {
         $result = $this->validateSecrets($request);
-        // if ($result['code'] !== 0) 
-        //     return $result;
+        if ($result['code'] !== 0) 
+            return $result;
         
         $this->paymentFromRequest($request)->save();
 
@@ -67,4 +69,27 @@ class PaymentTestController extends Controller
             'status' => $request->Status, 
         ]);
     }
+
+    protected function chargeByToken($token)
+    {
+        $array = [
+            'Amount' => 10, 
+            'Currency' => 'RUB', 
+            'Token' => $token, 
+            'InvoiceId' => 123,
+            'Description' => 'Recharge by token',
+            'AccountId' => 12,
+            'Email' => 'test@test.com',
+        ];
+
+        // Trying to do Payment
+        try {
+            $result = (new LaravelCloudPayments)->tokensCharge($array);
+        } catch (\Exception $e) {
+            $result = $e->getMessage();
+        }
+
+        return redirect('/test');
+    }
+
 }
