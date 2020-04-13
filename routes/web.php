@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\PaymentTestController;
 use App\Http\Controllers\Admin\TariffController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -23,11 +24,12 @@ LoginController::routes();
 DashboardController::routes();
 UserController::routes();
 TariffController::routes();
+PaymentTestController::routes();
 
 // SPA route
 Route::get('/{any?}', function (){
     return view('app');
-})->where('any', '^(?!api\/|admin\/|email\/|auth\/)[\/\w\.-]*');
+})->where('any', '^(?!api\/|cp\/|email\/|auth\/)[\/\w\.-]*');
 
 // Email verification
 VerificationController::routes();

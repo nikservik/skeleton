@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentTestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordRemindController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -26,3 +27,4 @@ AuthController::apiRoutes();
 LocaleController::apiRoutes();
 ProfileController::apiRoutes();
 DemoController::apiRoutes();
+PaymentTestController::apiRoutes();
