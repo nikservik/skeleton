@@ -88,7 +88,6 @@ class PaymentTestController extends Controller
             return (new LaravelCloudPayments)->tokensCharge($array);
         } catch (\Exception $e) {
             $result = $e->getMessage();
-            Log::debug('recharge fail '.var_dump($result));
         }
 
         return redirect('/test');
