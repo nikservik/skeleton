@@ -23,19 +23,9 @@
                   </svg>
                 </a>
               </div>
-              <div class="pb-4 md:pb-2 px-1 md:flex" :class="menuOpened ? 'block' : 'hidden'">
-                <router-link :to="{name: 'home'}" class="router-link block md:ml-1" @click.native="closeMenus">{{ $t('menu.welcome') }}</router-link>
-              </div>
-              <div class="pb-4 md:pb-2 pl-2 pr-12 md:pr-2 md:mr-8 text-right md:absolute right-0 bg-gray-300 dark:bg-gray-900 md:border-gray-400 md:border md:shadow md:rounded md:-mt-10" :class="localeOpened ? 'block' : 'hidden'">
-                <a v-for="locale in locales" href="#" class="router-link block md:ml-0 uppercase" @click.prevent="setLocale(locale)">{{ locale }}</a>
-              </div>
-              <div class="pb-4 md:pb-2 px-2 text-right md:absolute right-0 bg-gray-300 dark:bg-gray-900 md:border-gray-400 md:border md:shadow md:rounded md:-mt-10" :class="userOpened ? 'block' : 'hidden'">
-                <router-link v-if="!$auth.check()" :to="{name: 'login'}" class="router-link block md:ml-0 md:mt-2" @click.native="closeMenus">{{ $t('userMenu.login') }}</router-link>
-                <router-link v-if="!$auth.check()" :to="{name: 'register'}" class="router-link block md:ml-0" @click.native="closeMenus">{{ $t('userMenu.register') }}</router-link>
-
-                <router-link v-if="$auth.check()" :to="{name: 'dashboard'}" class="router-link block md:ml-0 md:mt-2" @click.native="closeMenus">{{ $t('userMenu.profile') }}</router-link>
-                <a v-if="$auth.check()" href="#" class="router-link block md:ml-0" @click.prevent="$auth.logout()" @click="closeMenus">{{ $t('userMenu.logout') }}</a>
-              </div>
+              <topmenu />
+              <locales />
+              <usermenu />
             </div>
         </header>
         <div class="max-w-2xl mx-auto px-1 py-4" id="content">
@@ -51,34 +41,19 @@
 </template>
 
 <script>
+  import topmenu from './components/Menu'
+  import usermenu from './components/UserMenu'
+  import locales from './components/Locales'
+
   export default {
     data() {
       return {
         menuOpened: false,
         userOpened: false,
         localeOpened: false,
-        locales: ['ru', 'en'],
-      }
-    },
-    mounted() {
-      if (this.$auth.check()) {
-        this.$root.$i18n.locale = $auth.user().locale;
-      } else {
-        this.$root.$i18n.locale = this.$cookie.get('locale');
-        if (! this.$root.$i18n.locale)
-          this.$root.$i18n.locale = this.locales[0];
       }
     },
     methods: {
-      setLocale(locale) {
-        this.closeMenus();
-        this.$root.$i18n.locale = locale;
-        this.$cookie.set('locale', locale, { expires: '10Y' });
-        if (this.$auth.check()) {
-          this.$http.post('/locale', { locale: locale })
-            .catch(error => {});
-        }
-      },
       closeMenus() { 
         this.menuOpened = false; 
         this.userOpened = false; 
@@ -109,29 +84,16 @@
         }
       }
     },
+    components: { topmenu, usermenu, locales }
   }
 </script>
 
 <i18n locale="ru" lang="yaml">
   title: "Скелетон"
   uni: "Университет Никифоровых"
-  menu: 
-    welcome: "Добро пожаловать"
-  userMenu: 
-    login: "Вход"
-    register: "Регистрация"
-    profile: "Профиль"
-    logout: "Выход"
 </i18n>
 
 <i18n locale="en" lang="yaml">
   title: "Skeleton"
   uni: "Nikiforovy University"
-  menu: 
-    welcome: "Welcome"
-  userMenu: 
-    login: "Login"
-    register: "Register"
-    profile: "Profile"
-    logout: "Logout"
 </i18n>

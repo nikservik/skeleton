@@ -30,7 +30,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
         'settings' => 'array',
     ];
     
-    protected $appends = ['locale'];
+    protected $appends = ['locale', 'features'];
 
     public const ROLE_USER = 1;
     public const ROLE_EDITOR = 2;
@@ -73,6 +73,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
     public function getLocaleAttribute() 
     {
         return Arr::get($this->settings, 'locale', App::getLocale());
+    }   
+
+    public function getFeaturesAttribute() 
+    {
+        if ($this->subscription() and $this->subscription()->features)
+            return $this->subscription()->features;
+
+        return [];
     }   
 
     public function setLocaleAttribute($locale) 

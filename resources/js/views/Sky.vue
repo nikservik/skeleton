@@ -3,7 +3,7 @@
     <h1 class="page-header">{{ $t('pageTitle') }}</h1>
 
     <div class="py-6 mx-4">
-        Эта страница видна всем – и авторизованным, и не авторизованным.
+        Фича. Смотреть на небо могут только те, у кого это включено в тарифе
     </div>
 
   </div>
@@ -15,9 +15,9 @@ export default {
 </script>
 
 <i18n locale="ru" lang="yaml">
-  pageTitle: "Добро пожаловать"
+  pageTitle: "Видно небо"
 </i18n>
 
 <i18n locale="en" lang="yaml">
-  pageTitle: "Welcome"
+  pageTitle: "See sky"
 </i18n>

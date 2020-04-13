@@ -21,9 +21,10 @@ class FeaturePolicy
         //
     }
 
-    public function feature(User $user, $feature)
+    public function use(User $user, $feature)
     {
-        // тут будет проверка, есть ли фича в подписке пользователя
-        return in_array($feature, Feature::LIST);
+        return $user->subscription() 
+            and $user->subscription()->features
+            and in_array($feature, $user->subscription()->features);
     }
 }

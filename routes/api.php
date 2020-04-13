@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordRemindController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\DemoController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
@@ -24,3 +25,4 @@ PasswordRemindController::apiRoutes();
 AuthController::apiRoutes();
 LocaleController::apiRoutes();
 ProfileController::apiRoutes();
+DemoController::apiRoutes();
