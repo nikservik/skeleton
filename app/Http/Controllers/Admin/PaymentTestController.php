@@ -7,6 +7,7 @@ use Albakov\LaravelCloudPayments\Notifications;
 use App\Http\Controllers\Controller;
 use App\Subscriptions\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -84,12 +85,12 @@ class PaymentTestController extends Controller
 
         // Trying to do Payment
         try {
-            $result = (new LaravelCloudPayments)->tokensCharge($array);
+            return (new LaravelCloudPayments)->tokensCharge($array);
         } catch (\Exception $e) {
             $result = $e->getMessage();
+            Log::debug('recharge fail '.var_dump($result));
         }
 
         return redirect('/test');
     }
-
 }
