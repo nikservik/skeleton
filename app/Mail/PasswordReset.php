@@ -32,7 +32,7 @@ class PasswordReset extends Mailable
      */
     public function build()
     {
-        return $this->subject(__('auth.password-reset-subject'))
+        return $this->subject(__('emails/password-reset.subject'))
             ->view('emails.password-reset');
     }
 }

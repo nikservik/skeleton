@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'subject' => 'Verify your email',
     'preheader' => 'Verify your email address to use «:app».',
     'hello' => '<b>Hello, :name!</b>',
     'line1' => 'We sent this email to you as second step of registration in «:app».',

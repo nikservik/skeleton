@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'subject' => 'Password reset',
     'preheader' => 'Password reset link.',
     'hello' => '<b>Hello, :name!</b>',
     'line1' => 'We sent this mail to you because you or somebody on behalf of you asked for password reset for «:app».',

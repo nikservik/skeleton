@@ -37,7 +37,7 @@ class VerifyEmail extends Mailable
     {
         $this->verificationUrl = $this->verificationUrl($this->user);
         
-        return $this->subject(__('auth.verify-email-subject'))
+        return $this->subject(__('emails/verify-email.subject'))
             ->view('emails.verify-email');
     }
 
