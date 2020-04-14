@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscriptions;
+namespace Nikservik\Subscriptions\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;

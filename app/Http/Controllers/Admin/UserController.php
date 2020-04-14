@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserCreateRequest;
 use App\Http\Requests\Admin\UserEditRequest;
 use App\Mail\VerifyEmail;
-use App\Subscriptions\Manager;
-use App\Subscriptions\Tariff;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Models\Tariff;
 
 class UserController extends Controller
 {
@@ -85,7 +85,7 @@ class UserController extends Controller
         } else {
             Mail::to($user->email)->queue(new VerifyEmail($user));
         }
-        Manager::activateDefault($user);
+        Subscriptions::activateDefault($user);
 
         return redirect('/users');
     }
@@ -125,7 +125,7 @@ class UserController extends Controller
 
         $tariff = Tariff::findOrFail($request->tariff);
 
-        Manager::activate($user, $tariff);
+        Subscriptions::activate($user, $tariff);
 
         return redirect('/users/'.$user->id);
     }

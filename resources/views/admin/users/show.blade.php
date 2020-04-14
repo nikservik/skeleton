@@ -42,7 +42,7 @@
 
     <p class="my-2 mx-10">
         @foreach($user->subscription()->features as $feature)
-            - @lang('features.'.$feature)<br>
+            - @lang('subscriptions::features.'.$feature)<br>
         @endforeach
     </p>
 @endif

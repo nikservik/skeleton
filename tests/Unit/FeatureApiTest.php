@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Subscriptions\Manager;
-use App\Subscriptions\Tariff;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -36,7 +36,7 @@ class FeatureApiTest extends TestCase
         $user = factory(User::class)->create();
         $default = $this->createTariffFree();
 
-        Manager::activate($user, $default);
+        Subscriptions::activate($user, $default);
 
         $this->withHeaders(['Authorization' => 'Bearer '.JWTAuth::fromUser($user)])
             ->getJson('api/auth/user')
@@ -50,7 +50,7 @@ class FeatureApiTest extends TestCase
         $user = factory(User::class)->create();
         $default = $this->createTariffFree();
 
-        Manager::activate($user, $default);
+        Subscriptions::activate($user, $default);
 
         $this->withHeaders(['Authorization' => 'Bearer '.JWTAuth::fromUser($user)])
             ->getJson('api/books')

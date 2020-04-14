@@ -31,7 +31,7 @@
 
 <p class="my-4 mx-10">
     @foreach($tariff->features as $feature)
-        @lang('features.'.$feature)<br>
+        @lang('subscriptions::features.'.$feature)<br>
     @endforeach
 </p>
 

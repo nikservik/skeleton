@@ -2,16 +2,16 @@
 
 namespace Tests\Unit;
 
-use App\Subscriptions\Manager;
-use App\Subscriptions\Tariff;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
 
 
-class SubscriptionManagerTest extends TestCase
+class SubscriptionsFreeTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -69,7 +69,7 @@ class SubscriptionManagerTest extends TestCase
         $user = factory(User::class)->create();
         $tariff = $this->createTariffFree();
 
-        Manager::activate($user, $tariff);
+        Subscriptions::activate($user, $tariff);
 
         $this->assertEquals(1, $user->subscriptions()->count());
 
@@ -91,7 +91,7 @@ class SubscriptionManagerTest extends TestCase
         $user = factory(User::class)->create();
         $tariff = $this->createTariffTrial();
 
-        Manager::activate($user, $tariff);
+        Subscriptions::activate($user, $tariff);
 
         $this->assertEquals(1, $user->subscriptions()->count());
 
@@ -107,10 +107,10 @@ class SubscriptionManagerTest extends TestCase
         $tariff1 = $this->createTariffFree();
         $tariff2 = $this->createTariffTrial();
 
-        Manager::activate($user, $tariff1);
+        Subscriptions::activate($user, $tariff1);
         $this->assertEquals(1, $user->subscriptions()->count());
 
-        Manager::activate($user, $tariff2);
+        Subscriptions::activate($user, $tariff2);
         $this->assertEquals(2, $user->subscriptions()->count());
         $this->assertEquals(1, $user->subscriptions()->where('status', 'Active')->count());
         $subscription = $user->subscription();
@@ -123,7 +123,7 @@ class SubscriptionManagerTest extends TestCase
         $tariff1 = $this->createTariffFree();
         $tariff2 = $this->createTariffTrial();
 
-        $default = Manager::defaultTariff();
+        $default = Subscriptions::defaultTariff();
         $this->assertEquals($tariff1->id, $default->id);
     }
 
@@ -147,7 +147,7 @@ class SubscriptionManagerTest extends TestCase
         $tariff = $this->createTariffTrial();
         $default = $this->createTariffFree();
 
-        Manager::activate($user, $tariff);
+        Subscriptions::activate($user, $tariff);
 
         $subscription = $user->subscription();
         $this->assertEquals($tariff->id, $subscription->tariff_id);
@@ -155,7 +155,7 @@ class SubscriptionManagerTest extends TestCase
         $subscription->next_transaction_date = Carbon::now()->sub('1 day');
         $subscription->save();
 
-        Manager::endOutdated();
+        Subscriptions::endOutdated();
 
         $subscription->refresh();
         $this->assertEquals('Ended', $subscription->status);

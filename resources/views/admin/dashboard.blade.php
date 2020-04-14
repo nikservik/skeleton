@@ -13,7 +13,7 @@
             </div>
         </div>
         @endcan
-        @can('viewAny', \App\Subscriptions\Tariff::class)
+        @can('viewAny', Nikservik\Subscriptions\Models\Tariff::class)
         <div class="p-2 w-full md:w-1/2">
             <div class="block py-2 px-4 border border-gray-300 rounded-lg h-full">
                 <h3 class="text-2xl font-bold mb-3"><a href="/tariffs">@lang('admin/dashboard.tariffs')</a></h3>

@@ -18,6 +18,7 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
+        "nikservik/subscriptions": "dev-master",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
@@ -65,5 +66,11 @@
             "@php artisan key:generate --ansi",
             "@php artisan jwt:secret"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/nikservik/subscriptions"
+        }
+    ]
 }

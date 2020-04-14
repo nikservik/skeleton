@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Policies;
+namespace Nikservik\Subscriptions\Policies;
 
-use App\Subscriptions\Feature;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Log;

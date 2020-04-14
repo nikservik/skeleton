@@ -49,7 +49,7 @@
         <div class="form-group w-1/2 @error('period') has-error @enderror">
             <label for="period">@lang('admin/tariffs.period')</label>
             <select name="period" class="block">
-                @foreach(\App\Subscriptions\Tariff::$periods as $period)
+                @foreach(config('subscriptions.periods') as $period)
                     <option value="{{ $period }}" @if(old('period')==$period)selected=""@endif>@lang('admin/tariffs.period'.str_replace(' ', '', $period))</option>
                 @endforeach
             </select>
@@ -71,7 +71,7 @@
 
     <h2 class="sub-title">@lang('admin/tariffs.features')</h2>
 
-    @foreach(\App\Subscriptions\Feature::LIST as $feature)
+    @foreach(config('subscriptions.features') as $feature)
         <div class="form-group  pb-4">
             <input type="checkbox" name="features[]" value="{{ $feature }}" 
                 @if(old('features') and in_array($feature, old('features')))checked=""@endif>

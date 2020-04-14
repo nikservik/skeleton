@@ -1,9 +1,7 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
-use App\Subscriptions\Tariff;
 use Faker\Generator as Faker;
+use Nikservik\Subscriptions\Models\Tariff;
 
 $factory->define(Tariff::class, function (Faker $faker) {
     return [

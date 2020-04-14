@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Subscriptions\Tariff;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
 
 

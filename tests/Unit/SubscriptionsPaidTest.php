@@ -2,11 +2,19 @@
 
 namespace Tests\Unit;
 
-use App\Subscriptions\Manager;
-use App\Subscriptions\Tariff;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Mail;
+use Nikservik\Subscriptions\Facades\Payments;
+use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Mail\SubscriptionActivated;
+use Nikservik\Subscriptions\Mail\SubscriptionCancelled;
+use Nikservik\Subscriptions\Mail\SubscriptionEnded;
+use Nikservik\Subscriptions\Mail\SubscriptionPastDue;
+use Nikservik\Subscriptions\Mail\SubscriptionRejected;
+use Nikservik\Subscriptions\Mail\SubscriptionRenewed;
+use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
 
 
@@ -49,120 +57,138 @@ class SubscriptionsPaidTest extends TestCase
 
     public function testActivatePaid()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
 
-        Manager::activateDefault($user);
+        Subscriptions::activateDefault($user);
         $defaultSubscription = $user->subscription();
         $this->assertEquals($default->id, $defaultSubscription->tariff_id);
 
-        $subscription = Manager::activate($user, $tariff);
+        $subscription = Subscriptions::activate($user, $tariff);
         $this->assertNotNull($subscription);
         $this->assertEquals($tariff->id, $subscription->tariff_id);
         $this->assertEquals('Awaiting', $subscription->status);
 
-        Manager::confirmActivation($subscription);
+        Subscriptions::confirmActivation($subscription);
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
 
         $newSubscription = $user->subscription();
         $this->assertNotNull($newSubscription);
         $this->assertEquals($tariff->id, $newSubscription->tariff_id);
+
+        Mail::assertQueued(SubscriptionActivated::class, 1);
     }
 
 
     public function testCancelPaid()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
 
-        Manager::activateDefault($user);
+        Subscriptions::activateDefault($user);
         $defaultSubscription = $user->subscription();
         $this->assertEquals($default->id, $defaultSubscription->tariff_id);
 
-        $subscription = Manager::activate($user, $tariff);
+        $subscription = Subscriptions::activate($user, $tariff);
         $this->assertNotNull($subscription);
         $this->assertEquals('Awaiting', $subscription->status);
 
-        Manager::confirmActivation($subscription);
+        Subscriptions::confirmActivation($subscription);
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
 
-        Manager::cancel($subscription);
+        Subscriptions::cancel($subscription);
         $subscription->refresh();
         $this->assertEquals('Cancelled', $subscription->status);
 
         $subscription->next_transaction_date = Carbon::now()->sub('1 day');
         $subscription->save();
 
-        Manager::endCancelled();
+        Subscriptions::endCancelled();
         $subscription->refresh();
         $this->assertEquals('Ended', $subscription->status);
 
         $newSubscription = $user->subscription();
         $this->assertNotNull($newSubscription);
         $this->assertEquals($default->id, $newSubscription->tariff_id);
+        Mail::assertQueued(SubscriptionCancelled::class, 1);
+        Mail::assertQueued(SubscriptionEnded::class, 1);
     }
 
 
     public function testChargePaid()
     {
+        Mail::fake();
+
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
 
-        $subscription = Manager::activate($user, $tariff);
+        $subscription = Subscriptions::activate($user, $tariff);
         $this->assertNotNull($subscription);
-        Manager::confirmActivation($subscription);
+        Subscriptions::confirmActivation($subscription);
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
 
         $subscription->next_transaction_date = Carbon::now()->sub('1 day');
         $subscription->save();
 
-        Manager::chargePaid(); // оплата прошла
+        Payments::shouldReceive('charge')
+                    ->once()
+                    ->andReturn(true);
+        Subscriptions::chargePaid(); // оплата прошла
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
         $this->assertEquals(Carbon::now()->add($tariff->period)->format('d.m.Y'), $subscription->next_transaction_date->format('d.m.Y'));
+        Mail::assertQueued(SubscriptionRenewed::class, 1);
     }
 
     public function testChargePaidDeclined()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
 
-        $subscription = Manager::activate($user, $tariff);
+        $subscription = Subscriptions::activate($user, $tariff);
         $this->assertNotNull($subscription);
-        Manager::confirmActivation($subscription);
+        Subscriptions::confirmActivation($subscription);
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
 
         $subscription->next_transaction_date = Carbon::now()->sub('1 day');
         $subscription->save();
 
-        Manager::chargePaid(false); // оплата не прошла
+        Payments::shouldReceive('charge')
+                    ->once()
+                    ->andReturn(false);
+        Subscriptions::chargePaid(); // оплата не прошла
         $subscription->refresh();
         $this->assertEquals('PastDue', $subscription->status);
         $this->assertNotEquals(Carbon::now()->add($tariff->period)->format('d.m.Y'), $subscription->next_transaction_date->format('d.m.Y'));
+        Mail::assertQueued(SubscriptionPastDue::class, 1);
     }
 
     public function testRejectPastDue()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
 
-        $subscription = Manager::activate($user, $tariff);
+        $subscription = Subscriptions::activate($user, $tariff);
         $this->assertNotNull($subscription);
-        Manager::confirmActivation($subscription);
+        Subscriptions::confirmActivation($subscription);
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
 
@@ -170,12 +196,16 @@ class SubscriptionsPaidTest extends TestCase
             Carbon::now()->sub('1 day')->sub(config('subscriptions.past_due.reject'));
         $subscription->save();
 
-        Manager::chargePaid(false); // оплата давно не прошла
+        Payments::shouldReceive('charge')
+                    ->once()
+                    ->andReturn(false);
+        Subscriptions::chargePaid(false); // оплата давно не прошла
         $subscription->refresh();
         $this->assertEquals('Rejected', $subscription->status);
 
         $newSubscription = $user->subscription();
         $this->assertNotNull($newSubscription);
         $this->assertEquals($default->id, $newSubscription->tariff_id);
+        Mail::assertQueued(SubscriptionRejected::class, 1);
     }
 }

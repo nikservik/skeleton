@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Subscriptions\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Nikservik\Subscriptions\Models\Feature;
 
 class DemoController extends Controller
 {

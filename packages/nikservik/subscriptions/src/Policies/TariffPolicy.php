@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Policies;
+namespace Nikservik\Subscriptions\Policies;
 
-use App\Subscriptions\Tariff;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Nikservik\Subscriptions\Models\Tariff;
 
 class TariffPolicy
 {

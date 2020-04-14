@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Mail\PasswordReset;
-use App\Subscriptions\Subscription;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,11 +10,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
+use Nikservik\Subscriptions\Traits\Subscription;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLocalePreference
 {
-    use Notifiable;
+    use Notifiable, Subscription;
 
     protected $fillable = [
         'name', 'email', 'password', 'role',
@@ -44,15 +44,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
         self::ROLE_SUPERADMIN,
     ];
 
-    public function subscriptions()
-    {
-        return $this->hasMany(Subscription::class);
-    }
-
-    public function subscription()
-    {
-        return $this->subscriptions()->where('status', 'Active')->first();
-    }
     
     public function getJWTIdentifier()
     {
@@ -73,14 +64,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
     public function getLocaleAttribute() 
     {
         return Arr::get($this->settings, 'locale', App::getLocale());
-    }   
-
-    public function getFeaturesAttribute() 
-    {
-        if ($this->subscription() and $this->subscription()->features)
-            return $this->subscription()->features;
-
-        return [];
     }   
 
     public function setLocaleAttribute($locale) 

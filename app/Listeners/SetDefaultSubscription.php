@@ -2,10 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Subscriptions\Manager;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Nikservik\Subscriptions\Facades\Subscriptions;
 
 class SetDefaultSubscription
 {
@@ -27,6 +27,6 @@ class SetDefaultSubscription
      */
     public function handle(Registered $event)
     {
-        Manager::activateDefault($event->user);
+        Subscriptions::activateDefault($event->user);
     }
 }

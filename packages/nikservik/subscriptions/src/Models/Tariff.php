@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscriptions;
+namespace Nikservik\Subscriptions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -16,8 +16,6 @@ class Tariff extends Model
         'availability' => 'array',
         'texts' => 'array',
     ];
-
-    public static $periods = ['15 days', '1 month', '1 year', 'endless'];
 
     public function getNameTranslation($locale)
     {

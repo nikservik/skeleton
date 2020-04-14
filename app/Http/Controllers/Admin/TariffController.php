@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TariffCreateRequest;
 use App\Http\Requests\Admin\TariffEditRequest;
-use App\Subscriptions\Tariff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Nikservik\Subscriptions\Models\Tariff;
 
 class TariffController extends Controller
 {

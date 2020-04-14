@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Policies\UserPolicy;
+use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,9 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\User' => 'App\Policies\UserPolicy',
-        'App\Subscriptions\Tariff' => 'App\Policies\TariffPolicy',
-        'App\Subscriptions\Feature' => 'App\Policies\FeaturePolicy',
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -26,7 +26,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        Gate::define('see-sky', 'App\Policies\FeaturePolicy@use');
     }
 }
