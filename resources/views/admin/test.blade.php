@@ -5,16 +5,19 @@
 <h1 class="page-header">Тестирование платежей</h1>
 
 <div class="m-10 text-center">
-    <a class="button" onclick="pay()">Тестовая оплата</a> 
-    <a class="button" onclick="authorize()">Тестовая авторизация</a>
+    <a class="button" onclick="pay()">Подписаться за {{ $tariff->price }}</a>
+    @if(Auth::user()->token and Auth::user()->subscription()->price >0) 
+        <a class="button" href="/test/charge">Заплатить за месяц</a>
+    @endif
 </div>
 
 <h2 class="sub-title">Уведомления от шлюза</h2>
 
-@foreach($payments as $payment)
+@foreach(Auth::user()->payments()->orderBy('created_at', 'desc') as $payment)
     <div class="mx-10 my-4 p-4 border border-gray-500 rounded-lg">
+        Сумма: {{ $payment->amount }}<br>
         Статус: {{ $payment->status }}<br>
-        Токен: {{ $payment->card_last_digits }}<br>
+        Карта: {{ $payment->card_last_digits }}<br>
         <a class="button small" href="/test/charge/{{ $payment->card_last_digits }}">Повторить</a>
     </div>
 @endforeach
@@ -32,23 +35,21 @@ var fail = function(reason, options) {
     console.log(options)
 }
 var options = { 
-    publicId: 'pk_4ac2f7a43a9f5f3167e2396048810',  
-    description: 'Пример оплаты', 
-    amount: 10,
-    currency: 'RUB', 
-    invoiceId: '1234567', 
-    accountId: 12,
-    email: 'test@test.com',
+    publicId: '{{ config('cloudpayments.publicId') }}',  
+    description: 'Подписка', 
+    amount: {{ $tariff->price }},
+    currency: '{{ $tariff->currency }}', 
+    accountId: {{ Auth::id() }},
+    email: '{{ Auth::user()->email }}',
+    data: {
+        tariff_id: {{ $tariff->id }},
+        activation: true
+    },
     skin: "mini",
 };
 
 function pay() {
-    options.description = 'Пример оплаты';
     widget.charge(options, success, fail);
-};     
-function authorize() {
-    options.description = 'Пример авторизации';
-    widget.auth(options, success, fail);
 };     
 </script>
 @endsection
