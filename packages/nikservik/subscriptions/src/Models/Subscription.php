@@ -4,6 +4,7 @@ namespace Nikservik\Subscriptions\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Nikservik\Subscriptions\Models\Payment;
 
 class Subscription extends Model
 {
@@ -22,6 +23,11 @@ class Subscription extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function isEndless()

@@ -2,22 +2,32 @@
 
 namespace Nikservik\Subscriptions;
 
-use Nikservik\Subscriptions\Models\Subscription;
-use Nikservik\Subscriptions\Models\Tariff;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Nikservik\Subscriptions\Facades\Payments;
+use Nikservik\Subscriptions\Mail\SubscriptionAboutToRenew;
 use Nikservik\Subscriptions\Mail\SubscriptionActivated;
 use Nikservik\Subscriptions\Mail\SubscriptionCancelled;
 use Nikservik\Subscriptions\Mail\SubscriptionEnded;
 use Nikservik\Subscriptions\Mail\SubscriptionPastDue;
 use Nikservik\Subscriptions\Mail\SubscriptionRejected;
 use Nikservik\Subscriptions\Mail\SubscriptionRenewed;
+use Nikservik\Subscriptions\Models\Subscription;
+use Nikservik\Subscriptions\Models\Tariff;
 
 
 class SubscriptionsManager 
 {
+    protected $warnBefore;
+    protected $warnTime;
+
+    public function __construct()
+    {
+        $this->warnBefore = config('subscriptions.before_charge.warn');
+        $this->warnTime = config('subscriptions.before_charge.before');
+    }
+
     public function activate(User $user, Tariff $tariff)
     {
         if ($tariff->price == 0)
@@ -64,6 +74,23 @@ class SubscriptionsManager
 
         foreach ($toCharge as $subscription) {
             $this->charge($subscription);
+        }
+    }
+
+    public function warnBeforeCharge()
+    {
+        if (! $this->warnBefore)
+            return;
+
+        $toWarn = Subscription::where('next_transaction_date', '>', 
+                Carbon::now()->add($this->warnTime)->sub('12 hours'))
+            ->where('next_transaction_date', '<', 
+                Carbon::now()->add($this->warnTime)->add('12 hours'))
+            ->where('status', 'Active')->where('price', '>', 0)
+            ->where('prolongable', true)->get();
+
+        foreach ($toWarn as $subscription) {
+            Mail::to($subscription->user->email)->queue(new SubscriptionAboutToRenew($subscription));
         }
     }
 

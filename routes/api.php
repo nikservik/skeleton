@@ -27,4 +27,4 @@ AuthController::apiRoutes();
 LocaleController::apiRoutes();
 ProfileController::apiRoutes();
 DemoController::apiRoutes();
-PaymentTestController::apiRoutes();
+// PaymentTestController::apiRoutes();

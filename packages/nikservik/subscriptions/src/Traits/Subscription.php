@@ -2,6 +2,7 @@
 
 namespace Nikservik\Subscriptions\Traits;
 
+use Illuminate\Support\Arr;
 use Nikservik\Subscriptions\Models\Subscription as SubscriptionModel;
 
 trait Subscription
@@ -22,5 +23,17 @@ trait Subscription
             return $this->subscription()->features;
 
         return [];
+    }   
+
+    public function getTokenAttribute() 
+    {
+        return Arr::get($this->settings, 'token', '');
+    }   
+
+    public function setTokenAttribute($token) 
+    {
+        $settings = $this->settings;
+        $settings['token'] = $token;
+        $this->settings = $settings;
     }   
 }

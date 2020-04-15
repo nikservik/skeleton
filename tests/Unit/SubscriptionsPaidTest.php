@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Mail;
 use Nikservik\Subscriptions\Facades\Payments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Mail\SubscriptionAboutToRenew;
 use Nikservik\Subscriptions\Mail\SubscriptionActivated;
 use Nikservik\Subscriptions\Mail\SubscriptionCancelled;
 use Nikservik\Subscriptions\Mail\SubscriptionEnded;
@@ -207,5 +208,41 @@ class SubscriptionsPaidTest extends TestCase
         $this->assertNotNull($newSubscription);
         $this->assertEquals($default->id, $newSubscription->tariff_id);
         Mail::assertQueued(SubscriptionRejected::class, 1);
+    }
+
+    public function testWarnBeforeCharge()
+    {
+        Mail::fake();
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+
+        $subscription1 = Subscriptions::activate($user1, $tariff);
+        Subscriptions::confirmActivation($subscription1);
+        $subscription1->refresh();
+
+        $subscription2 = Subscriptions::activate($user2, $tariff);
+        Subscriptions::confirmActivation($subscription2);
+        $subscription2->refresh();
+
+        $subscription3 = Subscriptions::activate($user3, $tariff);
+        Subscriptions::confirmActivation($subscription3);
+        $subscription3->refresh();
+
+        $subscription1->next_transaction_date = 
+            Carbon::now()->add(config('subscriptions.before_charge.before'))->sub('1 day');
+        $subscription1->save();
+
+        $subscription2->next_transaction_date = 
+            Carbon::now()->add(config('subscriptions.before_charge.before'));
+        $subscription2->save();
+
+        $subscription3->next_transaction_date = 
+            Carbon::now()->add(config('subscriptions.before_charge.before'))->add('1 day');
+        $subscription3->save();
+
+        Subscriptions::warnBeforeCharge();
+        Mail::assertQueued(SubscriptionAboutToRenew::class, 1);
     }
 }
