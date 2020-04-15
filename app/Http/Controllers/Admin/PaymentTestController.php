@@ -40,6 +40,7 @@ class PaymentTestController extends Controller
         $array = [
             'Amount' => $subscription->price, 
             'Currency' => $subscription->currency, 
+            'InvoiceId' => $subscription->id, 
             'Token' => Auth::user()->token, 
             'Description' => 'Recharge by token',
             'AccountId' => Auth::user()->id,
