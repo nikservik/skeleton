@@ -11,6 +11,7 @@ use Nikservik\Subscriptions\Facades\CloudPayments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Subscription;
+use Nikservik\Subscriptions\Models\Tariff;
 
 
 
@@ -80,8 +81,17 @@ class PaymentsManager
             return false;
 
         $data = json_decode($request->Data, true);
-        if (! $data['subscription_id'])
+        if (! array_key_exists('subscription_id', $data) and ! array_key_exists('tariff_id', $data))
             return false;
+
+        if (array_key_exists('tariff_id', $data)) {
+            if(! ($subscription = Subscriptions::activate(
+                User::find($request->AccountId),
+                Tariff::find($data['tariff_id'])
+            )))
+                return false;
+            $data['subscription_id'] = $subscription->id;
+        }
 
         return Payment::create([
             'subscription_id' => $data['subscription_id'], 

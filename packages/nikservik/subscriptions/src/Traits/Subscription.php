@@ -3,6 +3,7 @@
 namespace Nikservik\Subscriptions\Traits;
 
 use Illuminate\Support\Arr;
+use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Subscription as SubscriptionModel;
 
 trait Subscription
@@ -10,6 +11,11 @@ trait Subscription
     public function subscriptions()
     {
         return $this->hasMany(SubscriptionModel::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function subscription()

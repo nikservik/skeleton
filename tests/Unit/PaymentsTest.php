@@ -129,6 +129,47 @@ class PaymentsTest extends TestCase
         Mail::assertQueued(SubscriptionActivated::class, 1);
     }
 
+    public function testFirstPaymentConfirmationWithoutSubscriptionId()
+    {
+        Mail::fake();
+
+        Tariff::where('id', '>', 0)->delete();
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+        $default = $this->createTariffFree();
+
+        Subscriptions::activateDefault($user);
+
+        $request = new Request;
+        $request->setMethod('POST');
+        $request->merge([
+            'AccountId' => $user->id, 
+            'TransactionId' => 12345678, 
+            'CardLastFour' => 1234,
+            'Amount' => $tariff->price, 
+            'Currency' => $tariff->currency, 
+            'Status' => 'Completed', 
+            'Token' => 'test-token',
+            'Data' => json_encode([
+                'tariff_id' => $tariff->id,
+                'activation' => true,
+            ])
+        ]);
+
+        CloudPaymentsManager::shouldReceive('validateSecrets')->once()->andReturn(true);
+
+        Payments::processPaymentConfirmation($request);
+        $user->refresh();
+        $this->assertEquals(1, $user->subscription()->payments()->count());
+        $payment = $user->subscription()->payments[0];
+        $this->assertEquals(12345678, $payment->remote_transaction_id);
+
+        $this->assertEquals($tariff->id, $user->subscription()->tariff_id);
+        $user->refresh();
+        $this->assertEquals('test-token', $user->token);
+        Mail::assertQueued(SubscriptionActivated::class, 1);
+    }
+
 
     public function testNextPaymentConfirmation()
     {
