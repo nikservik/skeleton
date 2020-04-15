@@ -18,7 +18,6 @@
         Сумма: {{ $payment->amount }}<br>
         Статус: {{ $payment->status }}<br>
         Карта: {{ $payment->card_last_digits }}<br>
-        <a class="button small" href="/test/charge/{{ $payment->card_last_digits }}">Повторить</a>
     </div>
 @endforeach
 
