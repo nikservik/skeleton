@@ -163,7 +163,8 @@ class SubscriptionsManager
     protected function charge(Subscription $subscription)
     {
         if (Payments::charge($subscription)) {
-            $subscription->next_transaction_date = Carbon::now()->add($subscription->period);
+            $subscription->next_transaction_date = 
+                $subscription->next_transaction_date->add($subscription->period);
             $subscription->save();
             Mail::to($subscription->user->email)->queue(new SubscriptionRenewed($subscription));
         } else {

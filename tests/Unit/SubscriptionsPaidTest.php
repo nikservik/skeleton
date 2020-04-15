@@ -148,7 +148,7 @@ class SubscriptionsPaidTest extends TestCase
         Subscriptions::chargePaid(); // оплата прошла
         $subscription->refresh();
         $this->assertEquals('Active', $subscription->status);
-        $this->assertEquals(Carbon::now()->add($tariff->period)->format('d.m.Y'), $subscription->next_transaction_date->format('d.m.Y'));
+        $this->assertEquals(Carbon::now()->sub('1 day')->add($tariff->period)->format('d.m.Y'), $subscription->next_transaction_date->format('d.m.Y'));
         Mail::assertQueued(SubscriptionRenewed::class, 1);
     }
 
