@@ -48,7 +48,7 @@ class PaymentTestController extends Controller
 
         // Trying to do Payment
         try {
-            return (new LaravelCloudPayments)->tokensCharge($array);
+            (new LaravelCloudPayments)->tokensCharge($array);
         } catch (\Exception $e) {
             $result = $e->getMessage();
         }
