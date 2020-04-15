@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use Albakov\LaravelCloudPayments\Facade as CloudPayments;
+use Albakov\LaravelCloudPayments\Facade as CloudPaymentsFacade;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Nikservik\Subscriptions\Facades\CloudPayments as CloudPaymentsManager;
+use Nikservik\Subscriptions\Facades\CloudPayments;
 use Nikservik\Subscriptions\Facades\Payments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Mail\SubscriptionActivated;
@@ -72,17 +72,33 @@ class PaymentsTest extends TestCase
         $subscription->user->refresh();
         $this->assertNotNull($subscription->user->token);
 
-        CloudPayments::shouldReceive('tokensCharge')
+        CloudPaymentsFacade::shouldReceive('tokensCharge')
             ->with(\Mockery::subset(['Amount' => $tariff->price]))
             ->with(\Mockery::subset(['Currency' => $tariff->currency]))
             ->with(\Mockery::subset(['AccountId' => $subscription->user->id]))
             ->with(\Mockery::subset(['Token' => 'test-token']))
             ->with(\Mockery::subset(['Email' => $user->email]))
             ->with(\Mockery::subset(['JsonData' => ['subscription_id' => $subscription->id, 'activation' => false]]))
-            ->andReturn(['code'=>0]);
+            ->andReturn([
+                'Model' => [
+                    'Amount' => $tariff->price,
+                    'Currency' => $tariff->currency,
+                    'AccountId' => $subscription->user->id,
+                    'Token' => 'test-token',
+                    'Email' => $user->email,
+                    'TransactionId' => 12345678,
+                    'CardLastFour' => 1234,
+                    'Status' => 'Completed',
+                    'JsonData' => ['subscription_id' => $subscription->id, 'activation' => false]
+                ],
+                'Success' => true
+            ]);
 
-        $result = Payments::charge($subscription);
+        $result = (boolean) Payments::charge($subscription);
         $this->assertTrue($result);
+        $this->assertEquals(1, $subscription->payments()->count());
+        $payment = $subscription->payments[0];
+        $this->assertEquals($user->id, $payment->user_id);
     }
 
     public function testFirstPaymentConfirmation()
@@ -115,7 +131,7 @@ class PaymentsTest extends TestCase
             ])
         ]);
 
-        CloudPaymentsManager::shouldReceive('validateSecrets')->once()->andReturn(true);
+        CloudPayments::shouldReceive('validateSecrets')->once()->andReturn(true);
 
         Payments::processPaymentConfirmation($request);
         $this->assertEquals(1, $subscription->payments()->count());
@@ -156,7 +172,7 @@ class PaymentsTest extends TestCase
             ])
         ]);
 
-        CloudPaymentsManager::shouldReceive('validateSecrets')->once()->andReturn(true);
+        CloudPayments::shouldReceive('validateSecrets')->once()->andReturn(true);
 
         Payments::processPaymentConfirmation($request);
         $user->refresh();
@@ -168,43 +184,5 @@ class PaymentsTest extends TestCase
         $user->refresh();
         $this->assertEquals('test-token', $user->token);
         Mail::assertQueued(SubscriptionActivated::class, 1);
-    }
-
-
-    public function testNextPaymentConfirmation()
-    {
-        Mail::fake();
-
-        $user = factory(User::class)->create();
-        $tariff = $this->createTariffPaid();
-
-        Subscriptions::activateDefault($user);
-        $subscription = Subscriptions::activate($user, $tariff);
-        Subscriptions::confirmActivation($subscription);
-        $subscription->refresh();
-        $this->assertEquals('Active', $subscription->status);
-
-        $request = new Request;
-        $request->setMethod('POST');
-        $request->merge([
-            'AccountId' => $user->id, 
-            'TransactionId' => 123456789, 
-            'CardLastFour' => 1234,
-            'Amount' => $tariff->price, 
-            'Currency' => $tariff->currency, 
-            'Status' => 'Completed', 
-            'Token' => 'test-token',
-            'Data' => json_encode([
-                'subscription_id' => $subscription->id,
-                'activation' => false,
-            ])
-        ]);
-
-        CloudPaymentsManager::shouldReceive('validateSecrets')->once()->andReturn(true);
-
-        Payments::processPaymentConfirmation($request);
-        $this->assertEquals(1, $subscription->payments()->count());
-        $payment = $subscription->payments[0];
-        $this->assertEquals(123456789, $payment->remote_transaction_id);
     }
 }

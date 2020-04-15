@@ -23,9 +23,14 @@ class PaymentsManager
         if (! ($bill = $this->prepareBill($subscription)))
             return false;
 
-        $result = CloudPaymentsFacade::tokensCharge($bill);
+        $response = CloudPaymentsFacade::tokensCharge($bill);
 
-        return array_key_exists('code', $result) and $result['code'] == 0;
+        if (! $this->isGoodResponse($response))
+            return false;
+
+        return $this->savePayment(
+            $this->prepareResponseToSave($response)
+        );
     }
 
     public function processPaymentConfirmation(Request $request)
@@ -33,12 +38,16 @@ class PaymentsManager
         if (! CloudPayments::validateSecrets($request))
             return false;
 
-        if (! $payment = $this->savePayment($request))
+        if (! $subscription = $this->getSubscription($request->all()))
+            return false;
+        $request->merge(['subscription_id' => $subscription->id]);
+
+        if (! $payment = $this->savePayment($request->all()))
             return false;
 
-        if (json_decode($request->Data, true)['activation']) {
-            $this->saveToken($request, $payment->user);
-            Subscriptions::confirmActivation($payment->subscription);
+        if ($this->needActivation($request->all())) {
+            $this->saveToken($request->Token, $request->AccountId);
+            Subscriptions::confirmActivation($subscription);
         }
         return true;
     }
@@ -65,51 +74,78 @@ class PaymentsManager
         ];
     }
 
-    protected function savePayment(Request $request)
+    protected function savePayment($data)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($data, [
             'AccountId' => 'required|numeric',
             'TransactionId' => 'required|numeric',
             'CardLastFour' => 'required|numeric',
             'Amount' => 'required|numeric',
             'Currency' => 'required',
             'Status' => 'required',
-            'Data' => 'required|json',
+            'subscription_id' => 'required|numeric',
         ]);
 
         if ($validator->fails()) 
             return false;
 
-        $data = json_decode($request->Data, true);
-        if (! array_key_exists('subscription_id', $data) and ! array_key_exists('tariff_id', $data))
-            return false;
-
-        if (array_key_exists('tariff_id', $data)) {
-            if(! ($subscription = Subscriptions::activate(
-                User::find($request->AccountId),
-                Tariff::find($data['tariff_id'])
-            )))
-                return false;
-            $data['subscription_id'] = $subscription->id;
-        }
-
         return Payment::create([
             'subscription_id' => $data['subscription_id'], 
-            'user_id' => $request->AccountId, 
-            'remote_transaction_id' => $request->TransactionId, 
-            'card_last_digits' => $request->CardLastFour,
-            'amount' => $request->Amount, 
-            'currency' => $request->Currency, 
-            'status' => $request->Status, 
+            'user_id' => $data['AccountId'], 
+            'remote_transaction_id' => $data['TransactionId'], 
+            'card_last_digits' => $data['CardLastFour'],
+            'amount' => $data['Amount'], 
+            'currency' => $data['Currency'], 
+            'status' => $data['Status'], 
         ]);
     }
 
-    protected function saveToken(Request $request, User $user)
+    protected function saveToken($token, $userId)
     {
-        if (! $request->has('Token'))
+        if (! $token or ! $user = User::find($userId))
             return;
 
-        $user->token = $request->Token;
+        $user->token = $token;
         $user->save();
+    }
+
+    public function getSubscription($data)
+    {
+        $subscriptionData = json_decode($data['Data'], true);
+
+        if (! array_key_exists('subscription_id', $subscriptionData) 
+            and ! array_key_exists('tariff_id', $subscriptionData))
+            return false;
+
+        if (array_key_exists('tariff_id', $subscriptionData)) {
+            if(! ($subscription = Subscriptions::activate(
+                User::find($data['AccountId']),
+                Tariff::find($subscriptionData['tariff_id'])
+            )))
+                return false;
+
+            return $subscription;
+        } 
+
+        return Subscription::find($subscriptionData['subscription_id']);
+    }
+
+    public function needActivation($data)
+    {
+        $activationData = json_decode($data['Data'], true);
+        return array_key_exists('activation', $activationData) and $activationData['activation'];
+    }
+
+    public function isGoodResponse($response)
+    {
+        return array_key_exists('Success', $response) and $response['Success'] 
+            and array_key_exists('Model', $response) and is_array($response['Model'])
+            and array_key_exists('Status', $response['Model']) 
+            and $response['Model']['Status'] == 'Completed';
+    }
+
+    public function prepareResponseToSave($response)
+    {
+        return array_merge($response['Model'], $response['Model']['JsonData']);
     }
 }

@@ -5,9 +5,10 @@
 <h1 class="page-header">Тестирование платежей</h1>
 
 <div class="m-10 text-center">
-    <a class="button" onclick="pay()">Подписаться за {{ $tariff->price }}</a>
     @if(Auth::user()->token and Auth::user()->subscription()->price >0) 
         <a class="button" href="/test/charge">Заплатить за месяц</a>
+    @else
+        <a class="button" onclick="pay()">Подписаться за {{ $tariff->price }}</a>
     @endif
 </div>
 
@@ -27,6 +28,7 @@ var widget = new cp.CloudPayments();
 var success = function(options) {
     console.log('success')
     console.log(options)
+    location.reload()
 }
 var fail = function(reason, options) {
     console.log('fail')
