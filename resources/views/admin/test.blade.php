@@ -13,7 +13,7 @@
 
 <h2 class="sub-title">Уведомления от шлюза</h2>
 
-@foreach(Auth::user()->payments()->orderBy('created_at', 'desc') as $payment)
+@foreach(Auth::user()->payments()->orderBy('created_at', 'desc')->get() as $payment)
     <div class="mx-10 my-4 p-4 border border-gray-500 rounded-lg">
         Сумма: {{ $payment->amount }}<br>
         Статус: {{ $payment->status }}<br>
