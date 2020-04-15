@@ -7,6 +7,7 @@ use Albakov\LaravelCloudPayments\Notifications;
 use App\Http\Controllers\Controller;
 use App\Subscriptions\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
