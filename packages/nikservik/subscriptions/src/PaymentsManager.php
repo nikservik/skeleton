@@ -24,6 +24,7 @@ class PaymentsManager
             return false;
 
         $response = CloudPaymentsFacade::tokensCharge($bill);
+        Log::debug($response);
 
         if (! $this->isGoodResponse($response))
             return false;
@@ -111,7 +112,13 @@ class PaymentsManager
 
     public function getSubscription($data)
     {
-        $subscriptionData = json_decode($data['Data'], true);
+        if (! array_key_exists('Data', $data) and ! array_key_exists('JsonData', $data))
+            return false;
+
+        $subscriptionData = json_decode(
+            array_key_exists('Data', $data) ? $data['Data'] : $data['JsonData'],
+            true
+        );
 
         if (! array_key_exists('subscription_id', $subscriptionData) 
             and ! array_key_exists('tariff_id', $subscriptionData))
