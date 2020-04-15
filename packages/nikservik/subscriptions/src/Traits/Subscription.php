@@ -42,4 +42,16 @@ trait Subscription
         $settings['token'] = $token;
         $this->settings = $settings;
     }   
+
+    public function getCardLastFourAttribute() 
+    {
+        return Arr::get($this->settings, 'cardLastFour', '');
+    }   
+
+    public function setCardLastFourAttribute($cardLastFour) 
+    {
+        $settings = $this->settings;
+        $settings['cardLastFour'] = $cardLastFour;
+        $this->settings = $settings;
+    }   
 }

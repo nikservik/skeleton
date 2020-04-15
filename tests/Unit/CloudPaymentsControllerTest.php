@@ -72,10 +72,7 @@ class CloudPaymentsControllerTest extends TestCase
             'Currency' => $tariff->currency, 
             'Status' => 'Completed', 
             'Token' => 'test-token',
-            'Data' => json_encode([
-                'subscription_id' => $subscription->id,
-                'activation' => false,
-            ])
+            'InvoiceId' => $subscription->id,
         ])  ->assertStatus(200)
             ->assertJsonPath('code', 0);
 

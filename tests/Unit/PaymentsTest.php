@@ -78,18 +78,18 @@ class PaymentsTest extends TestCase
             ->with(\Mockery::subset(['AccountId' => $subscription->user->id]))
             ->with(\Mockery::subset(['Token' => 'test-token']))
             ->with(\Mockery::subset(['Email' => $user->email]))
-            ->with(\Mockery::subset(['JsonData' => ['subscription_id' => $subscription->id, 'activation' => false]]))
+            ->with(\Mockery::subset(['InvoiceId' => $subscription->id]))
             ->andReturn([
                 'Model' => [
                     'Amount' => $tariff->price,
                     'Currency' => $tariff->currency,
                     'AccountId' => $subscription->user->id,
+                    'InvoiceId' => $subscription->id,
                     'Token' => 'test-token',
                     'Email' => $user->email,
                     'TransactionId' => 12345678,
                     'CardLastFour' => 1234,
                     'Status' => 'Completed',
-                    'JsonData' => ['subscription_id' => $subscription->id, 'activation' => false]
                 ],
                 'Success' => true
             ]);
@@ -125,10 +125,7 @@ class PaymentsTest extends TestCase
             'Currency' => $tariff->currency, 
             'Status' => 'Completed', 
             'Token' => 'test-token',
-            'Data' => json_encode([
-                'subscription_id' => $subscription->id,
-                'activation' => true,
-            ])
+            'InvoiceId' => $subscription->id,
         ]);
 
         CloudPayments::shouldReceive('validateSecrets')->once()->andReturn(true);

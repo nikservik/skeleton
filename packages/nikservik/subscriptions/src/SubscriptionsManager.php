@@ -46,6 +46,11 @@ class SubscriptionsManager
         return Tariff::where('availability->default', true)->first();
     }
 
+    public function needActivation(Subscription $subscription)
+    {
+        return $subscription->status == 'Awaiting';
+    }
+    
     public function confirmActivation(Subscription $subscription)
     {
         $subscription->last_transaction_date = Carbon::now();
