@@ -24,7 +24,6 @@ class PaymentsManager
             return false;
 
         $response = CloudPaymentsFacade::tokensCharge($bill);
-        Log::debug($response);
 
         if (! $this->isGoodResponse($response))
             return false;
@@ -36,14 +35,14 @@ class PaymentsManager
     {
         if (! CloudPayments::validateSecrets($request))
             return false;
-
+        Log::debug('secrets ok');
         if (! $subscription = $this->getSubscription($request->all()))
             return false;
         $request->merge(['InvoiceId' => $subscription->id]);
-
+        Log::debug('subs ok');
         if (! $payment = $this->savePayment($request->all()))
             return false;
-
+        Log::debug('payment ok');
         $this->saveCardData($request->Token, $request->CardLastFour, $request->AccountId);
     
         if (Subscriptions::needActivation($subscription)) {
@@ -111,17 +110,17 @@ class PaymentsManager
 
     public function getSubscription($data)
     {
-        if (array_key_exists('InvoiceId', $data))
+        if (array_key_exists('InvoiceId', $data) and $data['InvoiceId'])
             return Subscription::find($data['InvoiceId']);
-
+        Log::debug('no invoice');
         if (! array_key_exists('Data', $data))
             return false;
-
+        Log::debug('Data ok');
         $tariffData = json_decode($data['Data'], true);
 
         if (! array_key_exists('tariff_id', $tariffData))
             return false;
-
+        Log::debug('tariff ok');
         return Subscriptions::activate(
                 User::find($data['AccountId']),
                 Tariff::find($tariffData['tariff_id'])

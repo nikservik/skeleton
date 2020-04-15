@@ -182,4 +182,63 @@ class PaymentsTest extends TestCase
         $this->assertEquals('test-token', $user->token);
         Mail::assertQueued(SubscriptionActivated::class, 1);
     }
+
+    public function testPaymentFromSample()
+    {
+        Mail::fake();
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+        $request = new Request;
+        $request->setMethod('POST');
+        $request->merge([
+            'TransactionId' => '351399719',
+            'Amount' => '300.00',
+            'Currency' => 'RUB',
+            'PaymentAmount' => '300.00',
+            'PaymentCurrency' => 'RUB',
+            'OperationType' => 'Payment',
+            'InvoiceId' => NULL,
+            'AccountId' => ''.$user->id,
+            'SubscriptionId' => NULL,
+            'Name' => NULL,
+            'Email' => 'ser.nikiforov@gmail.com',
+            'DateTime' => '2020-04-15 14:18:21',
+            'IpAddress' => '178.43.16.106',
+            'IpCountry' => 'PL',
+            'IpCity' => 'Grodzisk Mazowiecki',
+            'IpRegion' => 'Masovian Voivodeship',
+            'IpDistrict' => 'Masovian Voivodeship',
+            'IpLatitude' => '52.1064',
+            'IpLongitude' => '20.6231',
+            'CardFirstSix' => '555555',
+            'CardLastFour' => '4444',
+            'CardType' => 'MasterCard',
+            'CardExpDate' => '12/22',
+            'Issuer' => 'CloudPayments',
+            'IssuerBankCountry' => 'RU',
+            'Description' => 'Подписка',
+            'AuthCode' => 'A1B2C3',
+            'Token' => '2F725BBD1F405A1ED0336ABAF85DDFEB6902A9984A76FD877C3B5CC3B5085A82',
+            'TestMode' => '1',
+            'Status' => 'Completed',
+            'GatewayName' => 'Test',
+            'Data' => '{"tariff_id":'.$tariff->id.',"activation":true}',
+            'TotalFee' => '0.00',
+            'CardProduct' => 'SAP',
+            'PaymentMethod' => NULL,
+        ]);
+
+        CloudPayments::shouldReceive('validateSecrets')->once()->andReturn(true);
+
+        Payments::processPaymentConfirmation($request);
+        $this->assertNotNull($user->subscription());
+        $this->assertEquals(1, $user->subscription()->payments()->count());
+        $payment = $user->subscription()->payments[0];
+        $this->assertEquals(351399719, $payment->remote_transaction_id);
+
+        $this->assertEquals($tariff->id, $user->subscription()->tariff_id);
+        $user->refresh();
+        $this->assertEquals('2F725BBD1F405A1ED0336ABAF85DDFEB6902A9984A76FD877C3B5CC3B5085A82', $user->token);
+        Mail::assertQueued(SubscriptionActivated::class, 1);
+    }
 }
