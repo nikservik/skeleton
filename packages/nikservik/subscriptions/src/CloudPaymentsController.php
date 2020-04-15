@@ -21,6 +21,7 @@ class CloudPaymentsController extends Controller
 
     public function pay(Request $request)
     {
+        Log::debug($request);
         if (Payments::processPaymentConfirmation($request))
             return ['code' => 0];
         else
