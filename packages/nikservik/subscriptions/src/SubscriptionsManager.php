@@ -28,6 +28,11 @@ class SubscriptionsManager
         $this->warnTime = config('subscriptions.before_charge.before');
     }
 
+    public function list()
+    {
+        return Tariff::all();
+    }
+
     public function activate(User $user, Tariff $tariff)
     {
         if ($tariff->price == 0)

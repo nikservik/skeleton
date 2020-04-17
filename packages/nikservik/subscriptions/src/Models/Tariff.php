@@ -4,6 +4,7 @@ namespace Nikservik\Subscriptions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Nikservik\Subscriptions\TranslatableField;
 
 class Tariff extends Model
 {
@@ -15,28 +16,8 @@ class Tariff extends Model
         'features' => 'array',
         'availability' => 'array',
         'texts' => 'array',
+        'name' => TranslatableField::class,
     ];
-
-    public function getNameTranslation($locale)
-    {
-        if ($locale == config('app.locale'))
-            return $this->name;
-        else
-            return Arr::get($this->texts, 'name.'.$locale, $this->name);
-    }
-
-    public function setNameTranslation($name, $locale)
-    {
-        $texts = $this->texts;
-        if ($locale == config('app.locale')) {
-            $texts['name']['locale'] = $locale;
-            $this->name = $name;
-        } else {
-            $texts['name'][$locale] = $name;
-        }
-        $this->texts = $texts;
-        return $name;
-    }
 
     public function getPeriodLocaleAttribute() 
     {

@@ -30,7 +30,7 @@
 <h2 class="sub-title">@lang('admin/tariffs.features')</h2>
 
 <p class="my-4 mx-10">
-    @foreach($tariff->features as $feature)
+    @foreach((is_array($tariff->features)?$tariff->features:[]) as $feature)
         @lang('subscriptions::features.'.$feature)<br>
     @endforeach
 </p>

@@ -9,11 +9,12 @@
 <form autocomplete="off" method="post" action="/tariffs/{{ $tariff->id }}">
     @csrf
     @method('PATCH')
+
     @foreach(config('app.locales') as $locale)
-        <div class="form-group @error('name_'.$locale) has-error @enderror">
-            <label for="name_{{ $locale }}">@lang('admin/tariffs.name') ({{ $locale }})</label>
-            <input type="text" name="name_{{ $locale }}" value="{{ old('name_'.$locale)?old('name_'.$locale):$tariff->getNameTranslation($locale) }}" placeholder="" required>
-            @error('name_'.$locale)
+        <div class="form-group @error('name.'.$locale) has-error @enderror">
+            <label for="name[{{ $locale }}]">@lang('admin/tariffs.name') ({{ $locale }})</label>
+            <input type="text" name="name[{{ $locale }}]" value="{{ old('name.'.$locale)?old('name.'.$locale):$tariff->name->$locale }}" placeholder="" required>
+            @error('name.'.$locale)
                 <div class="error-description">
                     @lang('admin/tariffs.'.$message)
                 </div>
@@ -77,8 +78,9 @@
         <div class="form-group  pb-4">
             <input type="checkbox" name="features[]" value="{{ $feature }}" 
                 @if(old('features') and in_array($feature, old('features')) 
-                    or !old('features') and in_array($feature, $tariff->features))checked=""@endif>
-            <label for="prolongable">@lang('features.'.$feature)</label>
+                    or !old('features') and is_array($tariff->features) 
+                        and in_array($feature, $tariff->features))checked=""@endif>
+            <label for="prolongable">@lang('subscriptions::features.'.$feature)</label>
         </div>
     @endforeach
 

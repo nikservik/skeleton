@@ -9,10 +9,10 @@
 <form autocomplete="off" method="post" action="/tariffs">
     @csrf
     @foreach(config('app.locales') as $locale)
-        <div class="form-group @error('name_'.$locale) has-error @enderror">
-            <label for="name_{{ $locale }}">@lang('admin/tariffs.name') ({{ $locale }})</label>
-            <input type="text" name="name_{{ $locale }}" value="{{ old('name_'.$locale) }}" placeholder="" required>
-            @error('name_'.$locale)
+        <div class="form-group @error('name.'.$locale) has-error @enderror">
+            <label for="name[{{ $locale }}]">@lang('admin/tariffs.name') ({{ $locale }})</label>
+            <input type="text" name="name[{{ $locale }}]" value="{{ old('name.'.$locale) }}" placeholder="" required>
+            @error('name.'.$locale)
                 <div class="error-description">
                     @lang('admin/tariffs.'.$message)
                 </div>
@@ -75,7 +75,7 @@
         <div class="form-group  pb-4">
             <input type="checkbox" name="features[]" value="{{ $feature }}" 
                 @if(old('features') and in_array($feature, old('features')))checked=""@endif>
-            <label for="prolongable">@lang('features.'.$feature)</label>
+            <label for="prolongable">@lang('subscriptions::features.'.$feature)</label>
         </div>
     @endforeach
     <div class="form-group text-center">
