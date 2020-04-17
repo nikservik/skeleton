@@ -20,10 +20,10 @@
         </div>
     @endforeach
     <div class="flex">
-        <div class="form-group w-1/2 @error('short_name') has-error @enderror">
-            <label for="short_name">@lang('admin/tariffs.shortName')</label>
-            <input type="text" name="short_name" value="{{ old('short_name') }}" placeholder="" required>
-            @error('short_name')
+        <div class="form-group w-1/2 @error('slug') has-error @enderror">
+            <label for="slug">@lang('admin/tariffs.slug')</label>
+            <input type="text" name="slug" value="{{ old('slug') }}" placeholder="" required>
+            @error('slug')
                 <div class="error-description">
                     @lang('admin/tariffs.'.$message)
                 </div>

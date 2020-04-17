@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class TariffCreateRequest extends FormRequest
 {
     protected $rules = [
-        'short_name' => 'required|string|min:3|max:15', 
+        'slug' => 'required|string|min:3|max:15', 
         'price' => 'required|numeric', 
         'currency' => 'required|string|size:3', 
         'period' => 'required', 
@@ -20,10 +20,10 @@ class TariffCreateRequest extends FormRequest
         'name.required' => 'name_required',
         'name.string' => 'name_string',
         'name.min' => 'name_min',
-        'short_name.required' => 'short_name_required',
-        'short_name.string' => 'short_name_string',
-        'short_name.min' => 'short_name_min',
-        'short_name.max' => 'short_name_max',
+        'slug.required' => 'slug_required',
+        'slug.string' => 'slug_string',
+        'slug.min' => 'slug_min',
+        'slug.max' => 'slug_max',
         'price.required' => 'price_required',
         'price.numeric' => 'price_numeric',
         'currency.required' => 'currency_required',

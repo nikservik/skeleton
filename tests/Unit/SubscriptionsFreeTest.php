@@ -19,7 +19,7 @@ class SubscriptionsFreeTest extends TestCase
     {
         $tariffFree = new Tariff([
             'name' => 'Бесплатный',
-            'short_name' => 'free',
+            'slug' => 'free',
             'price' => 0,
             'currency' => 'RUB',
             'period' => 'endless',
@@ -36,7 +36,7 @@ class SubscriptionsFreeTest extends TestCase
     {
         $tariffTrial = new Tariff([
             'name' => 'Пробный',
-            'short_name' => 'trial',
+            'slug' => 'trial',
             'price' => 0,
             'currency' => 'RUB',
             'period' => '15 days',
@@ -52,7 +52,7 @@ class SubscriptionsFreeTest extends TestCase
     {
         $tariffPaid = new Tariff([
             'name' => 'Платный',
-            'short_name' => 'paid',
+            'slug' => 'paid',
             'price' => 100,
             'currency' => 'RUB',
             'period' => '1 month',
@@ -74,7 +74,7 @@ class SubscriptionsFreeTest extends TestCase
         $this->assertEquals(1, $user->subscriptions()->count());
 
         $subscription = $user->subscriptions()->first();
-        $this->assertEquals($tariff->short_name, $subscription->short_name);
+        $this->assertEquals($tariff->slug, $subscription->slug);
         $this->assertEquals($tariff->name, $subscription->name);
         $this->assertEquals($tariff->price, $subscription->price);
         $this->assertEquals($tariff->currency, $subscription->currency);

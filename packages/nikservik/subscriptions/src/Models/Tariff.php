@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Tariff extends Model
 {
     protected $fillable = [
-        'short_name', 'name', 'price', 'currency', 'period', 'prolongable'
+        'slug', 'name', 'price', 'currency', 'period', 'prolongable'
     ];
 
     protected $casts = [
@@ -30,6 +30,7 @@ class Tariff extends Model
         $texts = $this->texts;
         if ($locale == config('app.locale')) {
             $texts['name']['locale'] = $locale;
+            $this->name = $name;
         } else {
             $texts['name'][$locale] = $name;
         }

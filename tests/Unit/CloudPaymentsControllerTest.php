@@ -19,7 +19,7 @@ class CloudPaymentsControllerTest extends TestCase
     {
         $tariffFree = new Tariff([
             'name' => 'Бесплатный',
-            'short_name' => 'free',
+            'slug' => 'free',
             'price' => 0,
             'currency' => 'RUB',
             'period' => 'endless',
@@ -36,7 +36,7 @@ class CloudPaymentsControllerTest extends TestCase
     {
         $tariffPaid = new Tariff([
             'name' => 'Платный',
-            'short_name' => 'paid',
+            'slug' => 'paid',
             'price' => 100,
             'currency' => 'RUB',
             'period' => '1 month',

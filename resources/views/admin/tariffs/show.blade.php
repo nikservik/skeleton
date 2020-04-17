@@ -4,7 +4,7 @@
 <h1 class="page-header">
     <a href="/tariffs" class="text-white">@lang('admin/tariffs.listTitle')</a> 
 </h1>
-<h2 class="sub-header">{{ $tariff->name }} ({{ $tariff->short_name }})</h2>
+<h2 class="sub-header">{{ $tariff->name }} ({{ $tariff->slug }})</h2>
 
 <div class="mb-4 text-right">
     <a class="button small mr-4" href="/tariffs/{{ $tariff->id }}/edit">

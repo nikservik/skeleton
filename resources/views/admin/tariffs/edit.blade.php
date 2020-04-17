@@ -4,7 +4,7 @@
 <h1 class="page-header">
     <a href="/tariffs" class="text-white">@lang('admin/tariffs.listTitle')</a> 
 </h1>
-<h2 class="sub-header"><a href="/tariffs/{{ $tariff->id }}">{{ $tariff->name }} ({{ $tariff->short_name }})</a></h2>
+<h2 class="sub-header"><a href="/tariffs/{{ $tariff->id }}">{{ $tariff->name }} ({{ $tariff->slug }})</a></h2>
 
 <form autocomplete="off" method="post" action="/tariffs/{{ $tariff->id }}">
     @csrf
@@ -21,10 +21,10 @@
         </div>
     @endforeach
     <div class="flex">
-        <div class="form-group w-1/2 @error('short_name') has-error @enderror">
-            <label for="short_name">@lang('admin/tariffs.shortName')</label>
-            <input type="text" name="short_name" value="{{ old('short_name')?old('short_name'):$tariff->short_name }}" placeholder="" required>
-            @error('short_name')
+        <div class="form-group w-1/2 @error('slug') has-error @enderror">
+            <label for="slug">@lang('admin/tariffs.slug')</label>
+            <input type="text" name="slug" value="{{ old('slug')?old('slug'):$tariff->slug }}" placeholder="" required>
+            @error('slug')
                 <div class="error-description">
                     @lang('admin/tariffs.'.$message)
                 </div>

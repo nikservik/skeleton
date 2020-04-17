@@ -17,7 +17,7 @@ class FeatureApiTest extends TestCase
     {
         $tariffFree = new Tariff([
             'name' => 'Бесплатный',
-            'short_name' => 'free',
+            'slug' => 'free',
             'price' => 0,
             'currency' => 'RUB',
             'period' => 'endless',

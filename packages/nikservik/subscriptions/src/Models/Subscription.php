@@ -9,7 +9,7 @@ use Nikservik\Subscriptions\Models\Payment;
 class Subscription extends Model
 {
     protected $fillable = [
-        'short_name', 'name', 'price', 'currency', 'period', 'prolongable'
+        'slug', 'name', 'price', 'currency', 'period', 'prolongable'
     ];
 
     protected $casts = [

@@ -1,7 +1,7 @@
         <div class="user-card hover:bg-indigo-100">
             <div class="">
                 <a href="/tariffs/{{ $tariff->id }}">{{ $tariff->name }}</a>
-                <span class="text-sm ml-2">{{ $tariff->short_name }}</span>
+                <span class="text-sm ml-2">{{ $tariff->slug }}</span>
                 <div>
                     <span class="text-sm text-gray-500">
                         {{ $tariff->price }} {{ $tariff->currency }}

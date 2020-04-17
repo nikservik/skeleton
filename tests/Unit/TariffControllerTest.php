@@ -36,6 +36,6 @@ class TariffControllerTest extends TestCase
             ->get('http://admin.'.Str::after(config('app.url'),'//').'/tariffs/'.$tariff->id)
             ->assertStatus(200)
             ->assertSee($tariff->name)
-            ->assertSee($tariff->shortName);
+            ->assertSee($tariff->slug);
     }
 }

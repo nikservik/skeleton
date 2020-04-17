@@ -16,7 +16,7 @@ class CreateTariffsTable extends Migration
         Schema::create('tariffs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('short_name');
+            $table->string('slug');
             $table->string('name');
             $table->float('price');
             $table->string('currency');

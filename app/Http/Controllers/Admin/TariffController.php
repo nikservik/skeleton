@@ -56,7 +56,7 @@ class TariffController extends Controller
     public function store(TariffCreateRequest $request)
     {
         $request->merge(array('prolongable' => $request->has('prolongable') ? true : false));
-        $tariff = Tariff::create($request->all());
+        $tariff = Tariff::create(array_merge(['name' => 'name'], $request->all()));
 
         foreach (config('app.locales') as $locale) {
             $tariff->setNameTranslation($request->get('name_'.$locale), $locale);
