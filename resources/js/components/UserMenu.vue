@@ -20,6 +20,12 @@
         @click.native="$parent.closeMenus">
         {{ $t('profile') }}
     </router-link>
+    <router-link v-if="$auth.check()" 
+        :to="{name: 'subscription'}" 
+        class="router-link block md:ml-0 md:mt-2" 
+        @click.native="$parent.closeMenus">
+        {{ $t('subscription') }}
+    </router-link>
     <a v-if="$auth.check()" 
         href="#" 
         class="router-link block md:ml-0" 
@@ -45,6 +51,7 @@ export default {
     login: "Вход"
     register: "Регистрация"
     profile: "Профиль"
+    subscription: "Подписка"
     logout: "Выход"
 </i18n>
 
@@ -52,5 +59,6 @@ export default {
     login: "Login"
     register: "Register"
     profile: "Profile"
+    subscription: "Subscription"
     logout: "Logout"
 </i18n>

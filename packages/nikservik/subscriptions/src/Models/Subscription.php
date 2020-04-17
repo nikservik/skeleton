@@ -9,7 +9,7 @@ use Nikservik\Subscriptions\Models\Payment;
 class Subscription extends Model
 {
     protected $fillable = [
-        'slug', 'name', 'price', 'currency', 'period', 'prolongable'
+        'slug', 'name', 'price', 'currency', 'period', 'prolongable', 
     ];
 
     protected $casts = [
@@ -42,6 +42,6 @@ class Subscription extends Model
 
     public function isTrial()
     {
-        return !$this->isEndless() and !$this->prolongable;
+        return ! $this->isEndless() and ! $this->prolongable and $this->price == 0;
     }
 }

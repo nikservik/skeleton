@@ -22,6 +22,8 @@ class SubscriptionApiTest extends TestCase
             'prolongable' => false,
             'period' => 'endless',
         ]); 
+        $default->visible = true;
+        $default->save();
         $trial = factory(Tariff::class)->create([
             'price' => 0,
             'prolongable' => false,
@@ -35,7 +37,9 @@ class SubscriptionApiTest extends TestCase
 
         $this->getJson('api/subscriptions')
             ->assertStatus(200)
-            ->assertJsonCount(3, 'data');
+            ->assertJsonCount(3, 'data.subscriptions')
+            ->assertJsonCount(2, 'data.features.see-welcome')
+            ->assertJsonCount(2, 'data.periods.endless');
     }
 
     public function testActivate()
@@ -73,5 +77,39 @@ class SubscriptionApiTest extends TestCase
             ->assertJsonPath('data.subscription.tariff_id', $trial->id);
 
         $this->assertEquals($trial->id, $user->subscription()->tariff_id);
+    }
+
+    public function testCancel()
+    {
+        Tariff::where('id', '>', 0)->delete();
+        $default = factory(Tariff::class)->create([
+            'price' => 0,
+            'prolongable' => false,
+            'period' => 'endless',
+        ]); 
+        $default->default = true;
+        $default->visible = true;
+        $default->save();
+        $trial = factory(Tariff::class)->create([
+            'price' => 0,
+            'prolongable' => false,
+            'period' => '1 month',
+        ]); 
+        $paid = factory(Tariff::class)->create([
+            'price' => 100,
+            'prolongable' => true,
+            'period' => '1 month',
+        ]); 
+
+        $user = factory(User::class)->create();
+        $subscription = Subscriptions::activate($user, $paid);
+        Subscriptions::confirmActivation($subscription);
+        $this->assertEquals($paid->id, $user->subscription()->tariff_id);
+
+        $this->withHeaders(['Authorization' => 'Bearer '.JWTAuth::fromUser($user)])
+            ->postJson('api/subscriptions/cancel')
+            ->assertStatus(200)
+            ->assertJson(['status' => 'success'])
+            ->assertJsonPath('data.subscription.tariff_id', $default->id);
     }
 }

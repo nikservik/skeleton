@@ -12,6 +12,14 @@ require('laravel-mix-purgecss');
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js/')
+        }
+    }
+});
+
 mix.extend('i18n', function( webpackConfig, ...args ) {
     webpackConfig.module.rules.push({
         resourceQuery: /blockType=i18n/,

@@ -52,7 +52,7 @@
             <label for="period">@lang('admin/tariffs.period')</label>
             <select name="period" class="block">
                 @foreach(config('subscriptions.periods') as $period)
-                    <option value="{{ $period }}" @if((old('period')?old('period'):$tariff->period)==$period)selected=""@endif>@lang('admin/tariffs.period'.str_replace(' ', '', $period))</option>
+                    <option value="{{ $period }}" @if((old('period')?old('period'):$tariff->period)==$period)selected=""@endif>@lang('subscriptions::periods.'.$period)</option>
                 @endforeach
             </select>
             @error('period')

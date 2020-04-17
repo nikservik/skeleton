@@ -8,6 +8,13 @@ use Nikservik\Subscriptions\Models\Subscription as SubscriptionModel;
 
 trait Subscription
 {
+    public function __construct(array $attributes = [])
+    {
+        $this->appends[] = 'subscription';
+        $this->appends[] = 'features';
+        parent::__construct($attributes);
+    }
+    
     public function subscriptions()
     {
         return $this->hasMany(SubscriptionModel::class);
@@ -27,6 +34,14 @@ trait Subscription
     {
         if ($this->subscription() and $this->subscription()->features)
             return $this->subscription()->features;
+
+        return [];
+    }   
+
+    public function getSubscriptionAttribute() 
+    {
+        if ($this->subscription())
+            return $this->subscription()->toArray();
 
         return [];
     }   

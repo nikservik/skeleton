@@ -58,4 +58,14 @@ class TranslatableTest extends TestCase
             $this->assertNotNull($locale);
         }
     }
+
+
+    public function testLoad()
+    {
+        app()->setLocale('en');
+        $app = Translatable::loadFromLocales('app.name');
+
+        $this->assertEquals(trans('app.name', [], 'en'), $app->en);
+        $this->assertEquals(trans('app.name', [], 'ru'), $app->ru);
+    }
 }

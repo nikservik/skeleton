@@ -5,12 +5,18 @@
     <div class="py-6 mx-4">
         Эта страница видна всем – и авторизованным, и не авторизованным.
     </div>
-
+    {{ $t('test') }}
   </div>
 </template>
 
 <script>
+import LocaleMixin from '@/components/LocaleMixin'
+
 export default {
+    mixins: [LocaleMixin],
+    mounted() {
+        this.addToLocale('test', {ru:'sss',en:'ttt'})
+    }
 }
 </script>
 

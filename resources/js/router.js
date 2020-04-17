@@ -10,6 +10,7 @@ import Remind from './views/auth/Remind'
 import RemindNewPassword from './views/auth/RemindNewPassword'
 import Verify from './views/auth/Verify'
 import Dashboard from './views/user/Dashboard'
+import Subscription from './views/user/Subscription'
 
 // Routes
 const routes = [
@@ -22,6 +23,7 @@ const routes = [
   { name: 'remind-new', path: '/remind/new', component: RemindNewPassword, meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
   { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
+  { name: 'subscription', path: '/subscription', component: Subscription, meta: { auth: true } },
 ]
 const router = new VueRouter({
   history: true,

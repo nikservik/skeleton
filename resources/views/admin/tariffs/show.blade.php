@@ -20,7 +20,7 @@
     </form>
 
 <p class="my-4 mx-10">{{ $tariff->price }} {{ $tariff->currency }}
-    / @lang('admin/tariffs.'.$tariff->periodLocale)
+    / @lang('subscriptions::periods.'.$tariff->period)
     </p>
 @if($tariff->prolongable)
     <p class="my-4 mx-10">@lang('admin/tariffs.prolongable')</p>

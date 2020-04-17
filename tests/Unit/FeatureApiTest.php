@@ -41,7 +41,8 @@ class FeatureApiTest extends TestCase
         $this->withHeaders(['Authorization' => 'Bearer '.JWTAuth::fromUser($user)])
             ->getJson('api/auth/user')
             ->assertStatus(200)
-            ->assertJsonPath('data.features', ['read-books']);
+            ->assertJsonPath('data.features', ['read-books'])
+            ->assertJsonPath('data.subscription.period', 'endless');
     }
 
     public function testAuthorizeApiFeature()

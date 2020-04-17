@@ -17,6 +17,7 @@ class SubscriptionController extends Controller
     { 
         Route::get('api/subscriptions', 'Nikservik\Subscriptions\SubscriptionController@index');
         Route::post('api/subscriptions', 'Nikservik\Subscriptions\SubscriptionController@activate')->middleware('auth:api');
+        Route::post('api/subscriptions/cancel', 'Nikservik\Subscriptions\SubscriptionController@cancel')->middleware('auth:api');
     }
 
     public function __construct()
@@ -28,7 +29,11 @@ class SubscriptionController extends Controller
     {
         return [
             'status' => 'success',
-            'data' => Subscriptions::list(),
+            'data' => [
+                'subscriptions' => Subscriptions::list(),
+                'features' => Subscriptions::features(),
+                'periods' => Subscriptions::periods(),
+            ] 
         ];
     }
 
@@ -43,6 +48,21 @@ class SubscriptionController extends Controller
             'status' => 'success',
             'data' => [
                 'subscription' => $result
+            ]
+        ];
+    }
+
+    public function cancel()
+    {
+        $subscription = Subscriptions::activateDefault(Auth::user());
+
+        if (! $subscription)
+            return ['status' => 'error'];
+
+        return [
+            'status' => 'success',
+            'data' => [
+                'subscription' => $subscription
             ]
         ];
     }

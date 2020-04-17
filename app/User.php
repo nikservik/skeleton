@@ -30,7 +30,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
         'settings' => 'array',
     ];
     
-    protected $appends = ['locale', 'features'];
+    protected $appends = ['locale'];
 
     public const ROLE_USER = 1;
     public const ROLE_EDITOR = 2;

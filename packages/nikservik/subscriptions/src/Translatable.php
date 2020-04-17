@@ -2,19 +2,31 @@
 
 namespace Nikservik\Subscriptions;
 
-class Translatable
+use Illuminate\Contracts\Support\Arrayable;
+
+class Translatable implements Arrayable
 {
     protected $translations = [];
     protected $currentLocale;
+
+    public static function loadFromLocales($name)
+    {
+        $translations = [];
+        foreach (config('app.locales') as $locale) {
+            $translations[$locale] = trans($name, [], $locale);
+        }
+        return new Translatable($translations);
+    }
 
     public function __construct($translations)
     {
         $this->currentLocale = config('app.locale');
 
-        if (is_array($translations))
+        if (is_array($translations)) {
             $this->translations = $translations;
-        else
+        } else {
             $this->translations[$this->currentLocale] = $translations;
+        }
     }
 
     public function __toString()
@@ -30,6 +42,11 @@ class Translatable
     public function __set($locale, $value)
     {
         return $this->setTranslation($locale, $value);
+    }
+
+    public function __serialize()
+    {
+        return $this->toArray();
     }
 
     public function getTranslation($locale)

@@ -24,7 +24,11 @@ Vue.use(LoadScript)
 Vue.use(VueCookie)
 
 Vue.use(VueI18n)
-const i18n = new VueI18n()
+const dateTimeFormats = {
+    'ru': { short: {year: 'numeric', month: 'short', day: 'numeric'} },
+    'en': { short: {year: 'numeric', month: 'short', day: 'numeric'} },
+}
+const i18n = new VueI18n({dateTimeFormats})
 
 Vue.component('index', Index)
 

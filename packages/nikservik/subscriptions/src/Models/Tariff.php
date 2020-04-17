@@ -19,10 +19,7 @@ class Tariff extends Model
         'name' => TranslatableField::class,
     ];
 
-    public function getPeriodLocaleAttribute() 
-    {
-        return 'period'.str_replace(' ', '', $this->period);
-    }   
+    protected $appends = ['type', 'visible'];
 
     public function getDefaultAttribute() 
     {
@@ -47,4 +44,20 @@ class Tariff extends Model
         $availability['visible'] = (boolean) $visible;
         $this->availability = $availability;
     }   
+
+    public function getTypeAttribute()
+    {
+        if ($this->price > 0)
+            return 'paid';
+
+        if (! $this->prolongable and $this->period != 'endless')
+            return 'trial';
+
+        return 'free';
+    }
+
+    public function toCopy()
+    {
+        return array_merge($this->toArray(), ['name' => $this->name]);
+    }
 }

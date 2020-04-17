@@ -15,6 +15,7 @@ use Nikservik\Subscriptions\Mail\SubscriptionRejected;
 use Nikservik\Subscriptions\Mail\SubscriptionRenewed;
 use Nikservik\Subscriptions\Models\Subscription;
 use Nikservik\Subscriptions\Models\Tariff;
+use Nikservik\Subscriptions\Translatable;
 
 
 class SubscriptionsManager 
@@ -26,6 +27,8 @@ class SubscriptionsManager
     {
         $this->warnBefore = config('subscriptions.before_charge.warn');
         $this->warnTime = config('subscriptions.before_charge.before');
+        $this->features = config('subscriptions.features');
+        $this->periods = config('subscriptions.periods');
     }
 
     public function list()
@@ -129,6 +132,26 @@ class SubscriptionsManager
         }
     }
 
+    public function features()
+    {
+        $features = [];
+        foreach ($this->features as $featureName) {
+            $features[$featureName] = Translatable::loadFromLocales('subscriptions::features.'.$featureName)->toArray();
+        }
+        return $features;
+    }
+
+    public function periods()
+    {
+        $periods = [];
+        foreach ($this->periods as $periodName) {
+            $periods[$periodName] = Translatable::loadFromLocales(
+                'subscriptions::periods.'.$periodName
+            )->toArray();
+        }
+        return $periods;
+    }
+
     protected function activateFree(User $user, Tariff $tariff)
     {
         $subscription = $this->createSubscriptionFromTariff($tariff);
@@ -147,7 +170,7 @@ class SubscriptionsManager
 
     protected function createSubscriptionFromTariff(Tariff $tariff)
     {
-        $subscription = Subscription::make($tariff->toArray());
+        $subscription = Subscription::make($tariff->toCopy());
         $subscription->tariff_id = $tariff->id;
         $subscription->status = 'Active';
         $subscription->features = $tariff->features;
