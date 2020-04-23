@@ -241,4 +241,95 @@ class PaymentsTest extends TestCase
         $this->assertEquals('2F725BBD1F405A1ED0336ABAF85DDFEB6902A9984A76FD877C3B5CC3B5085A82', $user->token);
         Mail::assertQueued(SubscriptionActivated::class, 1);
     }
+
+    public function testChargeByCrypt()
+    {
+        Mail::fake();
+
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+
+        CloudPaymentsFacade::shouldReceive('cardsCharge')
+            ->with(\Mockery::subset(['Amount' => $tariff->price]))
+            ->with(\Mockery::subset(['Currency' => $tariff->currency]))
+            ->with(\Mockery::subset(['AccountId' => $user->id]))
+            ->with(\Mockery::subset(['Name' => 'Cardholder']))
+            ->with(\Mockery::subset(['IpAddress' => '127.0.0.1']))
+            ->with(\Mockery::subset(['CardCryptogramPacket' => '123456787654321']))
+            ->andReturn([
+                'Model' => [
+                    'Amount' => $tariff->price,
+                    'Currency' => $tariff->currency,
+                    'AccountId' => $user->id,
+                    'Token' => 'test-token',
+                    'TransactionId' => 12345678,
+                    'CardLastFour' => 1234,
+                    'Status' => 'Completed',
+                ],
+                'Success' => true
+            ]);
+
+        $result = (boolean) Payments::chargeByCrypt($user, $tariff, 'Cardholder', '127.0.0.1', '123456787654321');
+        $this->assertTrue($result);
+        $this->assertEquals(1, $user->subscription()->payments()->count());
+        $payment = $user->subscription()->payments[0];
+        $this->assertEquals($user->id, $payment->user_id);
+    }
+
+    public function testChargeByCryptNeed3dSecure()
+    {
+        Mail::fake();
+
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+
+        CloudPaymentsFacade::shouldReceive('cardsCharge')
+            ->with(\Mockery::subset(['Amount' => $tariff->price]))
+            ->with(\Mockery::subset(['Currency' => $tariff->currency]))
+            ->with(\Mockery::subset(['AccountId' => $user->id]))
+            ->with(\Mockery::subset(['Name' => 'Cardholder']))
+            ->with(\Mockery::subset(['IpAddress' => '127.0.0.1']))
+            ->with(\Mockery::subset(['CardCryptogramPacket' => '123456787654321']))
+            ->andReturn([
+                'Model' => [
+                    'TransactionId' => 12345678,
+                    'PaReq' => '876543212345678',
+                    'AcsUrl' => 'http://somewhere.com/to',
+                ],
+                'Success' => false
+            ]);
+
+        $result = Payments::chargeByCrypt($user, $tariff, 'Cardholder', '127.0.0.1', '123456787654321');
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(12345678, $result['TransactionId']);
+        $this->assertEquals('876543212345678', $result['PaReq']);
+        $this->assertEquals('http://somewhere.com/to', $result['AcsUrl']);
+    }
+
+    public function testChargeByCryptDeclined()
+    {
+        Mail::fake();
+
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+
+        CloudPaymentsFacade::shouldReceive('cardsCharge')
+            ->with(\Mockery::subset(['Amount' => $tariff->price]))
+            ->with(\Mockery::subset(['Currency' => $tariff->currency]))
+            ->with(\Mockery::subset(['AccountId' => $user->id]))
+            ->with(\Mockery::subset(['Name' => 'Cardholder']))
+            ->with(\Mockery::subset(['IpAddress' => '127.0.0.1']))
+            ->with(\Mockery::subset(['CardCryptogramPacket' => '123456787654321']))
+            ->andReturn([
+                'Model' => [
+                    'TransactionId' => 12345678,
+                    'ReasonCode' => 5001,
+                    'Reason' => 'No',
+                ],
+                'Success' => false
+            ]);
+
+        $result = Payments::chargeByCrypt($user, $tariff, 'Cardholder', '127.0.0.1', '123456787654321');
+        $this->assertTrue(is_string($result));
+    }
 }

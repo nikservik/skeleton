@@ -33,15 +33,15 @@ class SubscriptionsManager
 
     public function list()
     {
-        return Tariff::all();
+        return Tariff::orderBy('price')->orderBy('prolongable')->get();
     }
 
-    public function activate(User $user, Tariff $tariff)
+    public function activate(User $user, Tariff $tariff, bool $force=false)
     {
         if ($tariff->price == 0)
             return $this->activateFree($user, $tariff);
         else
-            return $this->activatePaid($user, $tariff);
+            return $this->activatePaid($user, $tariff, $force);
     }
 
     public function activateDefault(User $user)
@@ -71,12 +71,14 @@ class SubscriptionsManager
 
     public function cancel(Subscription $subscription)
     {
-        if ($subscription->next_transaction_date) 
-            $subscription->status = 'Cancelled';
-        else
-            $subscription->status = 'Ended';
-        $subscription->save();
         Mail::to($subscription->user->email)->queue(new SubscriptionCancelled($subscription));
+
+        if ($subscription->price <= 0 or ! $subscription->next_transaction_date)
+            return $this->activateDefault($subscription->user);
+
+        $subscription->status = 'Cancelled';
+        $subscription->save();
+
         return $subscription;
     }
 
@@ -160,11 +162,15 @@ class SubscriptionsManager
         return $subscription;
     }
 
-    protected function activatePaid(User $user, Tariff $tariff)
+    protected function activatePaid(User $user, Tariff $tariff, bool $force)
     {
         $subscription = $this->createSubscriptionFromTariff($tariff);
         $subscription->status = 'Awaiting';
         $user->subscriptions()->save($subscription);
+
+        if ($force)
+            $this->confirmActivation($subscription);
+        
         return $subscription;
     }
 

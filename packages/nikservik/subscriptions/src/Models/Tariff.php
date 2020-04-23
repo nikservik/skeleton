@@ -19,7 +19,7 @@ class Tariff extends Model
         'name' => TranslatableField::class,
     ];
 
-    protected $appends = ['type', 'visible'];
+    protected $appends = ['type', 'visible', 'default'];
 
     public function getDefaultAttribute() 
     {

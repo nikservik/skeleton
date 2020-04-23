@@ -20,12 +20,12 @@ class PaymentsManager
 
     public function charge(Subscription $subscription)
     {
-        if (! ($bill = $this->prepareBill($subscription)))
+        if (! ($bill = $this->prepareTokenBill($subscription)))
             return false;
 
         $response = CloudPaymentsFacade::tokensCharge($bill);
 
-        if (! $this->isGoodResponse($response))
+        if (! $this->successResponse($response))
             return false;
 
         return $this->savePayment($response['Model']);
@@ -51,7 +51,55 @@ class PaymentsManager
         return true;
     }
 
-    protected function prepareBill(Subscription $subscription)
+    public function chargeByCrypt(User $user, Tariff $tariff, string $cardholderName, string $ip,  string $crypt)
+    {
+        $bill = [
+            'Amount' => $tariff->price, 
+            'Currency' => $tariff->currency, 
+            'IpAddress' => $ip, 
+            'Name' => $cardholderName, 
+            'CardCryptogramPacket' => $crypt, 
+            'Description' => __('subscriptions::payments.description', ['app' => config('app.url')]),
+            'AccountId' => $user->id,
+            'JsonData' => json_encode([
+                'tariff_id' => $tariff->id,
+                'activation' => true,
+            ]),
+        ];
+
+        return $this->activateSubscriptionByResponse($user, $tariff, 
+            CloudPaymentsFacade::cardsCharge($bill));
+    }
+
+    public function post3ds(User $user, Tariff $tariff, int $transactionId, string $paRes)
+    {
+        $bill = [
+            'TransactionId' => $transactionId,
+            'PaRes' => $paRes,
+        ];
+        
+        return $this->activateSubscriptionByResponse($user, $tariff, 
+            CloudPaymentsFacade::cardsPost3ds($bill));
+    }
+
+    protected function activateSubscriptionByResponse(User $user, Tariff $tariff, array $response)
+    {
+        if (! $this->successResponse($response) and ! $this->need3dSecureResponse($response))
+            return $this->getErrorMessage($response);
+
+        if ($this->need3dSecureResponse($response))
+            return $response['Model'];
+
+        if (! $subscription = Subscriptions::activate($user, $tariff, true))
+            return 'errors.failed';
+
+        $response['Model']['InvoiceId'] = $subscription->id;
+        $this->savePayment($response['Model']);
+
+        return $subscription;
+    }
+
+    protected function prepareTokenBill(Subscription $subscription)
     {
         if (! $subscription->price > 0 or ! $subscription->prolongable)
             return false;
@@ -127,11 +175,27 @@ class PaymentsManager
         );
     }
 
-    public function isGoodResponse($response)
+    public function successResponse($response)
     {
         return array_key_exists('Success', $response) and $response['Success'] 
             and array_key_exists('Model', $response) and is_array($response['Model'])
             and array_key_exists('Status', $response['Model']) 
             and $response['Model']['Status'] == 'Completed';
+    }
+
+    public function need3dSecureResponse($response)
+    {
+        return array_key_exists('Success', $response) and !$response['Success'] 
+            and array_key_exists('Model', $response) and is_array($response['Model'])
+            and array_key_exists('PaReq', $response['Model']) 
+            and array_key_exists('AcsUrl', $response['Model']);
+    }
+
+    protected function getErrorMessage($response)
+    {
+        if (! is_array($response) or ! array_key_exists('Model', $response))
+            return 'errors.undefined';
+
+        return 'errors.'.$response['Model']['ReasonCode'];
     }
 }

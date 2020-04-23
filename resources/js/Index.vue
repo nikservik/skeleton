@@ -41,9 +41,9 @@
 </template>
 
 <script>
-  import topmenu from './components/Menu'
-  import usermenu from './components/UserMenu'
-  import locales from './components/Locales'
+  import topmenu from '@/components/Menu'
+  import usermenu from '@/components/UserMenu'
+  import locales from '@/components/Locales'
 
   export default {
     data() {
@@ -84,7 +84,7 @@
         }
       }
     },
-    components: { topmenu, usermenu, locales }
+    components: { topmenu, usermenu, locales },
   }
 </script>
 

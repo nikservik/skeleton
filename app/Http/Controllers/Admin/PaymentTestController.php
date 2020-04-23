@@ -21,15 +21,23 @@ class PaymentTestController extends Controller
     {
         Route::domain('admin.'.Str::after(config('app.url'),'//'))->middleware(['auth:web', 'isAdmin'])->namespace('Admin')->group(function () {
             Route::get('test', 'PaymentTestController@test');
-            // Route::get('test/subscribe/{subscription}', 'PaymentTestController@subscribe');
+            Route::get('testcrypt', 'PaymentTestController@testCrypt');
             Route::get('test/charge', 'PaymentTestController@charge');
+            Route::post('test/charge', 'PaymentTestController@chargeCrypt');
         });
+        Route::post('cp/frame', 'Admin\PaymentTestController@testFrame');
     }
 
     public function test()
     {
         $tariff = Tariff::where('price','>',0)->first();
         return view('admin.test', ['tariff' => $tariff]);
+    }
+
+    public function testCrypt()
+    {
+        $tariff = Tariff::where('price','>',0)->first();
+        return view('admin.testcrypt', ['tariff' => $tariff]);
     }
 
     public function charge()
@@ -55,5 +63,37 @@ class PaymentTestController extends Controller
         }
 
         return redirect('/test');
+    }
+
+    public function chargeCrypt()
+    {
+        $request->validate(['tariff' => 'required', 'crypt' => 'required']);
+
+        $tariff = Tariff::findOrFail($request->tariff);
+
+        $array = [
+            'Amount' => $tariff->price, 
+            'Currency' => $tariff->currency, 
+            'InvoiceId' => $tariff->id, 
+            'IpAddress' => $request->ip(), 
+            'Name' => 'test', 
+            'CardCryptogramPacket' => Auth::user()->token, 
+            'Description' => 'Charge by crypt',
+            'AccountId' => Auth::user()->id,
+        ];
+
+        // Trying to do Payment
+        try {
+            (new LaravelCloudPayments)->tokensCharge($array);
+        } catch (\Exception $e) {
+            $result = $e->getMessage();
+        }
+
+        return redirect('/test');
+    }
+
+    public function testFrame(Request $request)
+    {
+        return '<script>parent.closeFrame()</script>';
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Nikservik\Subscriptions\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Subscription as SubscriptionModel;
@@ -12,6 +13,7 @@ trait Subscription
     {
         $this->appends[] = 'subscription';
         $this->appends[] = 'features';
+        $this->appends[] = 'hadTrial';
         parent::__construct($attributes);
     }
     
@@ -27,7 +29,11 @@ trait Subscription
 
     public function subscription()
     {
-        return $this->subscriptions()->where('status', 'Active')->first();
+        return $this->subscriptions()->where('status', 'Active')
+            ->orWhere(function($query) {
+                $query->where('status', 'Cancelled')
+                      ->where('next_transaction_date', '>', Carbon::now());
+            })->orderBy('status')->first();
     }
 
     public function getFeaturesAttribute() 
@@ -36,6 +42,16 @@ trait Subscription
             return $this->subscription()->features;
 
         return [];
+    }   
+
+    public function getHadTrialAttribute() 
+    {
+        return (boolean) $this->subscriptions()
+            ->where('price', 0)
+            ->where('prolongable', false)
+            ->where('period', '<>', 'endless')
+            ->where('status', 'Ended')
+            ->count();
     }   
 
     public function getSubscriptionAttribute() 

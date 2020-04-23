@@ -11,6 +11,7 @@ import RemindNewPassword from './views/auth/RemindNewPassword'
 import Verify from './views/auth/Verify'
 import Dashboard from './views/user/Dashboard'
 import Subscription from './views/user/Subscription'
+import ChangeSubscription from './views/user/ChangeSubscription'
 
 // Routes
 const routes = [
@@ -24,6 +25,7 @@ const routes = [
   { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
   { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
   { name: 'subscription', path: '/subscription', component: Subscription, meta: { auth: true } },
+  { name: 'subscription-change', path: '/subscription/change', component: ChangeSubscription, meta: { auth: true } },
 ]
 const router = new VueRouter({
   history: true,

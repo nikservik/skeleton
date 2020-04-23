@@ -84,6 +84,26 @@ class SubscriptionsPaidTest extends TestCase
         Mail::assertQueued(SubscriptionActivated::class, 1);
     }
 
+    public function testActivateForce()
+    {
+        Mail::fake();
+        Tariff::where('id', '>', 0)->delete();
+        $user = factory(User::class)->create();
+        $tariff = $this->createTariffPaid();
+        $default = $this->createTariffFree();
+
+        Subscriptions::activateDefault($user);
+        $defaultSubscription = $user->subscription();
+        $this->assertEquals($default->id, $defaultSubscription->tariff_id);
+
+        $subscription = Subscriptions::activate($user, $tariff, true);
+        $this->assertNotNull($subscription);
+        $this->assertEquals($tariff->id, $subscription->tariff_id);
+        $this->assertEquals($tariff->id, $user->subscription()->tariff_id);
+        $this->assertEquals('Active', $subscription->status);
+
+        Mail::assertQueued(SubscriptionActivated::class, 1);
+    }
 
     public function testCancelPaid()
     {

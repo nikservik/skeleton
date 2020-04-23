@@ -35,6 +35,7 @@
         "vue-axios": "^2.1.5",
         "vue-cookie": "^1.1.4",
         "vue-i18n": "^8.16.0",
-        "vue-router": "^3.1.5"
+        "vue-router": "^3.1.5",
+        "vue-the-mask": "^0.11.1"
     }
 }
