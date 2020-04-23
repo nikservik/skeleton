@@ -61,6 +61,7 @@
         )
         .then(response => {
           this.message = this.$t(response.data.message);
+          this.$router.push({name: 'login'})
         }).catch(error => {
           this.hasError = true
           this.errors = error.response.data.errors || {}
