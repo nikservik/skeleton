@@ -29,7 +29,7 @@ export default {
         // создать форму и отправить
         var iframe = document.getElementById('secureframe');
         var doc = iframe.contentWindow.document;
-        var termUrl = 'http://skeleton.test/api/subscriptions/'+userId+'/'+tariffId;
+        var termUrl = document.location.origin + '/api/subscriptions/'+userId+'/'+tariffId;
         doc.open().write(
           '<body onload="document.getElementById(\'iframeform\').submit()">' +
           '<form id="iframeform" action="' + url + '" method="POST">' +
