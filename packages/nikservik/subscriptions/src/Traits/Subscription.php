@@ -14,6 +14,7 @@ trait Subscription
         $this->appends[] = 'subscription';
         $this->appends[] = 'features';
         $this->appends[] = 'hadTrial';
+        $this->appends[] = 'cardLastFour';
         parent::__construct($attributes);
     }
     

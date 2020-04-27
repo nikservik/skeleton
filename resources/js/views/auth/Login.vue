@@ -1,7 +1,6 @@
 <template>
-    <div>
-        <h1 class="page-header">{{ $t('login') }}</h1>
-        <div class="error" v-if="hasError">
+    <div class="mt-75">
+        <div class="error" v-if="errorsHappened">
             <p>{{ $t('badLoginOrPassword') }}</p>
         </div>
         <form autocomplete="off" @submit.prevent="login" method="post">
@@ -25,45 +24,34 @@
     </div>
 </template>
 <script>
+  import { mapGetters } from 'vuex'
   export default {
     data() {
       return {
         email: null,
         password: null,
-        hasError: false,
         wait: false,
       }
     },
-    mounted() {
-      //
-    },
     methods: {
-      login() {
-        this.wait = true;
-        this.hasError = false;
-        // get the redirect object
-        var redirect = this.$auth.redirect()
-        var app = this
-        this.$auth.login({
-          params: {
-            email: app.email,
-            password: app.password
-          },
-          success: function() {
-            // handle redirection
-            if(this.$auth.user().email_verified_at)
-              this.$router.push({name: 'dashboard'});
-            else
-              this.$router.push({name: 'verify'});
-          },
-          error: function() {
-            this.wait = false;
-            app.hasError = true;
-          },
-          rememberMe: true,
-          fetchUser: true
-        })
-      }
+      login () {
+        this.$store.dispatch('errors/clear')
+        this.$store.dispatch('auth/login', {
+            email: this.email,
+            password: this.password
+          })
+          .then(() => {
+            this.$router.push({ name: 'dashboard' })
+          })
+          .catch(err => {
+            this.$store.dispatch('errors/set', { login: 'failed' })
+          })
+      },
+    },
+    computed: {
+      ...mapGetters('errors', {
+        errorsHappened: 'happened'
+      })
     }
   }
 </script>

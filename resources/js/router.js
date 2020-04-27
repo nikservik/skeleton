@@ -1,5 +1,6 @@
-import VueRouter from 'vue-router'
-import VueAuth from '@websanova/vue-auth'
+import Vue from 'vue'
+import Router from 'vue-router'
+import store from './store/index'
 // Pages
 import Home from './views/Home'
 import Sky from './views/Sky'
@@ -9,7 +10,7 @@ import Login from './views/auth/Login'
 import Remind from './views/auth/Remind'
 import RemindNewPassword from './views/auth/RemindNewPassword'
 import Verify from './views/auth/Verify'
-import Dashboard from './views/user/Dashboard'
+import Profile from './views/user/Profile'
 import Subscription from './views/user/Subscription'
 import ChangeSubscription from './views/user/ChangeSubscription'
 
@@ -23,21 +24,25 @@ const routes = [
   { name: 'remind', path: '/remind', component: Remind, meta: { auth: undefined }, },
   { name: 'remind-new', path: '/remind/new', component: RemindNewPassword, meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
-  { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
+  { name: 'profile', path: '/profile', component: Profile, meta: { auth: true } },
   { name: 'subscription', path: '/subscription', component: Subscription, meta: { auth: true } },
   { name: 'subscription-change', path: '/subscription/change', component: ChangeSubscription, meta: { auth: true } },
 ]
-const router = new VueRouter({
+
+Vue.use(Router)
+
+const router = new Router({
   history: true,
   mode: 'history',
   routes,
 })
 router.beforeEach((to, from, next) => {
-    if ('feature' in to.meta) 
-        if (window.Vue.auth.check() && window.Vue.auth.user().features 
-          && window.Vue.auth.user().features.includes(to.meta.feature)) 
-            next()
-        else next('/login')
-    else next()
+  if (store.getters['auth/canSee'](to.meta)) 
+    if (store.getters['auth/needVerification'])
+      next('/verify')
+    else
+      next()
+  else
+    next(false)
 })
 export default router

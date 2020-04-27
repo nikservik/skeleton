@@ -1,15 +1,11 @@
 <template>
     <div>
         <h1 class="page-header">{{ $t('pageTitle') }}</h1>
-        <div v-if="hasError || message" 
-            :class="((!edit.name && !edit.email && !edit.password && hasError)?'hidden ':' ')+(hasError?'error':'info')">
-            <p>{{ message }}</p>
-        </div>
         <form autocomplete="off" @submit.prevent="save" method="post">
             <div class="form-group" :class="{ 'has-error': errors.name && edit.name }">
                 <label for="name">{{ $t('name') }}</label>
                 <div class="flex items-center">
-                    <input type="text" id="name" class="form-control flex-grow" placeholder="Ваше имя" v-model="name" required :disabled="!edit.name">
+                    <input type="text" id="name" class="form-control flex-grow" placeholder="Ваше имя" v-model="user.name" required :disabled="!edit.name">
                     <a href="#" @click="toggleEditName()">
                         <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M6.3 12.3l10-10a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-10 10a1 1 0 0 1-.7.3H7a1 1 0 0 1-1-1v-4a1 1 0 0 1 .3-.7zM8 16h2.59l9-9L17 4.41l-9 9V16zm10-2a1 1 0 0 1 2 0v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2h6a1 1 0 0 1 0 2H4v14h14v-6z"/></svg>
                     </a>
@@ -60,27 +56,35 @@
     </div>
 </template>
 <script>
+  import { mapState, mapGetters } from 'vuex'
   export default {
     data() {
       return {
         edit: { name: false, email: false, password: false },
         hasError: false,
         message: '',
-        errors: {}, 
         wait: false,
-        name: this.$auth.user().name,
-        email: this.$auth.user().email,
+        name: '',
+        email: '',
         password: '12345678',
         password_confirmation: '',
         old_password: '',
       }
     },
-    mounted() {
-      if(!this.$auth.user().email_verified_at)
-        this.$router.push({name: 'verify'})
+    computed: {
+      errors() {
+        return {}
+      },
+      ...mapGetters('errors', {
+        errorsHappened: 'happened'
+      }),
+      ...mapState('auth', {
+        user: state => state.user
+      }),
     },
-    components: {
-      //
+    mounted() {
+      this.name = this.user.name
+      this.email = this.user.email
     },
     methods: {
       toggleEditName() {

@@ -1,22 +1,18 @@
 <template>
   <div>
-    <h1 class="page-header">{{ $t('pageTitle') }}</h1>
+    <PageHeader>{{ $t('pageTitle') }}</PageHeader>
 
-    <div class="py-6 mx-4">
+    <div class="page-text">
         Эта страница видна всем – и авторизованным, и не авторизованным.
     </div>
-    {{ $t('test') }}
   </div>
 </template>
 
 <script>
-import LocaleMixin from '@/components/LocaleMixin'
+import PageHeader from '@/components/visual/PageHeader'
 
 export default {
-    mixins: [LocaleMixin],
-    mounted() {
-        this.addToLocale('test', {ru:'sss',en:'ttt'})
-    }
+  components: { PageHeader }
 }
 </script>
 
