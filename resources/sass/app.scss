@@ -45,7 +45,7 @@
             @apply text-right text-base; }
             .content-bottom .block .input-item input {
                 @extend %third-color;
-                @apply w-full text-right bg-white px-5; }
+                @apply w-full text-right bg-white px-5 py-5; }
                 .content-bottom .block .input-item input:focus {
                     @apply outline-none; }
                 .content-bottom .block .error input {
