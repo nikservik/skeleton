@@ -3,8 +3,8 @@
         <SaveButton :editing="editing" @save="save" />
         <div class="block with-errors" >
             <div class="title">
-                <IconLock height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('password') }}</div>
+                <IconLock height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('password') }}</div>
             </div>
             <div v-if="! editing" @click="edit">********</div>
             <div class="bottom">
@@ -13,22 +13,22 @@
                     <input type="password" id="old-password" autocomplete="off" 
                         v-model="old_password" 
                         @focusout="unedit">
-                </div>
-                <div class="error-text" :class="{ hidden : ! hasError('old_password') }">
-                    {{ $t('errors.' + getError('old_password')) }}
+                    <div class="error-text" :class="{ hidden : ! hasError('old_password') }">
+                        {{ $t('errors.' + getError('old_password')) }}
+                    </div>
                 </div>
                 <div class="input-item" :class="{ error : hasError('password') }" v-if="editing">
                     <label>{{ $t('newPassword') }}</label>
                     <input type="password" id="edit-password" autocomplete="off"
                         v-model="password" 
                         @focusout="unedit">
+                    <div class="error-text" :class="{ hidden : ! hasError('password') }">
+                        {{ $t('errors.' + getError('password')) }}
+                    </div>
                     <label>{{ $t('passwordConfirmation') }}</label>
                     <input type="password" id="confirm-password" autocomplete="off"
                         v-model="password_confirmation" 
                         @focusout="unedit">
-                </div>
-                <div class="error-text" :class="{ hidden : ! hasError('password') }">
-                    {{ $t('errors.' + getError('password')) }}
                 </div>
             </div>
         </div>

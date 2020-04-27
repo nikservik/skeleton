@@ -2,8 +2,8 @@
     <div v-if="user.cardLastFour">
         <div class="block with-errors" >
             <div class="title">
-                <IconMoney height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('method') }}</div>
+                <IconMoney height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('method') }}</div>
             </div>
             <div class="flex items-center text-black">
                 <div class="">** {{ user.cardLastFour }}</div>

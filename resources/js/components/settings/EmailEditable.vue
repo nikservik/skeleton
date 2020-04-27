@@ -3,10 +3,10 @@
         <SaveButton :editing="editing" @save="save" />
         <div class="block with-errors" >
             <div class="title">
-                <IconEmail height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('email') }}</div>
+                <IconEmail height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('email') }}</div>
             </div>
-            <div v-if="! editing" @click="edit">{{ user.email }}</div>
+            <div class="w-1/2 overflow-hidden" v-if="! editing" @click="edit">{{ user.email }}</div>
             <div class="bottom">
                 <div class="input-item" :class="{ error : hasError('email') }" v-if="editing">
                     <input type="email" id="edit-email" 

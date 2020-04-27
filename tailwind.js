@@ -13,7 +13,7 @@ module.exports = {
       none: 'none',
     },
     fontFamily: {
-      sans: 'Gilroy, "Helvetica Neue", Arial, sans-serif'
+      sans: '"Cera Pro", "Helvetica Neue", Arial, sans-serif'
     },
     borderRadius: {
       none: '0',

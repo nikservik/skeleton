@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'font.css';
+@import 'cera.css';
 @import 'admin.css';
 
 %prime-color {
@@ -12,12 +12,11 @@
 %third-color {
     @apply bg-gray-200; } 
 
-
 .header {
     @apply pt-20  px-20 fixed top-0 inset-x-0 bg-white; }
     .header .title {
         @extend %prime-color;
-        @apply font-semibold; }
+        @apply font-bold; }
     .header .nav {
         @extend %second-color;
         @apply flex items-start justify-between; }
@@ -30,8 +29,10 @@
     @apply mx-20 my-20 mt-75; }
 
 .vertical-center {
-    margin-bottom: 1px;
-}
+    margin-bottom: 1px; }
+.settings-icon {
+    @apply text-gray-700 mr-11 hidden; }
+
 .content-bottom {
     @extend %third-color;
     @apply rounded-t-lg pb-75; }
@@ -76,7 +77,7 @@
     @apply fixed z-10 top-0 right-0 mt-20 mr-20 ; }
     .save-button-holder button {
         @extend %prime-color;
-        @apply font-semibold text-base; }
+        @apply font-bold text-base; }
 
 .bottom-menu {
     @extend %second-color;
@@ -84,3 +85,8 @@
     flex items-center justify-between; }
     .bottom-menu .item {
         @apply mx-30; }
+
+@media(min-width: theme('screens.xs')) {
+    .settings-icon {
+        @apply block; }
+}

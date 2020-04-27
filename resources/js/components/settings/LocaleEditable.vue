@@ -2,8 +2,8 @@
     <div>
         <div class="block with-errors" >
             <div class="title">
-                <IconGlobe height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('language') }}</div>
+                <IconGlobe height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('language') }}</div>
             </div>
             <div class="flex items-center text-black" @click="toggleEdit">
                 <div class="pr-5">{{ $t('locales.' + locale) }}</div>

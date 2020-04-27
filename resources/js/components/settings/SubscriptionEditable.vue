@@ -2,8 +2,8 @@
     <div>
         <div class="block with-errors" >
             <div class="title">
-                <IconMoney height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('tariff') }}</div>
+                <IconMoney height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('tariff') }}</div>
             </div>
             <div class="flex items-center text-black">
                 <div class="">{{ $t('tariffs.' + subscription.slug) }}</div>

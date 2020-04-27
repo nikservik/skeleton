@@ -2,8 +2,8 @@
     <div>
         <div class="block" >
             <div class="title">
-                <IconHistory height="20" classes="vertical-center" />
-                <div class="ml-11">{{ $t('history') }}</div>
+                <IconHistory height="20" classes="settings-icon vertical-center" />
+                <div>{{ $t('history') }}</div>
             </div>
             <div class="text-black">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />
