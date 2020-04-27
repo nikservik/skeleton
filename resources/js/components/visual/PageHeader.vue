@@ -1,5 +1,5 @@
 <template>
-    <div class="page-header">
+    <div class="header">
         <div class="nav">
             <div class="back">
                 <router-link :to="{ name: back }" v-if="back">
