@@ -44,9 +44,9 @@ h4 {
         @apply bg-blue-700; }
     .button:disabled {
         @apply bg-blue-400; }
-.error {
+.error-old {
     @apply rounded-lg border border-red-400 bg-red-200 text-red-800 py-4 px-8 m-4; }
-.info {
+.info-old {
     @apply rounded-lg border border-green-400 bg-green-200 text-green-800 py-4 px-8 m-4; }
 .text p {
     @apply m-4; }
