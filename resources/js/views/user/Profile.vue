@@ -4,7 +4,7 @@
         {{ $t('pageTitle') }}
     </PageHeader>
 
-    <div class="text-gray-500 mt-75">
+    <div class="text-gray-500">
         <IconProfile classes="mx-auto" height="75" />
     </div>
     <NameEditable />
@@ -52,8 +52,6 @@ export default {
 
 <i18n locale="ru" lang="yaml">
   pageTitle: "Профиль"
-  language: "Язык"
-  subscription: "Тарифный план"
 </i18n>
 
 <i18n locale="en" lang="yaml">

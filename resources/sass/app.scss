@@ -13,20 +13,16 @@
     @apply bg-gray-200; } 
 
 .header {
-    @apply pt-20  px-20 fixed top-0 inset-x-0 bg-white; }
+    @extend %second-color;
+    @apply pt-20  px-20 fixed top-0 inset-x-0 bg-white flex items-start justify-between; }
     .header .title {
         @extend %prime-color;
         @apply font-bold; }
-    .header .nav {
-        @extend %second-color;
-        @apply flex items-start justify-between; }
-        .header .nav .back {
-            @apply flex items-center; }
-            .header .nav .back .text {
-                @apply ml-11; }
+.header-spacer {
+    @apply mt-75; }
 .page-text {
     @extend %prime-color;
-    @apply mx-20 my-20 mt-75; }
+    @apply mx-20 my-20; }
 
 .vertical-center {
     margin-bottom: 1px; }
@@ -78,6 +74,55 @@
     .save-button-holder button {
         @extend %prime-color;
         @apply font-bold text-base; }
+
+.subscription-payment {
+    @apply px-20 py-30; }
+
+.subscription-switch {
+    @apply mt-30 mb-75; }
+    .subscription-switch .title {
+        @apply font-medium mx-20; }
+    .subscription-switch .text {
+        @apply mx-20 px-16 my-16 py-20 shadow-lg rounded-md; }
+        .subscription-switch .text p {
+            @apply mt-11 mx-0 mb-0; }
+    .subscription-switch .button-holder {
+        @apply mx-auto text-center mt-16 pb-30; }
+        .subscription-switch .button-holder button {
+            @apply text-white py-11 px-40 rounded; }
+            .subscription-switch .button-holder button:focus {
+                @apply outline-none; }
+            .subscription-switch .button-holder button:disabled {
+                @apply bg-gray-500; }
+
+.pay-form {
+    @apply px-16 my-16 py-20 max-w-full border rounded-md bg-gray-200 border-gray-300 shadow-lg; }
+    .pay-form .field {
+        @apply border p-5 text-lg; }
+    .pay-form .card-number {
+        @apply mt-30 w-full tracking-widest; }
+    .pay-form .card-holder {
+        @apply mt-30 w-full tracking-widest; }
+    .pay-form .line-2 {
+        @apply flex justify-between mt-5; }
+    .pay-form .expire {
+        @apply border flex items-center bg-white; }
+        .pay-form .expire .expire-month {
+            @apply w-40 text-lg tracking-widest text-right; }
+        .pay-form .expire .divider {
+            @apply vertical-center; }
+        .pay-form .expire .expire-year {
+            @apply pl-5 w-40 text-lg tracking-widest; }
+    .pay-form .cvv {
+        @apply flex justify-end items-center; }
+        .pay-form .cvv .description {
+            @apply text-xs text-gray-500 w-75 leading-snug mr-5; }
+        .pay-form .cvv .number {
+            @apply w-50 text-center tracking-normal; }
+    .pay-form input:focus {
+        @apply outline-none; }
+.pay-form-error {
+    @apply text-red-600 text-sm  text-center mx-20; }
 
 .bottom-menu {
     @extend %second-color;

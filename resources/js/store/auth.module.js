@@ -24,7 +24,7 @@ export const auth = {
       state.token = undefined
       localStorage.removeItem('token')
       delete axios.defaults.headers.common['Authorization']
-    }
+    },
   },
   actions: {
     register ({ commit }, credentials) {

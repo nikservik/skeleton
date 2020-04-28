@@ -31,6 +31,7 @@ module.exports = {
       '20': '20px',
       '30': '30px',
       '40': '40px',
+      '50': '50px',
       '75': '75px',
       px: '1px',
       '1': '0.25rem',
@@ -55,6 +56,9 @@ module.exports = {
         minHeight: {
             '30': '30px',
         },
+        borderWidth: {
+            '5': '5px',
+        }
     }
   },
   variants: {},

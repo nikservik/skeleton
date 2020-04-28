@@ -1,13 +1,12 @@
 <template>
   <div class="fixed left-0 top-0 w-full h-full bg-white" :class="opened ? 'block' : 'hidden'">
-    <a href="#" class="float-right p-3 text-gray-700 text-xl clearfix" @click.prevent="close()">×</a>
+    <a href="#" class="float-right p-11 text-gray-700 text-xl clearfix" @click.prevent="close()">×</a>
     <iframe class="w-full h-full" id="secureframe"></iframe>
   </div>
 </template>
 
 <script>
 export default {
-    props: [ 'errors' ],
     data() {
       return {
         opened: false,
@@ -17,11 +16,11 @@ export default {
       const me = this
       window.closeFrame = () => { 
         me.close() 
-        me.$router.push({name: 'subscription'});
+        me.$router.push({ name: 'profile' });
       }
       window.closeFrameWithError = (error) => { 
         me.close() 
-        me.errors = { response: error }
+        me.$store.dispatch('errors/set', { response: error })
       }
     },
     methods: {

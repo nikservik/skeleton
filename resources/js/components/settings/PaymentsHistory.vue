@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="block" >
+        <div class="block" @click="$router.push({ name: 'payments' })">
             <div class="title">
                 <IconHistory height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('history') }}</div>
             </div>
             <div class="text-black">
-                    <IconRightChevron height="16" classes="vertical-center ml-auto" />
+                <IconRightChevron height="16" classes="vertical-center ml-auto" />
             </div>
         </div>
     </div>

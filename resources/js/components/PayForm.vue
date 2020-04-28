@@ -1,58 +1,140 @@
 <template>
-  <div class="my-6">
-    <div class="mx-auto w-84 p-2 max-w-full border rounded-lg bg-gray-200 border-gray-500">
+  <div class="px-20">
+    <div class="pay-form">
       <form id="cardform">
-        <the-mask mask="#### #### #### #### ###" class="border border-gray-300 py-1 px-2 mt-12 w-full text-lg tracking-widest focus:outline-none" 
-          :class="{ 'border-gray-300': !errors['cardNumber'], 'border-red-400': errors['cardNumber'], }"
-          autocomplete="cc-number" type="tel" data-cp="cardNumber" 
+        <input v-mask="'#### #### #### #### ###'" class="card-number field" 
+          :class="{ 
+            'border-gray-300' : ! hasError('cardNumber'), 
+            'border-red-400' : hasError('cardNumber'), 
+          }"
+          autocomplete="cc-number" 
+          type="tel" data-cp="cardNumber" 
           :placeholder="$t('card.number')" />
-        <div class="flex justify-between mt-2">
-          <div class="border border-gray-300 flex items-center bg-white"
-            :class="{ 'border-gray-300': !errors['expDateMonth'] && !errors['expDateYear'], 
-              'border-red-400': errors['expDateMonth'] || errors['expDateYear'], }">
-            <the-mask mask="##" class=" py-1 w-10 text-lg tracking-widest focus:outline-none text-right" autocomplete="cc-exp-month" type="tel" data-cp="expDateMonth" :placeholder="$t('card.expire-month')" />
-            <span class="pb-1 pt-px mx-1">/</span>
-            <the-mask mask="##" class=" py-1 pr-2 w-8 text-lg tracking-widest focus:outline-none" autocomplete="cc-exp-year" type="tel" data-cp="expDateYear" :placeholder="$t('card.expire-year')" />
+
+        <div class="line-2">
+          <div class="expire" :class="{
+              'border-gray-300': !hasError('expDateMonth') && !hasError('expDateYear'), 
+              'border-red-400': hasError('expDateMonth') || hasError('expDateYear'), 
+            }">
+            <input v-mask="'##'" class="expire-month" 
+              autocomplete="cc-exp-month" 
+              type="tel" data-cp="expDateMonth" 
+              :placeholder="$t('card.expire-month')" />
+
+            <span class="divider">/</span>
+
+            <input v-mask="'##'" class="expire-year" 
+              autocomplete="cc-exp-year" 
+              type="tel" data-cp="expDateYear" 
+              :placeholder="$t('card.expire-year')" />
           </div>
-          <div class="flex justify-end items-center">
-            <span class="text-xs text-gray-500 w-16 leading-snug mr-2">{{ $t('card.cvv') }}</span>
-            <the-mask mask="###" class="border border-gray-300 py-1 px-2 w-16 text-center text-lg tracking-normal focus:outline-none" 
-              :class="{ 'border-gray-300': !errors['cvv'], 'border-red-400': errors['cvv'], }"
+          <div class="cvv">
+            <span class="description">{{ $t('card.cvv') }}</span>
+            <input v-mask="'###'" class="number field" :class="{ 
+                'border-gray-300': !hasError('cvv'), 
+                'border-red-400': hasError('cvv'), 
+              }"
               autocomplete="off" type="password" data-cp="cvv" 
               :placeholder="$t('card.cvv-placeholder')" />
-
           </div>
         </div>
-        <input class="border border-gray-300 py-1 px-2 mt-4 w-full text-lg tracking-widest focus:outline-none" 
-          :class="{ 'border-gray-300': !errors['name'], 'border-red-400': errors['name'], }" 
+        <input class="card-holder field" :class="{ 
+            'border-gray-300': ! hasError('name'), 
+            'border-red-400': hasError('name'), 
+          }"
           autocomplete="cc-name" type="tel" data-cp="name" 
           :placeholder="$t('card.name')" v-model="cardholder" />
       </form>
     </div>
-    <div class="text-red-600 mx-auto w-84 p-2 max-w-full" v-if="hasError()">
-      {{ formError() ? $t('errors.form') : $t(errors['response']) }}
+    <div class="pay-form-error" v-if="errorHappened">
+      {{ hasError('response') ? $t(getError('response')) : $t('errors.form')  }}
     </div>
+    <SecureFrame ref="secureframe" />
   </div>
 </template>
 
 <script>
-import {TheMask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
+import SecureFrame from '@/components/SecureFrame'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
-  props: ['errors'],
+  props: [ 'tariff' ],
+  components: { SecureFrame },
+  directives: { mask },
   data() {
     return {
+      cpLoaded: false,
       cardholder: '',
+      checkout: undefined,
+      crypt: '',
     }
   },
   methods: {
-    hasError() { return Object.keys(this.errors).length !== 0 },
-    formError() { 
-      return this.errors['cardNumber'] || this.errors['expDateMonth'] || this.errors['expDateYear'] 
-        || this.errors['cvv'] || this.errors['name']
-    }
+      loadCP() {
+        this.$loadScript('https://widget.cloudpayments.ru/bundles/checkout')
+          .then(() => { 
+            this.cpLoaded = true 
+            this.$emit('loaded')
+          })
+      },
+      initCheckout() {
+        this.crypt = ''
+        if(! this.checkout)
+          this.checkout = new cp.Checkout(
+            'pk_4ac2f7a43a9f5f3167e2396048810', 
+            document.getElementById("cardform")
+          )
+      },
+      createCrypt() {
+        if (! this.cpLoaded) return
+
+        this.initCheckout()
+        this.$store.dispatch('errors/clear')
+
+        var result = this.checkout.createCryptogramPacket();
+        if (result.success) 
+          this.crypt = result.packet
+        else 
+          this.$store.dispatch('errors/set', result.messages)
+      },
+      open3ds(data) {
+        this.$refs.secureframe.open(this.user.id, this.tariff.id, 
+          data.TransactionId, data.AcsUrl, data.PaReq)
+      },
+      pay() {
+        this.createCrypt()
+        if (! this.crypt) return
+
+        this.$store.dispatch('subscription/payByCrypt', {
+            tariff: this.tariff.id,
+            name: this.cardholder,
+            crypt: this.crypt 
+          })
+          .then(() => {
+            if (this.for3ds)
+              return this.open3ds(this.for3ds)
+            if (! this.errorHappened)
+              return this.$router.push({ name: 'profile' })
+          })
+      },
   },
-  components: { TheMask }
+  mounted() {
+    this.loadCP()
+  },
+  computed: {
+    ...mapState('subscription', {
+        for3ds: state => state.for3ds
+    }),
+    ...mapState('auth', {
+        user: state => state.user
+    }),
+    ...mapGetters('errors', {
+        errorHappened: 'happened',
+        hasError: 'has',
+        getError: 'getFirst',
+    }),
+  },
 }
 </script>
 <i18n locale="ru" lang="yaml">

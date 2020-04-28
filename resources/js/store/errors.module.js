@@ -32,7 +32,7 @@ export const errors = {
     getFirst: (state) => (key) => {
       if (! state.errors[key])
         return ''
-      if (state.errors[key] && state.errors[key][0])
+      if (typeof state.errors[key] == 'object')
         return state.errors[key][0]
       else
         return state.errors[key]

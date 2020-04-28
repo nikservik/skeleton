@@ -11,8 +11,8 @@ import Remind from './views/auth/Remind'
 import RemindNewPassword from './views/auth/RemindNewPassword'
 import Verify from './views/auth/Verify'
 import Profile from './views/user/Profile'
-import Subscription from './views/user/Subscription'
-import ChangeSubscription from './views/user/ChangeSubscription'
+import PaymentsHistory from './views/user/PaymentsHistory'
+import TariffSelect from './views/user/TariffSelect'
 
 // Routes
 const routes = [
@@ -25,8 +25,8 @@ const routes = [
   { name: 'remind-new', path: '/remind/new', component: RemindNewPassword, meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
   { name: 'profile', path: '/profile', component: Profile, meta: { auth: true } },
-  { name: 'subscription', path: '/subscription', component: Subscription, meta: { auth: true } },
-  { name: 'subscription-change', path: '/subscription/change', component: ChangeSubscription, meta: { auth: true } },
+  { name: 'payments', path: '/subscription/payments', component: PaymentsHistory, meta: { auth: true } },
+  { name: 'select-tariff', path: '/subscription/select', component: TariffSelect, meta: { auth: true } },
 ]
 
 Vue.use(Router)

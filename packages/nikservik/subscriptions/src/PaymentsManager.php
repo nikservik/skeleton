@@ -31,26 +31,6 @@ class PaymentsManager
         return $this->savePayment($response['Model']);
     }
 
-    public function processPaymentConfirmation(Request $request)
-    {
-        if (! CloudPayments::validateSecrets($request))
-            return false;
-
-        if (! $subscription = $this->getSubscription($request->all()))
-            return false;
-        $request->merge(['InvoiceId' => $subscription->id]);
-
-        if (! $payment = $this->savePayment($request->all()))
-            return false;
-
-        $this->saveCardData($request->Token, $request->CardLastFour, $request->AccountId);
-    
-        if (Subscriptions::needActivation($subscription)) {
-            Subscriptions::confirmActivation($subscription);
-        }
-        return true;
-    }
-
     public function chargeByCrypt(User $user, Tariff $tariff, string $cardholderName, string $ip,  string $crypt)
     {
         $bill = [
@@ -92,6 +72,8 @@ class PaymentsManager
 
         if (! $subscription = Subscriptions::activate($user, $tariff, true))
             return 'errors.failed';
+
+        $this->saveToken($user, $response['Model']);
 
         $response['Model']['InvoiceId'] = $subscription->id;
         $this->savePayment($response['Model']);
@@ -146,13 +128,10 @@ class PaymentsManager
         ]);
     }
 
-    protected function saveCardData($token, $cardLastFour, $userId)
+    protected function saveToken(User $user, array $response)
     {
-        if (! $token or ! $cardLastFour or ! $user = User::find($userId))
-            return;
-
-        $user->token = $token;
-        $user->cardLastFour = $cardLastFour;
+        $user->token = $response['Token'];
+        $user->cardLastFour = $response['CardLastFour'];
         $user->save();
     }
 

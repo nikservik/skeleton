@@ -1,10 +1,13 @@
 <template>
-    <div class="header">
-        <div class="nav">
+    <div>
+        <div class="header">
             <div class="back">
-                <router-link :to="{ name: back }" v-if="back">
+                <router-link :to="{ name: back }" v-if="typeof back == 'string'">
                     <IconLeftChevron height="20" />
                 </router-link>
+                <div v-if="typeof back == 'function'" @click="back">
+                    <IconLeftChevron height="20" />
+                </div>
                 &nbsp;
             </div>
             <div class="title">
@@ -12,6 +15,7 @@
             </div>
             <div>&nbsp;</div>
         </div>
+        <div class="header-spacer"></div>
     </div>
 </template>
 

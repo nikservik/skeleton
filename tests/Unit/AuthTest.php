@@ -23,7 +23,7 @@ class AuthTest extends TestCase
 
         $this->postJson('api/auth/login', ['email' => $user->email, 'password' => 'password'])
             ->assertStatus(200)
-            ->assertHeader('Authorization');
+            ->assertJson(['status' => 'success']);
     }
 
     public function testDeclineBadLogin()
@@ -32,7 +32,6 @@ class AuthTest extends TestCase
 
         $this->postJson('api/auth/login', ['email' => $user->email, 'password' => 'passw'])
             ->assertStatus(401)
-            ->assertHeaderMissing('Authorization')
             ->assertJson(['error' => 'login_error']);
     }
 

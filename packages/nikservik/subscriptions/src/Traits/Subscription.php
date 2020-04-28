@@ -34,7 +34,7 @@ trait Subscription
             ->orWhere(function($query) {
                 $query->where('status', 'Cancelled')
                       ->where('next_transaction_date', '>', Carbon::now());
-            })->orderBy('status')->first();
+            })->orderBy('status')->orderBy('next_transaction_date', 'desc')->first();
     }
 
     public function getFeaturesAttribute() 

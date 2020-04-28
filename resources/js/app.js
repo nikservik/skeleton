@@ -12,7 +12,8 @@ import store from './store/index'
 window.Vue = Vue
 
 Vue.router = router
-Vue.use(Vuex, axios, LoadScript, VueTheMask)
+Vue.use(Vuex, axios, VueTheMask)
+Vue.use(LoadScript)
 
 axios.defaults.baseURL = document.location.origin + '/api'
 // axios.defaults.withCredentials = true

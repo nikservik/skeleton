@@ -5,7 +5,8 @@
                 <IconMoney height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('tariff') }}</div>
             </div>
-            <div class="flex items-center text-black">
+            <div class="flex items-center text-black" 
+                @click="$router.push({ name: 'select-tariff' })">
                 <div class="">{{ $t('tariffs.' + subscription.slug) }}</div>
                 <div class="w-20">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />
@@ -23,7 +24,7 @@
                             + ' ' + $t('currency.' + subscription.currency) 
                             + '/' + $t('periods.' + subscription.period)
                         }} <br>
-                        {{ $t('nextPayment', { date: localizeDate() }) }}
+                        {{ $t('nextPayment', { date: localizeNext() }) }}
                     </div>
                 </div>
             </div>
@@ -49,7 +50,7 @@ export default {
       isEndless() {
         return this.subscription.period == 'endless'
       },
-      localizeDate() {
+      localizeNext() {
         return this.subscription.next_transaction_date 
             ? this.$d(new Date(this.subscription.next_transaction_date), 'short') 
             : ''
