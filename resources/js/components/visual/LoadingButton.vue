@@ -4,8 +4,11 @@
         :disabled="disable"
         @click="$emit('clicked')">
         <div class="flex items-center">
-          <LoadingSign size="16" class="-ml-16 align-middle" />
-          <div class="mx-5"><slot></slot></div>
+          <LoadingSign size="16" class="align-middle" />
+          <div class="mx-5">
+            <slot></slot>
+          </div>
+          <div class="w-16">&nbsp;</div>
         </div>
       </button>
     </div>
