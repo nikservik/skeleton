@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col justify-between pb-75" 
+    <div class="page" 
         :class="{ 'pt-75' : type != 'no-header' }">
         <div class="">
             <slot></slot>
@@ -13,5 +13,9 @@
 <script>
 export default {
     props: [ 'type' ],
+    created() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);        
+    },
 }
 </script>

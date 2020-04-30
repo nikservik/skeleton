@@ -15,6 +15,12 @@
 }
 .header-spacer {
     @apply mb-75; }
+
+.page {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    @apply flex flex-col justify-between pb-75; }
+    
 .page-text {
     @apply text-black mx-20 my-20; 
     h1 { 
