@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-75">
+  <Page>
     <PageHeader :back="collapsed ? () => { collapsed = false } : 'profile'">
         {{ $t('pageTitle') }}
     </PageHeader>
@@ -16,17 +16,18 @@
       :from="subscription"
       :to="tariffs[selected]"
     />
-  </div>
+  </Page>
 </template>
 
 <script>
+import Page from '@/components/visual/Page'
 import PageHeader from '@/components/visual/PageHeader'
 import Tariff from '@/components/Tariff'
 import TariffSwitch from '@/views/user/TariffSwitch'
 import { mapState } from 'vuex'
 
   export default {
-    components: { PageHeader, Tariff, TariffSwitch },
+    components: { Page, PageHeader, Tariff, TariffSwitch },
     data() {
       return {
         selected: undefined,

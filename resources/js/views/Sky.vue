@@ -1,16 +1,17 @@
 <template>
-  <div>
-    <h1 class="page-header">{{ $t('pageTitle') }}</h1>
+  <Page type="no-header">
+    <div class="page-text">
+        <h1>{{ $t('pageTitle') }}</h1>
 
-    <div class="py-6 mx-4">
-        Фича. Смотреть на небо могут только те, у кого это включено в тарифе
+        <p> Фича. Смотреть на небо могут только те, у кого это включено в тарифе </p>
     </div>
-
-  </div>
+  </Page>
 </template>
 
 <script>
+import Page from '@/components/visual/Page'
 export default {
+    components: { Page }
 }
 </script>
 

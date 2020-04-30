@@ -1,16 +1,14 @@
 <template>
   <div class="subscription-switch">
-    <div class="title">
-      {{ $t('swithcing', { to: $t('tariffs.' + to.slug) }) }}
-    </div>
 
-    <div class="text" 
-      v-html="$t('warning.' + fromToType, {
-        period: $t('periods.' + to.period),
-        expire: localizeNext,
-        'less-more': lessMore,
-      })">
-    </div>
+    <AutoScroll />
+    <PageBlock :title="$t('swithcing', { to: $t('tariffs.' + to.slug) })">
+      <div v-html="$t('warning.' + fromToType, {
+          period: $t('periods.' + to.period),
+          expire: localizeNext,
+          'less-more': lessMore,
+        })"></div>
+    </PageBlock>
 
     <TariffSwitchAction :from="from" :to="to" />
   </div>
@@ -18,11 +16,13 @@
 
 <script>
 import TariffSwitchAction from '@/views/user/TariffSwitchAction'
+import PageBlock from '@/components/visual/PageBlock'
+import AutoScroll from '@/components/visual/AutoScroll'
 import { mapState } from 'vuex'
 
   export default {
     props: [ 'from', 'to' ],
-    components: { TariffSwitchAction },
+    components: { TariffSwitchAction, PageBlock, AutoScroll },
     methods: {
       isFree(tariff) { return tariff.price == 0 },
       isPaid(tariff) { return tariff.price > 0 },

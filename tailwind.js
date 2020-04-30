@@ -58,9 +58,28 @@ module.exports = {
         },
         borderWidth: {
             '5': '5px',
+        },
+        colors: {
+          'prime': {
+            100: '#F0EEFC',
+            200: '#DAD4F7',
+            300: '#C3BBF2',
+            400: '#9787E8',
+            500: '#6A54DE',
+            600: '#5F4CC8',
+            700: '#403285',
+            800: '#302664',
+            900: '#201943',
+          },
         }
     }
   },
-  variants: {},
-  plugins: []
+  variants: {
+    backgroundColor: ['dark', 'dark-hover', ],
+    borderColor: ['dark', 'dark-focus',],
+    textColor: ['dark', ]
+  },
+  plugins: [
+    require('tailwindcss-dark-mode')(),
+  ]
 }

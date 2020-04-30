@@ -28,9 +28,9 @@ const app = new Vue({
   i18n,
   created() {
     this.$store.dispatch('locale/set', localStorage.getItem('locale') || 'ru')
-    const token = localStorage.getItem('token');
-    if (token) 
-        this.$store.dispatch('auth/setToken', token)
+    this.$store.dispatch('nightmode/set', localStorage.getItem('nightmode')
+      || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'on' : 'off') )
+    
     axios.interceptors.response.use(
       response => response,
       error => {
@@ -38,7 +38,21 @@ const app = new Vue({
           this.$store.dispatch('auth/logout')
         }
         return Promise.reject(error)
-      }
-    )
+      })
+    axios.interceptors.request.use(
+      config => {
+        this.$store.dispatch('loading/set', true)
+        return config;
+      }, error => {
+        return Promise.reject(error);
+      })
+    axios.interceptors.response.use(
+      response => {
+        this.$store.dispatch('loading/set', false)
+        return response;
+      }, error => {
+        this.$store.dispatch('loading/set', false)
+        return Promise.reject(error);
+      })
   }
 });

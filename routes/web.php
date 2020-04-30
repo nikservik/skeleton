@@ -29,9 +29,7 @@ PaymentTestController::routes();
 // SPA route
 Route::get('/{any?}', function (){
     return view('app');
-})->where('any', '^(?!api\/|cp\/|email\/|auth\/)[\/\w\.-]*');
+})->where('any', '^(?!api\/|cp\/|auth\/)[\/\w\.-]*');
 
-// Email verification
-VerificationController::routes();
 
 

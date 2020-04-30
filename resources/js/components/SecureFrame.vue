@@ -1,7 +1,7 @@
 <template>
-  <div class="fixed left-0 top-0 w-full h-full bg-white" :class="opened ? 'block' : 'hidden'">
-    <a href="#" class="float-right p-11 text-gray-700 text-xl clearfix" @click.prevent="close()">×</a>
-    <iframe class="w-full h-full" id="secureframe"></iframe>
+  <div class="fixed left-0 top-0 w-full h-full max-h-screen bg-white dark:bg-gray-800 pb-75" :class="opened ? 'block' : 'hidden'">
+    <a href="#" class="float-right p-11 text-gray-700 dark:text-gray-300 text-xl clearfix" @click.prevent="close()">×</a>
+    <iframe class="w-full h-full pb-50" id="secureframe"></iframe>
   </div>
 </template>
 
@@ -16,7 +16,10 @@ export default {
       const me = this
       window.closeFrame = () => { 
         me.close() 
-        me.$router.push({ name: 'profile' });
+        me.$store.dispatch('auth/fetch')
+          .then(() => {
+            me.$router.push({ name: 'profile' })
+          })
       }
       window.closeFrameWithError = (error) => { 
         me.close() 
@@ -28,7 +31,9 @@ export default {
         // создать форму и отправить
         var iframe = document.getElementById('secureframe');
         var doc = iframe.contentWindow.document;
-        var termUrl = document.location.origin + '/api/subscriptions/'+userId+'/'+tariffId;
+        var termUrl = document.location.origin + '/api/subscriptions/'+userId;
+        if (tariffId)
+          termUrl += '/'+tariffId
         doc.open().write(
           '<body onload="document.getElementById(\'iframeform\').submit()">' +
           '<form id="iframeform" action="' + url + '" method="POST">' +

@@ -51,6 +51,22 @@ class PaymentsManager
             CloudPaymentsFacade::cardsCharge($bill));
     }
 
+    public function authorizeByCrypt(User $user, string $cardholderName, string $ip,  string $crypt)
+    {
+        $bill = [
+            'Amount' => 10, 
+            'Currency' => 'RUB', 
+            'IpAddress' => $ip, 
+            'Name' => $cardholderName, 
+            'CardCryptogramPacket' => $crypt, 
+            'Description' => __('subscriptions::payments.authorization'),
+            'AccountId' => $user->id,
+        ];
+
+        return $this->authorizeByResponse($user, 
+            CloudPaymentsFacade::cardsAuth($bill));
+    }
+
     public function post3ds(User $user, Tariff $tariff, int $transactionId, string $paRes)
     {
         $bill = [
@@ -59,6 +75,17 @@ class PaymentsManager
         ];
         
         return $this->activateSubscriptionByResponse($user, $tariff, 
+            CloudPaymentsFacade::cardsPost3ds($bill));
+    }
+
+    public function authorizePost3ds(User $user, int $transactionId, string $paRes)
+    {
+        $bill = [
+            'TransactionId' => $transactionId,
+            'PaRes' => $paRes,
+        ];
+        
+        return $this->authorizeByResponse($user,  
             CloudPaymentsFacade::cardsPost3ds($bill));
     }
 
@@ -79,6 +106,24 @@ class PaymentsManager
         $this->savePayment($response['Model']);
 
         return $subscription;
+    }
+
+    protected function authorizeByResponse(User $user, array $response)
+    {
+        if (! $this->successResponse($response) and ! $this->need3dSecureResponse($response))
+            return $this->getErrorMessage($response);
+
+        if ($this->need3dSecureResponse($response))
+            return $response['Model'];
+
+        $this->saveToken($user, $response['Model']);
+
+        // TODO: Дописать метод отмены транзакции. Пока отменяется сама по таймауту
+        // CloudPaymentsFacade::paymentsVoid([ 
+        //     'TransactionId' => $response['Model']['TransactionId']
+        // ]);
+
+        return true;
     }
 
     protected function prepareTokenBill(Subscription $subscription)
@@ -159,7 +204,8 @@ class PaymentsManager
         return array_key_exists('Success', $response) and $response['Success'] 
             and array_key_exists('Model', $response) and is_array($response['Model'])
             and array_key_exists('Status', $response['Model']) 
-            and $response['Model']['Status'] == 'Completed';
+            and ($response['Model']['Status'] == 'Completed'
+                or $response['Model']['Status'] == 'Authorized');
     }
 
     public function need3dSecureResponse($response)
@@ -174,6 +220,7 @@ class PaymentsManager
     {
         if (! is_array($response) or ! array_key_exists('Model', $response))
             return 'errors.undefined';
+        Log::debug($response);
 
         return 'errors.'.$response['Model']['ReasonCode'];
     }

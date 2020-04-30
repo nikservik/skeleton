@@ -5,7 +5,7 @@
                 <IconMoney height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('tariff') }}</div>
             </div>
-            <div class="flex items-center text-black" 
+            <div class="flex items-center text-black dark:text-gray-500" 
                 @click="$router.push({ name: 'select-tariff' })">
                 <div class="">{{ $t('tariffs.' + subscription.slug) }}</div>
                 <div class="w-20">
@@ -13,9 +13,9 @@
                 </div>
             </div>
             <div class="bottom">
-                <div class="warning-text pr-20">
+                <div class="warning-text pr-16">
                     <div v-if="isEndless()">{{ $t('neverExpire') }}</div>
-                    <div v-if="canExpire()" class="text-red-500">
+                    <div v-if="canExpire()" class="text-prime-500">
                         {{ $t('expire', { date: localizeNext() }) }}
                     </div>
                     <div v-if="isPaid() && ! canExpire()">

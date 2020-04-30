@@ -1,86 +1,100 @@
 <template>
-    <div>
-        <h1 class="page-header">{{ $t('pageTitle') }}</h1>
-        <div :class="hasError?'error':'info'" v-if="hasError || message">
-            <p>{{ message }}</p>
+
+    <Page>
+        <PageHeader back="home">
+            {{ $t('pageTitle') }}
+        </PageHeader>
+        <div class="page-icon">
+            <IconLock classes="mx-auto" height="75" />
         </div>
-        <form autocomplete="off" @submit.prevent="reset" method="post">
-            <div class="form-group" :class="{ 'has-error': errors.password }">
-                <label for="password">{{ $t('password') }}</label>
-                <input type="password" id="password" class="form-control" v-model="password" required>
-                <div class="error-description" v-if="errors.password" v-for="error in errors.password">
-                    {{ $t('errors.'+error) }}
+        <template v-slot:bottom>
+            <form @submit.prevent="reset" class="form">
+                <div class="group" :class="{ 'has-error' : hasError('password') }">
+                    <label for="password">{{ $t('password') }}</label>
+                    <input type="password" v-model="password" required>
+                    <div class="error-description" v-if="hasError('password')" v-for="error in errors.password">
+                        {{ $t('errors.'+error) }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="password_confirmation">{{ $t('passwordConfirmation') }}</label>
-                <input type="password" id="password_confirmation" class="form-control" v-model="password_confirmation" required>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="button" :disabled="!goodToken||wait">{{ $t('save') }}</button>
-            </div>
-        </form>
-    </div>
+                <div class="group">
+                    <label for="password_confirmation">{{ $t('passwordConfirmation') }}</label>
+                    <input type="password" v-model="password_confirmation" required>
+                </div>
+
+                <div class="error" v-if="hasError('token')">
+                    {{ $t('errors.' + errors.token) }}
+                </div>
+
+                <BigButton :disable="disable || ! goodToken" @clicked="reset">
+                  {{ $t('save') }}
+                </BigButton>
+            </form>
+        </template>
+    </Page>
 </template>
+
 <script>
-  export default {
+import IconLock from '@/components/visual/icons/IconLock'
+import Page from '@/components/visual/Page'
+import PageBlock from '@/components/visual/PageBlock'
+import BigButton from '@/components/visual/BigButton'
+import PageHeader from '@/components/visual/PageHeader'
+import { mapState, mapGetters } from 'vuex'
+
+export default {
+    components: { IconLock, Page, PageHeader, PageBlock, BigButton },
     data() {
       return {
         password: null,
         password_confirmation: null,
-        hasError: false,
-        message: undefined,
-        errors: {},
         goodToken: false,
-        wait: false,
       }
     },
     mounted() {
-      this.$http.post('/auth/checkToken',
-        { token: this.$route.query.token, email: this.$route.query.email }
-      ).then(response => {
-        this.goodToken = true;
-      }).catch(error => {
-        this.hasError = true;
-        this.message = this.$t(error.response.data.message);
-      })
+      this.$store.dispatch('auth/checkToken', { 
+          token: this.$route.query.token, 
+          email: this.$route.query.email 
+        })
+        .then(() => {
+          if (! this.errorsHappened)
+            this.goodToken = true
+        })
     },
     methods: {
       reset() {
-        this.hasError = false;
-        this.message = undefined;
-        this.errors = {};
-        this.wait = true;
-        this.$http.post('/auth/newPassword',
-          { 
+        this.$store.dispatch('errors/clear')
+        this.$store.dispatch('auth/newPassword', { 
             token: this.$route.query.token, 
             email: this.$route.query.email, 
             password: this.password, 
             password_confirmation: this.password_confirmation, 
-          }
-        )
-        .then(response => {
-          this.message = this.$t(response.data.message);
-          this.$router.push({name: 'login'})
-        }).catch(error => {
-          this.hasError = true
-          this.errors = error.response.data.errors || {}
-          this.wait = false;
-          if (error.response.status == 422) {
-            if (this.errors.token || this.errors.email) 
-              this.message = this.$t(this.errors.token[0]) || this.$t(this.errors.email[0]);
-            else
-              this.message = this.$t('errors.validation');
-          } else
-            this.message = this.$t(error.response.data.message);
-        });
-      }
+          })
+          .then(() => {
+            if (! this.errorsHappened)
+              this.$router.push({ name: 'login' })
+          })
+      },
+    },
+    computed: {
+        ...mapGetters('loading', {
+            disable: 'disable',
+        }),
+        ...mapGetters('errors', {
+            errorsHappened: 'happened',
+            hasError: 'has',
+        }),
+        ...mapState('errors', {
+            errors: state => state.errors
+        }),
+        ...mapState('message', {
+            message: state => state.message
+        }),
     }
   }
 </script>
 
 <i18n locale="ru" lang="yaml">
-  pageTitle: "Установите новый пароль"
+  pageTitle: "Новый пароль"
   password: "Пароль"
   passwordConfirmation: "Подтверждение пароля"
   save: "Сохранить пароль"

@@ -1,11 +1,11 @@
 <template>
     <div v-if="user.cardLastFour">
-        <div class="block with-errors" >
+        <div class="block with-errors" @click="$router.push({ name: 'payment-card' })">
             <div class="title">
                 <IconMoney height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('method') }}</div>
             </div>
-            <div class="flex items-center text-black">
+            <div class="flex items-center text-black dark:text-gray-500">
                 <div class="">** {{ user.cardLastFour }}</div>
                 <div class="w-20">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />

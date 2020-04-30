@@ -1,36 +1,50 @@
 <template>
-    <div class="mt-75">
-        <div class="error" v-if="errorsHappened">
-            <p>{{ $t('badLoginOrPassword') }}</p>
+  <div>
+    <PageHeader back="home">
+        {{ $t('pageTitle') }}
+    </PageHeader>
+
+    <Page>
+        <div class="page-icon">
+            <IconProfile classes="mx-auto" height="75" />
         </div>
-        <form autocomplete="off" @submit.prevent="login" method="post">
-            <div class="form-group">
-                <label for="email">{{ $t('email') }}</label>
-                <input type="email" id="email" placeholder="user@example.com" v-model="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">{{ $t('password') }}</label>
-                <input type="password" id="password" v-model="password" required>
-            </div>
-            <div class="flex justify-between items-center form-group">
-              <div>
-                <button type="submit" class="button" :disabled="wait">{{ $t('loginButton') }}</button>
-              </div>
-              <div>
-                <a href="/remind" class="text-blue-600 hover:underline">{{ $t('forgotPassword') }}</a>
-              </div>
-            </div>
-        </form>
-    </div>
+        <template v-slot:bottom>
+            <form @submit.prevent="login" class="form">
+                <div class="group" :class="{ 'has-error' : errorsHappened }">
+                    <label for="email">{{ $t('email') }}</label>
+                    <input type="email" placeholder="user@example.com" v-model="email" required>
+                    </div>
+                <div class="group" :class="{ 'has-error' : errorsHappened }">
+                    <label for="password">{{ $t('password') }}</label>
+                    <input type="password" v-model="password" required>
+                </div>
+                <div class="error" v-if="errorsHappened">
+                    {{ $t('badLoginOrPassword') }}
+                </div>
+                <div class="flex justify-between items-center group">
+                    <div class="flex-grow-0">
+                      <LoadingButton :disable="disable">{{ $t('loginButton') }}</LoadingButton>
+                    </div>
+                    <a href="/remind" class="text-prime-500 hover:underline block mb-16">{{ $t('forgotPassword') }}</a>
+                </div>
+            </form>
+        </template>
+    </Page>
+  </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
-  export default {
+import IconProfile from '@/components/visual/icons/IconProfile'
+import Page from '@/components/visual/Page'
+import LoadingButton from '@/components/visual/LoadingButton'
+import PageHeader from '@/components/visual/PageHeader'
+import { mapGetters } from 'vuex'
+
+export default {
+    components: { IconProfile, Page, PageHeader, LoadingButton },
     data() {
       return {
         email: null,
         password: null,
-        wait: false,
       }
     },
     methods: {
@@ -41,35 +55,36 @@
             password: this.password
           })
           .then(() => {
-            this.$router.push({ name: 'dashboard' })
-          })
-          .catch(err => {
-            this.$store.dispatch('errors/set', { login: 'failed' })
+            if (! this.errorsHappened)
+              this.$router.push({ name: 'dashboard' })
           })
       },
     },
     computed: {
-      ...mapGetters('errors', {
-        errorsHappened: 'happened'
-      })
+        ...mapGetters('loading', {
+            disable: 'disable',
+        }),
+        ...mapGetters('errors', {
+            errorsHappened: 'happened'
+        })
     }
   }
 </script>
 
 <i18n locale="ru" lang="yaml">
-  login: "Вход"
+  pageTitle: "Вход"
   email: "Электронная почта"
   password: "Пароль"
   loginButton: "Войти"
   forgotPassword: "Забыли пароль?"
-  badLoginOrPassword: "Неправильный адрес или пароль."
+  badLoginOrPassword: "Неправильный адрес или пароль"
 </i18n>
 
 <i18n locale="en" lang="yaml">
-  login: "Login"
+  pageTitle: "Login"
   email: "E-mail"
   password: "Password"
   loginButton: "Login"
   forgotPassword: "Forgot password?"
-  badLoginOrPassword: "Bad email or password."
+  badLoginOrPassword: "Bad email or password"
 </i18n>

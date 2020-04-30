@@ -43,7 +43,7 @@ class VerifyEmail extends Mailable
 
     protected function verificationUrl($user)
     {
-        return config('app.url').'/email/verify/'
+        return config('app.url').'/verify/'
                     .$user->getKey() .'/'
                     .sha1($user->getEmailForVerification());
     }

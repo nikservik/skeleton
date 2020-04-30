@@ -12,6 +12,7 @@ use Nikservik\Subscriptions\Facades\Payments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Models\Tariff;
 use Nikservik\Subscriptions\Requests\ActivateSubscriptionRequest;
+use Nikservik\Subscriptions\Requests\AuthorizeByCryptogramRequest;
 use Nikservik\Subscriptions\Requests\PayByCryptogramRequest;
 use Nikservik\Subscriptions\Requests\Post3dsRequest;
 
@@ -27,6 +28,8 @@ class SubscriptionController extends Controller
             Route::post('', 'SubscriptionController@activate')->middleware('auth:api');
             Route::post('cancel', 'SubscriptionController@cancel')->middleware('auth:api');
             Route::post('crypt', 'SubscriptionController@crypt')->middleware('auth:api');
+            Route::post('authorize', 'SubscriptionController@authorizeCrypt')->middleware('auth:api');
+            Route::post('{user}', 'SubscriptionController@autorizePost3ds');
             Route::post('{user}/{tariff}', 'SubscriptionController@post3ds');
         });
     }
@@ -111,9 +114,31 @@ class SubscriptionController extends Controller
         return [ 'status' => 'success', 'data' => [ 'subscription' => $result ] ];
     }
 
+    public function authorizeCrypt(AuthorizeByCryptogramRequest $request)
+    {
+        $result = Payments::authorizeByCrypt(Auth::user(), $request->name, $request->ip(), $request->crypt);
+
+        if ($result === true)
+            return [ 'status' => 'success' ];
+
+        if (is_string($result))
+            return [ 'status' => 'error', 'message' => $result];
+
+        if (is_array($result))
+            return [ 'status' => 'need3ds', 'data' => $result];
+    }
+
     public function post3ds(Post3dsRequest $request, User $user, Tariff $tariff)
     {
         $result = Payments::post3ds($user, $tariff, $request->MD, $request->PaRes);
+
+        $error = is_string($result) ? $result : false; 
+        return view('subscriptions::frame', [ 'error' => $error ]);
+    }
+
+    public function autorizePost3ds(Post3dsRequest $request, User $user)
+    {
+        $result = Payments::authorizePost3ds($user, $request->MD, $request->PaRes);
 
         $error = is_string($result) ? $result : false; 
         return view('subscriptions::frame', [ 'error' => $error ]);

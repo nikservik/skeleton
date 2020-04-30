@@ -1,39 +1,36 @@
 <template>
   <div>
-    <div class="text-sm text-red-600 text-center" v-if="hasError('failed')">
+    <div class="text-sm text-prime-500 text-center" v-if="hasError('failed')">
       {{ $t('errors.failed') }}
     </div>
     
-    <PayForm ref="payform" 
-      :tariff="to"
-      v-if="nextAction == 'pay'"
-      v-on:loaded="cpLoaded = true"
-       />
+    <PayForm ref="payform":tariff="to" v-if="nextAction == 'pay'"
+      @loaded="cpLoaded = true" />
 
-    <div class="button-holder">
-      <button id="action" 
-        @click="doNextAction" 
-        :disabled="nextAction == 'pay' && ! cpLoaded" 
-        :class="{
-          'bg-red-600 hover:bg-red-700' : nextAction == 'cancel',
-          'bg-blue-500 hover:bg-blue-700' : nextAction == 'activate' || nextAction == 'pay'
-        }">
-        {{ $t('button.' + nextAction, { amount: price + ' ' + $t('currency.' + to.currency)}) }}
-      </button>
+    <div class="mx-20 flex items-center">
+      <input type="checkbox" v-model="agree">
+      <div class="ml-11" v-html="$t('agree', { url: '/oferta' })"></div>
     </div>
+
+    <LoadingButton @clicked="doNextAction"
+      :disable="disable || nextAction == 'pay' && (! cpLoaded || ! agree)">
+      {{ $t('button.' + nextAction, { amount: price + ' ' + $t('currency.' + to.currency)}) }}
+    </LoadingButton>
   </div>
 </template>
 
 <script>
 import PayForm from '@/components/PayForm'
+import LoadingButton from '@/components/visual/LoadingButton'
 import { mapState, mapGetters } from 'vuex'
 
   export default {
     props: [ 'from', 'to' ],
-    components: { PayForm },
+    components: { PayForm, LoadingButton },
     data() {
       return {
         cpLoaded: false,
+        agree: false,
       }
     },
     methods: {
@@ -63,9 +60,6 @@ import { mapState, mapGetters } from 'vuex'
           })
       },
     },
-    mounted() {
-      document.getElementById('action').scrollIntoView(true)
-    },
     computed: {
         nextAction() {
           if (this.isPaid(this.to))
@@ -86,11 +80,15 @@ import { mapState, mapGetters } from 'vuex'
             hasError: 'has',
             getError: 'getFirst',
         }),
+        ...mapGetters('loading', {
+            disable: 'disable',
+        }),
     },
   }
 </script>
 
 <i18n locale="ru" lang="yaml">
+  agree: "Соглашаюсь с условиями <a href='{url}'>оферты</a>"
   button:
     activate: "Включить"
     pay: "Оплатить {amount}"
@@ -102,6 +100,7 @@ import { mapState, mapGetters } from 'vuex'
 </i18n>
 
 <i18n locale="en" lang="yaml">
+  agree: "Agree with <a href='{url}'>politics</a>"
   button:
     activate: "Activate"
     pay: "Pay {amount}"

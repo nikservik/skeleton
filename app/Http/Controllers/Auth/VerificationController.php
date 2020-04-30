@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmailVerifyRequest;
 use App\Mail\VerifyEmail;
 use App\User;
 use Illuminate\Auth\Events\Verified;
@@ -19,27 +20,33 @@ class VerificationController extends Controller
         Route::namespace('Auth')->group(function () {
             Route::get('email/resend', 'VerificationController@resend')
             ->middleware('auth:api');
+            Route::post('email/verify', 'VerificationController@verify');
         });
     }
 
-    public static function routes() 
+    public function verify(EmailVerifyRequest $request)
     {
-        Route::get('email/verify/{user}/{hash}', 'Auth\VerificationController@verify')
-            ->middleware('throttle:6,1');
-    }
+        $user = User::find($request->user);
 
-    public function verify(User $user, $hash)
-    {
         if ($user->hasVerifiedEmail()) 
-            return redirect('/dashboard');
+            return [ 
+                'status' => 'success', 
+                'message' => 'messages.alreadyVerified',
+            ];
 
         if(! hash_equals((string) $hash, sha1($user->email)))
-            return redirect('/login');
+            return response()->json([ 
+                'status' => 'error', 
+                'errors' => [ 'verify' => 'badLink' ],
+            ], 403);
 
         if ($user->markEmailAsVerified()) 
             event(new Verified($user));
 
-        return redirect('/dashboard');
+        return [ 
+            'status' => 'success', 
+            'message' => 'messages.verified',
+        ];
     }
 
     public function resend()

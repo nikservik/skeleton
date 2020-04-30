@@ -15,7 +15,6 @@
             </div>
             <div>&nbsp;</div>
         </div>
-        <div class="header-spacer"></div>
     </div>
 </template>
 

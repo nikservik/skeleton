@@ -33,7 +33,7 @@ class PasswordRemindController extends Controller
         else
             return [ 
                 'status' => 'error', 
-                'message' => $response
+                'errors' => [ 'email' => $response ]
             ];
     }
 
@@ -42,19 +42,19 @@ class PasswordRemindController extends Controller
         if (! $request->has('token') or ! $request->has('email'))
             return response()->json([
                 'status' => 'error',
-                'message' => 'errors.email'
+                'errors' => [ 'token' => 'email' ],
             ], 403);
 
         if (is_null($user = Password::broker()->getUser($request->only('email'))))
             return response()->json([
                 'status' => 'error',
-                'message' => 'errors.email'
+                'errors' => [ 'token' => 'email' ],
             ], 403);
 
         if (! Password::broker()->tokenExists($user, $request->token))
             return response()->json([
                 'status' => 'error',
-                'message' => 'errors.token'
+                'errors' => [ 'token' => 'token' ],
             ], 403);
 
         return response()->json(['status' => 'success']);
@@ -79,7 +79,7 @@ class PasswordRemindController extends Controller
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => $response
+                'errors' => [ 'password' => $response ]
             ]);
         }
     }

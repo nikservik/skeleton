@@ -10,8 +10,12 @@ import Login from './views/auth/Login'
 import Remind from './views/auth/Remind'
 import RemindNewPassword from './views/auth/RemindNewPassword'
 import Verify from './views/auth/Verify'
+import Settings from './views/Settings'
+import Oferta from './views/Oferta'
 import Profile from './views/user/Profile'
+import Dashboard from './views/user/Dashboard'
 import PaymentsHistory from './views/user/PaymentsHistory'
+import PaymentCard from './views/user/PaymentCard'
 import TariffSelect from './views/user/TariffSelect'
 
 // Routes
@@ -21,11 +25,16 @@ const routes = [
   { name: 'books', path: '/books', component: Books, meta: { auth: true, feature: 'read-books' } },
   { name: 'register', path: '/register', component: Register, meta: { auth: false } },
   { name: 'login', path: '/login', component: Login, meta: { auth: false } },
+  { name: 'oferta', path: '/oferta', component: Oferta, meta: { auth: undefined } },
   { name: 'remind', path: '/remind', component: Remind, meta: { auth: undefined }, },
   { name: 'remind-new', path: '/remind/new', component: RemindNewPassword, meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
+  { name: 'verify', path: '/verify/:user/:hash', component: Verify, meta: { auth: undefined }, },
   { name: 'profile', path: '/profile', component: Profile, meta: { auth: true } },
+  { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
+  { name: 'settings', path: '/settings', component: Settings, meta: { auth: false } },
   { name: 'payments', path: '/subscription/payments', component: PaymentsHistory, meta: { auth: true } },
+  { name: 'payment-card', path: '/subscription/payment-card', component: PaymentCard, meta: { auth: true } },
   { name: 'select-tariff', path: '/subscription/select', component: TariffSelect, meta: { auth: true } },
 ]
 
@@ -37,12 +46,29 @@ const router = new Router({
   routes,
 })
 router.beforeEach((to, from, next) => {
-  if (store.getters['auth/canSee'](to.meta)) 
-    if (store.getters['auth/needVerification'])
-      next('/verify')
+  var checker = (to, from, next) => {
+    if (store.getters['auth/canSee'](to.meta)) 
+      if (store.getters['auth/needVerification'])
+        next('/verify')
+      else
+        next()
     else
-      next()
+      if (to.meta.auth)
+        next('/login')
+      else
+        next('/dashboard')
+  }
+
+  if (store.getters['auth/loaded']) 
+    checker(to, from, next)
   else
-    next(false)
+    store.dispatch('auth/init')
+      .then(() => {
+        if (! store.getters['auth/loaded'])
+          store.dispatch('auth/fetch')
+            .then(() => { checker(to, from, next) })
+        else
+          checker(to, from, next)
+      })
 })
 export default router

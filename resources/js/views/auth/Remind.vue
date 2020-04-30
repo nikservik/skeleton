@@ -1,32 +1,40 @@
 <template>
-    <div>
-        <h1 class="page-header">{{ $t('pageTitle') }}</h1>
-        <div :class="hasError?'error':'info'" v-if="hasError || message">
-            <p>{{ message }}</p>
+    <Page>
+        <PageHeader back="login">
+            {{ $t('pageTitle') }}
+        </PageHeader>
+        <div class="page-icon">
+            <IconLock classes="mx-auto" height="75" />
         </div>
-        <form @submit.prevent="remind" method="post">
-            <div class="form-group">
-                <label for="email">{{ $t('email') }}</label>
-                <input type="email" id="email" placeholder="user@example.com" v-model="email" required>
-                <div class="error-description" v-if="errors.email" v-for="error in errors.email">
-                    {{ $t('errors.'+error) }}
+        <template v-slot:bottom>
+            <form @submit.prevent="remind" class="form">
+                <div class="group" :class="{ 'has-error' : hasError('email') }">
+                    <label for="email">{{ $t('email') }}</label>
+                    <input type="email" placeholder="user@example.com" v-model="email" required>
+                    <div class="error-description" v-if="hasError('email')" v-for="error in errors.email">
+                        {{ $t('errors.'+error) }}
+                    </div>
                 </div>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="button" :disabled="wait">{{ $t('send') }}</button>
-            </div>
-        </form>
-    </div>
+                <BigButton :disable="disable" @clicked="remind">
+                  {{ $t('send') }}
+                </BigButton>
+            </form>
+        </template>
+    </Page>
 </template>
 <script>
-  export default {
+import IconLock from '@/components/visual/icons/IconLock'
+import Page from '@/components/visual/Page'
+import PageBlock from '@/components/visual/PageBlock'
+import BigButton from '@/components/visual/BigButton'
+import PageHeader from '@/components/visual/PageHeader'
+import { mapState, mapGetters } from 'vuex'
+
+export default {
+    components: { IconLock, Page, PageHeader, PageBlock, BigButton },
     data() {
       return {
         email: null,
-        hasError: false,
-        errors: {},
-        message: undefined,
-        wait: false,
       }
     },
     mounted() {
@@ -34,27 +42,24 @@
     },
     methods: {
       remind() {
-        this.hasError = false;
-        this.errors = {};
-        this.message = undefined;
-        this.wait = true;
-        this.$http.post('/auth/remind',
-          { email: this.email }
-        )
-        .then(response => {
-            this.hasError = (response.data.status == 'error');
-            this.message = this.$t(response.data.message);
-            this.wait = false;
-        }).catch(error => {
-            this.hasError = true;
-            this.errors = error.response.data.errors || {};
-            this.wait = false;
-            if (error.response.status == 422) {
-              this.message = this.$t('errors.validation');
-            } else
-              this.message = this.$t(error.response.data.message);
-        });
+        this.$store.dispatch('errors/clear')
+        this.$store.dispatch('auth/remind', this.email)
       }
+    },
+    computed: {
+        ...mapGetters('loading', {
+            disable: 'disable',
+        }),
+        ...mapGetters('errors', {
+            errorsHappened: 'happened',
+            hasError: 'has',
+        }),
+        ...mapState('errors', {
+            errors: state => state.errors
+        }),
+        ...mapState('message', {
+            message: state => state.message
+        }),
     }
   }
 </script>

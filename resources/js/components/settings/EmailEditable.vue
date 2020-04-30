@@ -8,7 +8,7 @@
             </div>
             <div class="w-1/2 overflow-hidden" v-if="! editing" @click="edit">{{ user.email }}</div>
             <div class="bottom">
-                <div class="input-item" :class="{ error : hasError('email') }" v-if="editing">
+                <div class="input-item text-right" :class="{ error : hasError('email') }" v-if="editing">
                     <input type="email" id="edit-email" 
                         :value="value" 
                         @focusout="unedit">

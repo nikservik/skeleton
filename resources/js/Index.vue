@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <div class="content">
-        <div class="">
-            <router-view/>
-        </div>
-    </div>
+    <PopupMessage />
+
+    <router-view/>
+
     <BottomMenu />
   </div>
 </template>
 
 <script>
   import BottomMenu from '@/components/visual/BottomMenu'
+  import PopupMessage from '@/components/visual/PopupMessage'
   export default {
+    components: { BottomMenu, PopupMessage },
     data() {
       return {
       }
@@ -19,7 +20,6 @@
     methods: {
       
     },
-    components: { BottomMenu },
   }
 </script>
 

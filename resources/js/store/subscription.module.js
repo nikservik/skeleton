@@ -85,5 +85,21 @@ export const subscription = {
           context.dispatch('errors/set', { response: 'errors.failed' }, { root: true })
         })
     },
+    authorizeCard(context, payData) {
+      context.commit('CLEAR_3DS')
+      return axios
+        .post('/subscriptions/authorize', payData)
+        .then(({ data }) => {
+          if (data.status == 'error') 
+            context.dispatch('errors/set', { payment: data.message }, { root: true })
+          if (data.status == 'need3ds') 
+            context.commit('SET_3DS', data.data)
+          if (data.status == 'success') 
+            context.dispatch('auth/fetch', {}, { root: true })
+        })
+        .catch((error) => {
+          context.dispatch('errors/set', { response: 'errors.failed' }, { root: true })
+        })
+    },
   },
 };

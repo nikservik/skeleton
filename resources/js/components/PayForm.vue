@@ -4,8 +4,7 @@
       <form id="cardform">
         <input v-mask="'#### #### #### #### ###'" class="card-number field" 
           :class="{ 
-            'border-gray-300' : ! hasError('cardNumber'), 
-            'border-red-400' : hasError('cardNumber'), 
+            'border border-prime-500' : hasError('cardNumber'), 
           }"
           autocomplete="cc-number" 
           type="tel" data-cp="cardNumber" 
@@ -13,8 +12,7 @@
 
         <div class="line-2">
           <div class="expire" :class="{
-              'border-gray-300': !hasError('expDateMonth') && !hasError('expDateYear'), 
-              'border-red-400': hasError('expDateMonth') || hasError('expDateYear'), 
+              'border border-prime-500': hasError('expDateMonth') || hasError('expDateYear'), 
             }">
             <input v-mask="'##'" class="expire-month" 
               autocomplete="cc-exp-month" 
@@ -31,23 +29,21 @@
           <div class="cvv">
             <span class="description">{{ $t('card.cvv') }}</span>
             <input v-mask="'###'" class="number field" :class="{ 
-                'border-gray-300': !hasError('cvv'), 
-                'border-red-400': hasError('cvv'), 
+                'border border-prime-500': hasError('cvv'), 
               }"
               autocomplete="off" type="password" data-cp="cvv" 
               :placeholder="$t('card.cvv-placeholder')" />
           </div>
         </div>
         <input class="card-holder field" :class="{ 
-            'border-gray-300': ! hasError('name'), 
-            'border-red-400': hasError('name'), 
+            'border border-prime-500': hasError('name'), 
           }"
           autocomplete="cc-name" type="tel" data-cp="name" 
           :placeholder="$t('card.name')" v-model="cardholder" />
       </form>
     </div>
     <div class="pay-form-error" v-if="errorHappened">
-      {{ hasError('response') ? $t(getError('response')) : $t('errors.form')  }}
+      {{ errorMessage }}
     </div>
     <SecureFrame ref="secureframe" />
   </div>
@@ -118,11 +114,33 @@ export default {
               return this.$router.push({ name: 'profile' })
           })
       },
+      authorize() {
+        this.createCrypt()
+        if (! this.crypt) return
+
+        this.$store.dispatch('subscription/authorizeCard', {
+            name: this.cardholder,
+            crypt: this.crypt 
+          })
+          .then(() => {
+            if (this.for3ds)
+              return this.open3ds(this.for3ds)
+            if (! this.errorHappened)
+              return this.$router.push({ name: 'profile' })
+          })
+      },
   },
   mounted() {
     this.loadCP()
   },
   computed: {
+    errorMessage() {
+      if (this.hasError('response'))
+        return this.$t(this.getError('response'))
+      if (this.hasError('payment'))
+        return this.$t(this.getError('payment'))
+      return this.$t('errors.form')
+    },
     ...mapState('subscription', {
         for3ds: state => state.for3ds
     }),
@@ -140,6 +158,7 @@ export default {
 <i18n locale="ru" lang="yaml">
   errors: 
     form: "Проверьте все данные еще раз"
+    failed: "Попытка не удалась, попробуйте позже"
   card:
     name: "Владелец карты"
     number: "Номер карты"
@@ -149,4 +168,14 @@ export default {
     cvv-placeholder: "CVC"
 </i18n>
 <i18n locale="en" lang="yaml">
+  errors: 
+    form: "Please check entered data"
+    failed: "Failed for unknown reason, please try later"
+  card:
+    name: "Cardholder"
+    number: "Card Number"
+    expire-month: "MM"
+    expire-year: "YY"
+    cvv: "Three digits on back"
+    cvv-placeholder: "CVC"
 </i18n>

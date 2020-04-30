@@ -14,6 +14,7 @@ const purgecss = postcssPurgecss({
   defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
   // Whitelist auto generated classes for transitions and router links.
   // From: https://github.com/ky-is/vue-cli-plugin-tailwind
+  whitelist: ['mode-dark'],
   whitelistPatterns: [/-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/],
 });
 module.exports = {

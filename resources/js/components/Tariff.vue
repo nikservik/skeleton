@@ -1,20 +1,21 @@
 <template>
     <div>
-        <div class="mx-20 px-16 my-16 py-20 shadow-lg rounded-md" 
+        <div class="page-block" 
             v-if="visible"
             :class="{ 
-                'bg-white' : ! selected,
-                'bg-gray-500 border text-white' : selected,
+                'bg-prime-400 text-white dark:bg-prime-700 dark:text-gray-200' : active,
+                'bg-white dark:bg-gray-900' : ! active && ! selected,
+                'bg-prime-500 dark:bg-prime-600 dark:text-gray-200 text-white' : selected,
             }"
             @click="select()">
             <div class="float-right">
-                <span class="rounded-sm bg-blue-500 text-white text-xs p-5" v-if="selected">
+                <span class="rounded-sm bg-prime-400 dark:bg-prime-600 dark:text-gray-200 text-white text-xs p-5" v-if="selected">
                     {{ $t('state.selected') }}
                 </span>
-                <span class="rounded-sm bg-blue-200 text-blue-600 text-xs p-5" v-if="next">
+                <span class="rounded-sm bg-prime-400 dark:bg-prime-600 dark:text-gray-200 text-white text-xs p-5" v-if="next">
                     {{ $t('state.next') }}
                 </span>
-                <span class="rounded-sm bg-green-200 text-green-600 text-xs p-5" v-if="active">
+                <span class="rounded-sm bg-prime-400 dark:bg-prime-700 dark:text-gray-200 text-white text-xs p-5" v-if="active">
                     {{ $t('state.active') }}
                 </span>
             </div>
@@ -32,7 +33,7 @@
                     {{ tariff.price + ' ' + $t('currency.'+tariff.currency) + 
                     '/' + $t('periods.'+tariff.period) }}
                 </div>
-                <div class="text-red-600" v-if="expire">
+                <div class="text-prime-100 dark:text-prime-300" v-if="expire">
                     {{ $t('expire', { date: localizeDate(subscription.next_transaction_date) }) }}
                 </div>
             </div>
@@ -40,7 +41,7 @@
                 <ul class="list-inside text-sm">
                     <div v-for="feature in features" 
                         :class="{ 
-                            'line-through text-gray-700': featureSign(feature) == '–',
+                            'line-through': featureSign(feature) == '–',
                             'font-bold': featureSign(feature) == '+',
                         }">
                         <span v-html="featureSign(feature)"></span> 
@@ -73,8 +74,7 @@ export default {
             if (this.tariff.features.includes(feature) 
                 && ! this.subscription.features.includes(feature))
                 return '+'
-            if (! this.tariff.features.includes(feature) 
-                && this.subscription.features.includes(feature))
+            if (! this.tariff.features.includes(feature))
                 return '–'
             return '&nbsp;&nbsp;'
         },

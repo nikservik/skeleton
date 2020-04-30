@@ -1,26 +1,30 @@
 <template>
-  <div>
-    <h1 class="page-header">{{ $t('pageTitle') }}</h1>
+  <Page type="no-header">
+    <div class="page-text">
+      <h1>{{ $t('pageTitle') }}</h1>
 
-    <div class="py-6 mx-4">
-        Фича. Читать могут только те, у кого это включено в тарифе. Книги загружаются из api.
+      <p> Фича. Читать могут только те, у кого это включено в тарифе. Книги загружаются из api. </p>
     </div>
-    <div v-for="book in books"
-        class="text-center py-6 text-xl border border-gray-500 rounded-lg my-4">
+    <PageBlock v-for="(book, index) in books" :key="index">
         {{ book }}
-    </div>
-  </div>
+    </PageBlock>
+  </Page>
 </template>
 
 <script>
+import Page from '@/components/visual/Page'
+import PageBlock from '@/components/visual/PageBlock'
+import axios from 'axios'
+
 export default {
+    components: { Page, PageBlock },
     data() {
       return {
         books: [],
       }
     },
     mounted() {
-      this.$http.get('/books')
+      axios.get('/books')
       .then(response => {
         this.books = response.data.books;
       })

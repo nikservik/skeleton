@@ -6,7 +6,7 @@
                 :value="bindedValue" 
                 @focus="edit"
                 @focusout="unedit">
-            <div class="error-text" :class="{ hidden : ! hasError('name') }">
+            <div class="error-text" v-if="editing && hasError('name')">
                 {{ $t('errors.' + getError('name')) }}
             </div>
         </div>

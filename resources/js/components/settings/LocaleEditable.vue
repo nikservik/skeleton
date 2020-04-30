@@ -5,7 +5,7 @@
                 <IconGlobe height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('language') }}</div>
             </div>
-            <div class="flex items-center text-black" @click="toggleEdit">
+            <div class="flex items-center text-black dark:text-gray-500" @click="toggleEdit">
                 <div class="pr-5">{{ $t('locales.' + locale) }}</div>
                 <div class="w-20">
                     <IconBottomChevron classes="mx-auto" v-if="! editing" />

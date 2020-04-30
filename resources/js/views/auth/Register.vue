@@ -1,82 +1,98 @@
 <template>
-    <div>
-        <h1 class="page-header">{{ $t('pageTitle') }}</h1>
+  <div>
+    <PageHeader back="home">
+        {{ $t('pageTitle') }}
+    </PageHeader>
 
-        <div class="error" v-if="hasError">
-            <p v-if="error == 'validation_error'">{{ $t('errors.validation') }}</p>
-            <p v-else>{{ $t('errors.connection') }}</p>
+    <Page>
+        <div class="page-icon">
+            <IconProfile classes="mx-auto" height="75" />
         </div>
-        <form autocomplete="off" @submit.prevent="register" method="post">
-            <div class="form-group" :class="{ 'has-error': errors.name }">
-                <label for="name">{{ $t('name') }}</label>
-                <input type="text" id="name" class="form-control" placeholder="Ваше имя" v-model="name" required>
-                <div class="error-description" v-if="errors.name" v-for="error in errors.name">
-                    {{ $t('errors.'+error) }}
+        <template v-slot:bottom>
+            <form @submit.prevent="register" class="form">
+                <div class="group" :class="{ 'has-error' : hasError('name') }">
+                    <label for="name">{{ $t('name') }}</label>
+                    <input type="text" placeholder="Ваше имя" v-model="name" required>
+                    <div class="error-description" v-if="hasError('name')" v-for="error in errors.name">
+                        {{ $t('errors.'+error) }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" :class="{ 'has-error': errors.email }">
-                <label for="email">{{ $t('email') }}</label>
-                <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
-                <div class="error-description" v-if="errors.email" v-for="error in errors.email">
-                    {{ $t('errors.'+error) }}
+                <div class="group" :class="{ 'has-error' : hasError('email') }">
+                    <label for="email">{{ $t('email') }}</label>
+                    <input type="email" placeholder="user@example.com" v-model="email" required>
+                    <div class="error-description" v-if="hasError('email')" v-for="error in errors.email">
+                        {{ $t('errors.'+error) }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" :class="{ 'has-error': errors.password }">
-                <label for="password">{{ $t('password') }}</label>
-                <input type="password" id="password" class="form-control" v-model="password" required>
-                <div class="error-description" v-if="errors.password" v-for="error in errors.password">
-                    {{ $t('errors.'+error) }}
+                <div class="group" :class="{ 'has-error' : hasError('password') }">
+                    <label for="password">{{ $t('password') }}</label>
+                    <input type="password" v-model="password" required>
+                    <div class="error-description" v-if="hasError('password')" v-for="error in errors.password">
+                        {{ $t('errors.'+error) }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="password_confirmation">{{ $t('passwordConfirmation') }}</label>
-                <input type="password" id="password_confirmation" class="form-control" v-model="password_confirmation" required>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="button" :disabled="wait">{{ $t('register') }}</button>
-            </div>
-        </form>
-    </div>
+                <div class="group">
+                    <label for="password_confirmation">{{ $t('passwordConfirmation') }}</label>
+                    <input type="password" v-model="password_confirmation" required>
+                </div>
+
+                <div class="error" v-if="errorsHappened">
+                    {{ hasError('connection') ? $t('errors.connection') : $t('errors.validation') }}
+                </div>
+
+                <BigButton :disable="disable" @clicked="register">
+                  {{ $t('register') }}
+                </BigButton>
+            </form>
+        </template>
+    </Page>
+  </div>
 </template>
 <script>
-  export default {
+import IconProfile from '@/components/visual/icons/IconProfile'
+import Page from '@/components/visual/Page'
+import BigButton from '@/components/visual/BigButton'
+import PageHeader from '@/components/visual/PageHeader'
+import { mapState, mapGetters } from 'vuex'
+
+export default {
+    components: { IconProfile, Page, PageHeader, BigButton },
     data() {
       return {
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
-        hasError: false,
-        error: '',
-        errors: {},
-        wait: false,
       }
     },
     methods: {
       register() {
-        this.wait = true;
-        this.errors = {};
-        var app = this
-        this.$auth.register({
-          data: {
-            name: app.name,
-            email: app.email,
-            password: app.password,
-            password_confirmation: app.password_confirmation
-          },
-          // autoLogin: true,
-          success: function () {
-            this.$router.push({ name: 'login', params: { successRegistrationRedirect: true } })
-          },
-          error: function (res) {
-            app.hasError = true;
-            app.wait = false;
-            if (res.response.status == 422) 
-                app.error = 'validation_error'
-            app.errors = res.response.data.errors || {}
-          }
-        })
+        this.$store.dispatch('errors/clear')
+        this.$store.dispatch('auth/register', {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          })
+          .then(() => {
+            if (! this.errorsHappened) {
+              this.$store.dispatch('message/show', this.$t('success'))
+              this.$router.push({ name: 'login' })
+            }
+          })
       }
+    },
+    computed: {
+        ...mapGetters('loading', {
+            disable: 'disable',
+        }),
+        ...mapGetters('errors', {
+            errorsHappened: 'happened',
+            hasError: 'has',
+        }),
+        ...mapState('errors', {
+            errors: state => state.errors
+        }),
     }
   }
 </script>
@@ -88,8 +104,9 @@
   password: "Пароль"
   passwordConfirmation: "Подтверждение пароля"
   register: "Зарегистрироваться"
+  success: "Поздравляем с регистрацией!"
   errors:
-    validation: "Проверьте правильность данных."
+    validation: "Проверьте все данные еще раз"
     connection: "Невозможно зарегистрироваться сейчас, попробуйте позже."
     name:
         required: "Имя обязательно нужно"
@@ -112,6 +129,7 @@
   password: "Password"
   passwordConfirmation: "Confirm password"
   register: "Register"
+  success: "Congratulations! You've been registered"
   errors:
     validation: "Please provide correct data"
     connection: "Can't register right now, please try later"
