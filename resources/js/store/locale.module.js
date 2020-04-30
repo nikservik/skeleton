@@ -24,7 +24,7 @@ export const locale = {
   actions: {
     set (context, locale) {
       context.commit('SET_LOCALE', locale)
-      if (context.rootGetters['auth/loggedIn']) 
+      if (locale != context.state.locale && context.rootGetters['auth/loggedIn']) 
         axios.post('/locale', { locale: locale })
           .then(() => {console.log('locale set')})
     },
