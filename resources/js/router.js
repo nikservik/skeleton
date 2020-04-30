@@ -7,11 +7,7 @@ import Sky from './views/Sky'
 import Books from './views/Books'
 import Register from './views/auth/Register'
 import Login from './views/auth/Login'
-import Remind from './views/auth/Remind'
-import RemindNewPassword from './views/auth/RemindNewPassword'
-import Verify from './views/auth/Verify'
 import Settings from './views/Settings'
-import Oferta from './views/Oferta'
 import Profile from './views/user/Profile'
 import Dashboard from './views/user/Dashboard'
 import PaymentsHistory from './views/user/PaymentsHistory'
@@ -25,17 +21,19 @@ const routes = [
   { name: 'books', path: '/books', component: Books, meta: { auth: true, feature: 'read-books' } },
   { name: 'register', path: '/register', component: Register, meta: { auth: false } },
   { name: 'login', path: '/login', component: Login, meta: { auth: false } },
-  { name: 'oferta', path: '/oferta', component: Oferta, meta: { auth: undefined } },
-  { name: 'remind', path: '/remind', component: Remind, meta: { auth: undefined }, },
-  { name: 'remind-new', path: '/remind/new', component: RemindNewPassword, meta: { auth: undefined }, },
-  { name: 'verify', path: '/verify', component: Verify, meta: { auth: true }, },
-  { name: 'verify', path: '/verify/:user/:hash', component: Verify, meta: { auth: undefined }, },
   { name: 'profile', path: '/profile', component: Profile, meta: { auth: true } },
   { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
   { name: 'settings', path: '/settings', component: Settings, meta: { auth: false } },
-  { name: 'payments', path: '/subscription/payments', component: PaymentsHistory, meta: { auth: true } },
-  { name: 'payment-card', path: '/subscription/payment-card', component: PaymentCard, meta: { auth: true } },
-  { name: 'select-tariff', path: '/subscription/select', component: TariffSelect, meta: { auth: true } },
+
+  { name: 'oferta', path: '/oferta', component: () => import('@/views/Oferta'), meta: { auth: undefined } },
+  { name: 'remind', path: '/remind', component: () => import('@/views/auth/Remind'), meta: { auth: undefined }, },
+  { name: 'remind-new', path: '/remind/new', component: () => import('@/views/auth/RemindNewPassword'), meta: { auth: undefined }, },
+  { name: 'verify', path: '/verify', component: () => import('@/views/auth/Verify'), meta: { auth: true }, },
+  { name: 'verify', path: '/verify/:user/:hash', component: () => import('@/views/auth/Verify'), meta: { auth: undefined }, },
+
+  { name: 'payments', path: '/subscription/payments', component: () => import('@/views/user/PaymentsHistory'), meta: { auth: true } },
+  { name: 'payment-card', path: '/subscription/payment-card', component: () => import('@/views/user/PaymentCard'), meta: { auth: true } },
+  { name: 'select-tariff', path: '/subscription/select', component: () => import('@/views/user/TariffSelect'), meta: { auth: true } },
 ]
 
 Vue.use(Router)
