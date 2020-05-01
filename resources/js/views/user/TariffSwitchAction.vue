@@ -7,7 +7,7 @@
     <PayForm ref="payform":tariff="to" v-if="nextAction == 'pay'"
       @loaded="cpLoaded = true" />
 
-    <div class="mx-20 flex items-center">
+    <div class="mx-20 flex items-center" v-if="nextAction == 'pay'">
       <input type="checkbox" v-model="agree">
       <div class="ml-11" v-html="$t('agree', { url: '/oferta' })"></div>
     </div>
