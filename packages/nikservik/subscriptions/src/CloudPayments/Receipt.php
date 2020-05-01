@@ -15,7 +15,7 @@ class Receipt
             'Type' => 'Income',
             'AccountId' => $accountId,
             'CustomerReceipt' => [
-                'TaxationSystem' => 0,
+                'TaxationSystem' => 1,
                 'CalculationPlace' => $this->withoutHttp(config('app.url')),
                 'Amounts' => [],
                 'Items' => [],
