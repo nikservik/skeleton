@@ -5,14 +5,11 @@ import store from './store/index'
 import Home from './views/Home'
 import Sky from './views/Sky'
 import Books from './views/Books'
+
 import Register from './views/auth/Register'
 import Login from './views/auth/Login'
 import Settings from './views/Settings'
-import Profile from './views/user/Profile'
 import Dashboard from './views/user/Dashboard'
-import PaymentsHistory from './views/user/PaymentsHistory'
-import PaymentCard from './views/user/PaymentCard'
-import TariffSelect from './views/user/TariffSelect'
 
 // Routes
 const routes = [
@@ -21,7 +18,6 @@ const routes = [
   { name: 'books', path: '/books', component: Books, meta: { auth: true, feature: 'read-books' } },
   { name: 'register', path: '/register', component: Register, meta: { auth: false } },
   { name: 'login', path: '/login', component: Login, meta: { auth: false } },
-  { name: 'profile', path: '/profile', component: Profile, meta: { auth: true } },
   { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { auth: true } },
   { name: 'settings', path: '/settings', component: Settings, meta: { auth: false } },
 
@@ -31,6 +27,7 @@ const routes = [
   { name: 'verify', path: '/verify', component: () => import('@/views/auth/Verify'), meta: { auth: true }, },
   { name: 'verify', path: '/verify/:user/:hash', component: () => import('@/views/auth/Verify'), meta: { auth: undefined }, },
 
+  { name: 'profile', path: '/profile', component: () => import('@/views/user/Profile'), meta: { auth: true } },
   { name: 'payments', path: '/subscription/payments', component: () => import('@/views/user/PaymentsHistory'), meta: { auth: true } },
   { name: 'payment-card', path: '/subscription/payment-card', component: () => import('@/views/user/PaymentCard'), meta: { auth: true } },
   { name: 'select-tariff', path: '/subscription/select', component: () => import('@/views/user/TariffSelect'), meta: { auth: true } },

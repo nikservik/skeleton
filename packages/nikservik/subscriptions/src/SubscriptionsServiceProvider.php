@@ -4,7 +4,7 @@ namespace Nikservik\Subscriptions;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
-use Nikservik\Subscriptions\CloudPaymentsManager;
+use Nikservik\Subscriptions\CloudPayments\CloudPaymentsManager;
 use Nikservik\Subscriptions\Jobs\ChargePaid;
 use Nikservik\Subscriptions\Jobs\EndCancelled;
 use Nikservik\Subscriptions\Jobs\EndOutdated;

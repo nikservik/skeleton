@@ -117,6 +117,7 @@ class SubscriptionsManager
         foreach ($outdated as $subscription) {
             $subscription->status = 'Ended';
             $subscription->save();
+            Mail::to($subscription->user->email)->queue(new SubscriptionEnded($subscription));
             $this->activateDefault($subscription->user);
         }
     }
@@ -159,6 +160,7 @@ class SubscriptionsManager
         $subscription = $this->createSubscriptionFromTariff($tariff);
         $user->subscriptions()->save($subscription);
         $this->endPreviousSubscription($subscription);
+        Mail::to($subscription->user->email)->queue(new SubscriptionActivated($subscription));
         return $subscription;
     }
 

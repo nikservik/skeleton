@@ -159,6 +159,14 @@ export default {
   errors: 
     form: "Проверьте все данные еще раз"
     failed: "Попытка не удалась, попробуйте позже"
+    insufficient-funds: "Недостаточно средств на карте"
+    incorrect-cvv: "Неверно указан код CVV"
+    restricted-card: "Платежи для этой карты запрещены. Попробуйте другую карту"
+    incorrect-card: "Проверьте правильность введенных данных карты или воспользуйтесь другой картой"
+    contact-issuer: "Свяжитесь с вашим банком или воспользуйтесь другой картой"
+    try-later: "Повторите попытку позже"
+    try-later-or-use-other: "Повторите попытку позже или воспользуйтесь другой картой"
+    use-other: "Воспользуйтесь другой картой"    
   card:
     name: "Владелец карты"
     number: "Номер карты"
@@ -171,6 +179,14 @@ export default {
   errors: 
     form: "Please check entered data"
     failed: "Failed for unknown reason, please try later"
+    insufficient-funds: "Insufficient funds"
+    incorrect-cvv: "Incorrect CVV"
+    restricted-card: "Restricted card, please use another one"
+    incorrect-card: "Check entered data or use other card"
+    contact-issuer: "Contact your bank or use other card"
+    try-later: "Transaction failed. Try again later"
+    try-later-or-use-other: "Transaction failed. Try again later or use other card"
+    use-other: "Use other card"    
   card:
     name: "Cardholder"
     number: "Card Number"

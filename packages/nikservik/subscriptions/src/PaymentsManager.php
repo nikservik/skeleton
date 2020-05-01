@@ -2,11 +2,14 @@
 
 namespace Nikservik\Subscriptions;
 
-use Albakov\LaravelCloudPayments\Facade as CloudPaymentsFacade;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Nikservik\Subscriptions\CloudPayments\CardChargeRequest;
+use Nikservik\Subscriptions\CloudPayments\PaymentApiResponse;
+use Nikservik\Subscriptions\CloudPayments\Post3dsRequest;
+use Nikservik\Subscriptions\CloudPayments\TokenChargeRequest;
 use Nikservik\Subscriptions\Facades\CloudPayments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Models\Payment;
@@ -23,105 +26,81 @@ class PaymentsManager
         if (! ($bill = $this->prepareTokenBill($subscription)))
             return false;
 
-        $response = CloudPaymentsFacade::tokensCharge($bill);
+        $response = CloudPayments::paymentsTokensCharge($bill);
 
-        if (! $this->successResponse($response))
+        if (! $response->isSuccessful())
             return false;
 
-        return $this->savePayment($response['Model']);
+        return $this->savePayment($response->Model);
     }
 
     public function chargeByCrypt(User $user, Tariff $tariff, string $cardholderName, string $ip,  string $crypt)
     {
-        $bill = [
-            'Amount' => $tariff->price, 
-            'Currency' => $tariff->currency, 
-            'IpAddress' => $ip, 
-            'Name' => $cardholderName, 
-            'CardCryptogramPacket' => $crypt, 
-            'Description' => __('subscriptions::payments.description', ['app' => config('app.url')]),
-            'AccountId' => $user->id,
-            'JsonData' => json_encode([
-                'tariff_id' => $tariff->id,
-                'activation' => true,
-            ]),
-        ];
+        $bill = new CardChargeRequest($tariff->price, $tariff->currency, 
+            $cardholderName, $crypt, $ip, $user->id,
+            __('subscriptions::payments.charge', ['app' => config('app.url')])
+        );
 
         return $this->activateSubscriptionByResponse($user, $tariff, 
-            CloudPaymentsFacade::cardsCharge($bill));
+            CloudPayments::paymentsCardsCharge($bill));
     }
 
     public function authorizeByCrypt(User $user, string $cardholderName, string $ip,  string $crypt)
     {
-        $bill = [
-            'Amount' => 10, 
-            'Currency' => 'RUB', 
-            'IpAddress' => $ip, 
-            'Name' => $cardholderName, 
-            'CardCryptogramPacket' => $crypt, 
-            'Description' => __('subscriptions::payments.authorization'),
-            'AccountId' => $user->id,
-        ];
+        $bill = new CardChargeRequest($tariff->price, $tariff->currency, 
+            $cardholderName, $crypt, $ip, $user->id,
+            __('subscriptions::payments.authorization', ['app' => config('app.url')])
+        );
 
         return $this->authorizeByResponse($user, 
-            CloudPaymentsFacade::cardsAuth($bill));
+            CloudPayments::paymentsCardsAuth($bill));
     }
 
     public function post3ds(User $user, Tariff $tariff, int $transactionId, string $paRes)
     {
-        $bill = [
-            'TransactionId' => $transactionId,
-            'PaRes' => $paRes,
-        ];
-        
         return $this->activateSubscriptionByResponse($user, $tariff, 
-            CloudPaymentsFacade::cardsPost3ds($bill));
+            CloudPayments::paymentsCardsPost3ds(
+                new Post3dsRequest($transactionId, $paRes)
+            ));
     }
 
     public function authorizePost3ds(User $user, int $transactionId, string $paRes)
     {
-        $bill = [
-            'TransactionId' => $transactionId,
-            'PaRes' => $paRes,
-        ];
-        
         return $this->authorizeByResponse($user,  
-            CloudPaymentsFacade::cardsPost3ds($bill));
+            CloudPayments::paymentsCardsPost3ds(
+                new Post3dsRequest($transactionId, $paRes)
+            ));
     }
 
-    protected function activateSubscriptionByResponse(User $user, Tariff $tariff, array $response)
+    protected function activateSubscriptionByResponse(User $user, Tariff $tariff, PaymentApiResponse $response)
     {
-        if (! $this->successResponse($response) and ! $this->need3dSecureResponse($response))
-            return $this->getErrorMessage($response);
+        if (! $response->isSuccessful() and ! $response->need3dSecure())
+            return $response->getErrorMessage();
 
-        if ($this->need3dSecureResponse($response))
-            return $response['Model'];
+        if ($response->need3dSecure())
+            return $response->Model;
 
         if (! $subscription = Subscriptions::activate($user, $tariff, true))
             return 'errors.failed';
 
-        $this->saveToken($user, $response['Model']);
+        $this->saveToken($user, $response->Model);
 
-        $response['Model']['InvoiceId'] = $subscription->id;
-        $this->savePayment($response['Model']);
+        $this->savePayment(array_merge($response->Model, ['InvoiceId' => $subscription->id]));
 
         return $subscription;
     }
 
-    protected function authorizeByResponse(User $user, array $response)
+    protected function authorizeByResponse(User $user, PaymentApiResponse $response)
     {
-        if (! $this->successResponse($response) and ! $this->need3dSecureResponse($response))
-            return $this->getErrorMessage($response);
+        if (! $response->isSuccessful() and ! $response->need3dSecure())
+            return $response->getErrorMessage();
 
-        if ($this->need3dSecureResponse($response))
-            return $response['Model'];
+        if ($response->need3dSecure())
+            return $response->Model;
 
-        $this->saveToken($user, $response['Model']);
+        $this->saveToken($user, $response->Model);
 
-        // TODO: Дописать метод отмены транзакции. Пока отменяется сама по таймауту
-        // CloudPaymentsFacade::paymentsVoid([ 
-        //     'TransactionId' => $response['Model']['TransactionId']
-        // ]);
+        CloudPayments::paymentsVoid($response->TransactionId);
 
         return true;
     }
@@ -134,15 +113,10 @@ class PaymentsManager
         if (! $subscription->user or ! $subscription->user->token)
             return false;
 
-        return [
-            'Amount' => $subscription->price, 
-            'Currency' => $subscription->currency, 
-            'AccountId' => $subscription->user->id,
-            'Token' => $subscription->user->token, 
-            'Description' => __('subscriptions::payments.description', ['app' => config('app.url')]),
-            'Email' => $subscription->user->email,
-            'InvoiceId' => $subscription->id,
-        ];
+        return new TokenChargeRequest($subscription->price, $subscription->currency,
+            $subscription->user->token, $subscription->user->id,
+            __('subscriptions::payments.autocharge', ['app' => config('app.url')])
+        );
     }
 
     protected function savePayment($data)
@@ -161,6 +135,8 @@ class PaymentsManager
             Log::debug($validator->errors());
             return false;
         }
+
+        // отправить чек
 
         return Payment::create([
             'subscription_id' => $data['InvoiceId'], 
@@ -199,29 +175,4 @@ class PaymentsManager
         );
     }
 
-    public function successResponse($response)
-    {
-        return array_key_exists('Success', $response) and $response['Success'] 
-            and array_key_exists('Model', $response) and is_array($response['Model'])
-            and array_key_exists('Status', $response['Model']) 
-            and ($response['Model']['Status'] == 'Completed'
-                or $response['Model']['Status'] == 'Authorized');
-    }
-
-    public function need3dSecureResponse($response)
-    {
-        return array_key_exists('Success', $response) and !$response['Success'] 
-            and array_key_exists('Model', $response) and is_array($response['Model'])
-            and array_key_exists('PaReq', $response['Model']) 
-            and array_key_exists('AcsUrl', $response['Model']);
-    }
-
-    protected function getErrorMessage($response)
-    {
-        if (! is_array($response) or ! array_key_exists('Model', $response))
-            return 'errors.undefined';
-        Log::debug($response);
-
-        return 'errors.'.$response['Model']['ReasonCode'];
-    }
 }

@@ -1,6 +1,7 @@
 <?php 
 
 return [
-    'description' => 'Оплата доступа на сайт :app',
+    'charge' => 'Доступ к сайту :app',
+    'autocharge' => '(Автопродление) Доступ к сайту :app',
     'authorization' => 'Авторизация карты'
 ];

@@ -2,9 +2,10 @@
 
 namespace Tests\Unit;
 
-use Albakov\LaravelCloudPayments\Facade as CloudPaymentsFacade;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Nikservik\Subscriptions\CloudPayments\PaymentApiResponse;
+use Nikservik\Subscriptions\Facades\CloudPayments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
@@ -146,25 +147,21 @@ class SubscriptionApiTest extends TestCase
             ])
             ->assertStatus(422);
 
-        CloudPaymentsFacade::shouldReceive('cardsCharge')
-            ->with(\Mockery::subset(['Amount' => $paid->price]))
-            ->with(\Mockery::subset(['Currency' => $paid->currency]))
-            ->with(\Mockery::subset(['AccountId' => $user->id]))
-            ->with(\Mockery::subset(['Name' => 'Cardholder']))
-            ->with(\Mockery::subset(['IpAddress' => '127.0.0.1']))
-            ->with(\Mockery::subset(['CardCryptogramPacket' => '12345678jjjjj']))
-            ->andReturn([
-                'Model' => [
-                    'Amount' => $paid->price,
-                    'Currency' => $paid->currency,
-                    'AccountId' => $user->id,
-                    'Token' => 'test-token',
-                    'TransactionId' => 12345678,
-                    'CardLastFour' => 1234,
-                    'Status' => 'Completed',
-                ],
-                'Success' => true
-            ]);
+        CloudPayments::shouldReceive('paymentsCardsCharge')
+            ->andReturn(
+                new PaymentApiResponse([
+                    'Model' => [
+                        'Amount' => $paid->price,
+                        'Currency' => $paid->currency,
+                        'AccountId' => $user->id,
+                        'Token' => 'test-token',
+                        'TransactionId' => 12345678,
+                        'CardLastFour' => 1234,
+                        'Status' => 'Completed',
+                    ],
+                    'Success' => true
+                ])
+            );
 
         $this->withHeaders(['Authorization' => 'Bearer '.JWTAuth::fromUser($user)])
             ->postJson('api/subscriptions/crypt', [
