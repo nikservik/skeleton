@@ -73,6 +73,18 @@ class PaymentsManager
             ));
     }
 
+    public function refund(Payment $payment)
+    {
+        $response = CloudPayments::paymentsRefund($payment->remote_transaction_id, $payment->amount);
+
+        if (! $response->isSuccessful()) 
+            return false;
+
+        $payment->status = 'Refunded';
+        $payment->save();
+        return true;
+    }
+
     protected function activateSubscriptionByResponse(User $user, Tariff $tariff, PaymentApiResponse $response)
     {
         if (! $response->isSuccessful() and ! $response->need3dSecure())

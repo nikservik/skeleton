@@ -63,6 +63,16 @@ class CloudPaymentsManager
         );
     }
 
+    public function paymentsRefund($transactionId, $amount)
+    {
+        return new ApiResponse(
+            $this->requestCpApi('payments/refund', [
+                'TransactionId' => $transactionId,
+                'Amount' => $amount,
+            ]) 
+        );
+    }
+
     public function kktReceipt(Receipt $receipt)
     {
         return new ApiResponse(
