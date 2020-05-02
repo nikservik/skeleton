@@ -4,21 +4,16 @@
         <h1>{{ $t('pageTitle') }}</h1>
 
         <p> Фича. Смотреть на небо могут только те, у кого это включено в тарифе </p>
-
-        <p>test={{ test }}</p>
+        <p><div class="w-20 h-20"><IconLoading classes="w-20 h-20" /></div></p>
     </div>
   </Page>
 </template>
 
 <script>
 import Page from '@/components/visual/Page'
+import IconLoading from '@/components/visual/icons/IconLoading'
 export default {
-    components: { Page },
-    data() {
-        return {
-            test: process.env.MIX_TEST
-        }
-    }
+    components: { Page, IconLoading },
 }
 </script>
 
