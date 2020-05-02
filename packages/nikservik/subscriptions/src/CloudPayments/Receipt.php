@@ -8,7 +8,7 @@ class Receipt
 {
     protected $data;
 
-    function __construct($accountId, $items)
+    function __construct($accountId, $email, $items)
     {
         $this->data = [
             'Inn' => config('cloudpayments.inn'),
@@ -16,6 +16,7 @@ class Receipt
             'AccountId' => $accountId,
             'CustomerReceipt' => [
                 'TaxationSystem' => 1,
+                'Email' => $email,
                 'CalculationPlace' => $this->withoutHttp(config('app.url')),
                 'Amounts' => [],
                 'Items' => [],

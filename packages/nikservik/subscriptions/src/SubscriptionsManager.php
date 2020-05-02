@@ -13,6 +13,7 @@ use Nikservik\Subscriptions\Mail\SubscriptionEnded;
 use Nikservik\Subscriptions\Mail\SubscriptionPastDue;
 use Nikservik\Subscriptions\Mail\SubscriptionRejected;
 use Nikservik\Subscriptions\Mail\SubscriptionRenewed;
+use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Subscription;
 use Nikservik\Subscriptions\Models\Tariff;
 use Nikservik\Subscriptions\Translatable;
@@ -153,6 +154,12 @@ class SubscriptionsManager
             )->toArray();
         }
         return $periods;
+    }
+
+    public function saveReceipt($transactioId, $url)
+    {
+        Payment::where('remote_transaction_id', $transactioId)
+            ->update(['receipt_url' => $url]);
     }
 
     protected function activateFree(User $user, Tariff $tariff)

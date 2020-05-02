@@ -30,7 +30,7 @@ class CloudPaymentsController extends Controller
 
     public function receipt(Request $request)
     {
-        Log::debug($request);
+        Subscriptions::saveReceipt($request->TransactionId, $request->Url);
 
         return ['code' => 0];
     }

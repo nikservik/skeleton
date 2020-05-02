@@ -5,6 +5,7 @@ namespace Nikservik\Subscriptions\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Nikservik\Subscriptions\Models\Payment;
+use Nikservik\Subscriptions\TranslatableField;
 
 class Subscription extends Model
 {
@@ -18,6 +19,7 @@ class Subscription extends Model
         'texts' => 'array',
         'last_transaction_date' => 'date',
         'next_transaction_date' => 'date',
+        'name' => TranslatableField::class,
     ];
 
     public function user()

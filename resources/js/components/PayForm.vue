@@ -78,7 +78,7 @@ export default {
         this.crypt = ''
         if(! this.checkout)
           this.checkout = new cp.Checkout(
-            'pk_4ac2f7a43a9f5f3167e2396048810', 
+            process.env.MIX_CLOUDPAYMENTS_PUBLICID,
             document.getElementById("cardform")
           )
       },

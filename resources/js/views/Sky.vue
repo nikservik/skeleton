@@ -4,6 +4,8 @@
         <h1>{{ $t('pageTitle') }}</h1>
 
         <p> Фича. Смотреть на небо могут только те, у кого это включено в тарифе </p>
+
+        <p>test={{ test }}</p>
     </div>
   </Page>
 </template>
@@ -11,7 +13,12 @@
 <script>
 import Page from '@/components/visual/Page'
 export default {
-    components: { Page }
+    components: { Page },
+    data() {
+        return {
+            test: process.env.MIX_TEST
+        }
+    }
 }
 </script>
 

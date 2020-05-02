@@ -27,7 +27,7 @@ class ReceiptTest extends TestCase
     public function testReceipt()
     {
         $item = new ReceiptItem('за месяц', 123);
-        $receipt = new Receipt(12, [$item]);
+        $receipt = new Receipt(12, 'test@test.com', [$item]);
 
         $this->assertEquals('Income', $receipt->toArray()['Type']);
         $this->assertEquals(12, $receipt->toArray()['AccountId']);

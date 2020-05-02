@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Nikservik\Subscriptions\CloudPayments\CardChargeRequest;
 use Nikservik\Subscriptions\CloudPayments\PaymentApiResponse;
 use Nikservik\Subscriptions\CloudPayments\Post3dsRequest;
@@ -37,8 +38,8 @@ class PaymentsManager
     public function chargeByCrypt(User $user, Tariff $tariff, string $cardholderName, string $ip,  string $crypt)
     {
         $bill = new CardChargeRequest($tariff->price, $tariff->currency, 
-            $cardholderName, $crypt, $ip, $user->id,
-            __('subscriptions::payments.charge', ['app' => config('app.url')])
+            $cardholderName, $crypt, $ip, $user->id, $user->email,
+            __('subscriptions::payments.charge', ['app' => Str::after(config('app.url'), '//')])
         );
 
         return $this->activateSubscriptionByResponse($user, $tariff, 
@@ -48,8 +49,8 @@ class PaymentsManager
     public function authorizeByCrypt(User $user, string $cardholderName, string $ip,  string $crypt)
     {
         $bill = new CardChargeRequest($tariff->price, $tariff->currency, 
-            $cardholderName, $crypt, $ip, $user->id,
-            __('subscriptions::payments.authorization', ['app' => config('app.url')])
+            $cardholderName, $crypt, $ip, $user->id, $user->email,
+            __('subscriptions::payments.authorization', ['app' => Str::after(config('app.url'), '//')])
         );
 
         return $this->authorizeByResponse($user, 
@@ -114,8 +115,8 @@ class PaymentsManager
             return false;
 
         return new TokenChargeRequest($subscription->price, $subscription->currency,
-            $subscription->user->token, $subscription->user->id,
-            __('subscriptions::payments.autocharge', ['app' => config('app.url')])
+            $subscription->user->token, $subscription->user->id, $subscription->user->email,
+            __('subscriptions::payments.autocharge', ['app' => Str::after(config('app.url'), '//')])
         );
     }
 

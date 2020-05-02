@@ -9,7 +9,7 @@ class CardChargeRequest
 {
     protected $data;
 
-    function __construct($price, $currency, $name, $crypt, $ip, $userId, $description)
+    function __construct($price, $currency, $name, $crypt, $ip, $userId, $email, $description)
     {
         $this->data = [
             'Amount' => $price, 
@@ -20,8 +20,8 @@ class CardChargeRequest
             'Description' => $description,
             'AccountId' => $userId,
             'JsonData' => [
-                'cloudPayments' => (new Receipt($userId, [new ReceiptItem($description, $price)]))
-                                        ->toArray()
+                'cloudPayments' => (new Receipt($userId, $email, 
+                    [new ReceiptItem($description, $price)]))->toArray()
             ],
         ];
     }

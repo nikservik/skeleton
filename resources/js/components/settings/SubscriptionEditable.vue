@@ -7,7 +7,7 @@
             </div>
             <div class="flex items-center text-black dark:text-gray-500" 
                 @click="$router.push({ name: 'select-tariff' })">
-                <div class="">{{ $t('tariffs.' + subscription.slug) }}</div>
+                <div class="">{{ subscription.name[$i18n.locale] }}</div>
                 <div class="w-20">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />
                 </div>
@@ -58,7 +58,6 @@ export default {
     },
     mounted() {
         this.$store.dispatch('locale/loadSubscriptions')
-        this.$store.dispatch('locale/loadTariffs')
     },
     computed: {
         ...mapState('auth', {

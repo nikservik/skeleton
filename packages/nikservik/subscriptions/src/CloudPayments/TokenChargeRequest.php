@@ -6,7 +6,7 @@ class TokenChargeRequest
 {
     protected $data;
 
-    function __construct($price, $currency, $token, $userId, $description)
+    function __construct($price, $currency, $token, $userId, $email, $description)
     {
         $this->data = [
             'Amount' => $price, 
@@ -15,8 +15,8 @@ class TokenChargeRequest
             'Token' => $token, 
             'Description' => $description,
             'JsonData' => [
-                'cloudPayments' => (new Receipt($userId, [new ReceiptItem($description, $price)]))
-                                        ->toArray()
+                'cloudPayments' => (new Receipt($userId, $email, 
+                    [new ReceiptItem($description, $price)]))->toArray()
             ],
         ];
     }
