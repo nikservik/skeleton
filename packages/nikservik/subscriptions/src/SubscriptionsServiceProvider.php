@@ -10,9 +10,11 @@ use Nikservik\Subscriptions\Jobs\EndCancelled;
 use Nikservik\Subscriptions\Jobs\EndOutdated;
 use Nikservik\Subscriptions\Jobs\WarnBeforeCharge;
 use Nikservik\Subscriptions\Models\Feature;
+use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Tariff;
 use Nikservik\Subscriptions\PaymentsManager;
 use Nikservik\Subscriptions\Policies\FeaturePolicy;
+use Nikservik\Subscriptions\Policies\PaymentPolicy;
 use Nikservik\Subscriptions\Policies\TariffPolicy;
 use Nikservik\Subscriptions\SubscriptionsManager;
 
@@ -21,6 +23,7 @@ class SubscriptionsServiceProvider extends AuthServiceProvider
     protected $policies = [
         Tariff::class => TariffPolicy::class,
         Feature::class => FeaturePolicy::class,
+        Payment::class => PaymentPolicy::class,
     ];
     /**
      * Register services.

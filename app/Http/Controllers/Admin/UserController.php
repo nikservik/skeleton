@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Nikservik\Subscriptions\Facades\Payments;
 use Nikservik\Subscriptions\Facades\Subscriptions;
+use Nikservik\Subscriptions\Models\Payment;
 use Nikservik\Subscriptions\Models\Tariff;
 
 class UserController extends Controller
@@ -24,6 +26,7 @@ class UserController extends Controller
         Route::domain('admin.'.Str::after(config('app.url'),'//'))->namespace('Admin')->group(function () {
             Route::post('users/{user}/subscription', 'UserController@subscription')->middleware('can:update,user');
             Route::get('users/search', 'UserController@search')->middleware('can:viewAny,App\User');
+            Route::get('users/payments/{payment}/delete', 'UserController@refund')->middleware('can:delete,payment');
             Route::resource('users', 'UserController');
         });
     }
@@ -117,6 +120,13 @@ class UserController extends Controller
         $user->delete();
 
         return redirect('/users');
+    }
+
+    public function refund(Payment $payment)
+    {
+        Payments::refund($payment);
+
+        return redirect('/users/'.$payment->user_id);
     }
 
     public function subscription(Request $request, User $user)

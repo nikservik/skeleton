@@ -30,5 +30,6 @@ mix.extend('i18n', function( webpackConfig, ...args ) {
 
 mix.i18n().js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
+   .sass('resources/sass/admin.scss', 'public/css')
    .tailwind()
    .purgeCss();

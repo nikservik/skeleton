@@ -36,4 +36,12 @@ return [
     'tariff' => 'Тариф',
     'changeTariff' => 'Изменить тариф на',
     'till' => 'до',
+    'payments' => 'Платежи',
+    'date' => 'Дата',
+    'card' => 'Карта',
+    'amount' => 'Сумма',
+    'refund' => 'Вернуть',
+    'confirmRefund' => 'Вернуть платеж?',
+    'Authorized' => 'Авторизация',
+    'Refunded' => 'Возвращен',
 ];

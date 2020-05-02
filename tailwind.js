@@ -75,7 +75,7 @@ module.exports = {
     }
   },
   variants: {
-    backgroundColor: ['dark', 'dark-hover', ],
+    backgroundColor: ['dark', 'dark-hover', 'odd' ],
     borderColor: ['dark', 'dark-focus',],
     textColor: ['dark', ]
   },

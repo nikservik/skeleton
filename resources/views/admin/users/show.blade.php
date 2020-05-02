@@ -9,7 +9,7 @@
     <a class="button small mr-4" href="/users/{{ $user->id }}/edit">
         @lang('admin/users.modify')
     </a>
-    <a class="button small" href="javascript:document.user_delete.submit()" onclick="return confirm('@lang('admin/users.confirmDelete')')">
+    <a class="button small red" href="javascript:document.user_delete.submit()" onclick="return confirm('@lang('admin/users.confirmDelete')')">
         @lang('admin/users.delete')
     </a>
 </div>
@@ -68,5 +68,41 @@
         </div>
     </div>
 </form>
+
+<h2 class="sub-title">@lang('admin/users.payments')</h2>
+
+<table class="table-auto w-full mt-8 mb-4">
+    <thead>
+        <tr>
+            <th>@lang('admin/users.date')</th>
+            <th>@lang('admin/users.card')</th>
+            <th>@lang('admin/users.amount')</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($user->payments()->orderBy('created_at', 'desc')->get() as $payment)
+            <tr class="text-center odd:bg-gray-200">
+                <td class="py-4">{{ $payment->created_at->format("d.m.Y") }}</td>
+                <td>{{ $payment->card_last_digits }}</td>
+                <td>{{ $payment->amount }} {{ $payment->currency }}</td>
+                <td>
+                    @if($payment->status == 'Completed')
+                        <a class="button small light" href="/users/payments/{{ $payment->id }}/delete" onclick="return confirm('@lang('admin/users.confirmRefund')')">
+                            @lang('admin/users.refund')
+                        </a>
+                    @else
+                        @if($payment->status == 'Authorized')
+                            @lang('admin/users.Authorized')
+                        @endif
+                        @if($payment->status == 'Refunded')
+                            @lang('admin/users.Refunded')
+                        @endif
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
 @endsection

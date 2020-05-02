@@ -9,7 +9,7 @@
   <title>@lang('app.name') - @lang('admin/layout.controlRoom')</title>
   <!-- Styles -->
   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/admin.css') }}?1" rel="stylesheet">
 </head>
 <body>
   <div id="app">
