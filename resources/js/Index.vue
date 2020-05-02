@@ -5,7 +5,7 @@
     <router-view/>
 
     <BottomMenu />
-    <div class="h-16 hidden">
+    <div class="h-16 hidden"></div>
   </div>
 </template>
 
