@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Nikservik\Subscriptions\Facades\Payments;
+use Nikservik\Subscriptions\Facades\Subscriptions;
 
 class CloudPaymentsController extends Controller
 {
