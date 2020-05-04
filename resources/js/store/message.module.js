@@ -15,7 +15,7 @@ export const message = {
     show ({ commit }, message, autoclear=true) {
       commit('SET_MESSAGE', message)
       if (autoclear)
-        setTimeout(() => { commit('CLEAR_MESSAGE') }, 10000)
+        setTimeout(() => { commit('CLEAR_MESSAGE') }, 5000)
     },
     clear ({ commit }) {
       commit('CLEAR_MESSAGE')
