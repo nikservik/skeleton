@@ -57,6 +57,11 @@ export default {
                 .then(() => {
                     if (this.hasError('email')) 
                         this.edit()
+                    else {
+                        this.$store.dispatch('message/show' , this.$t('emailSaved'))
+                        if (this.$store.getters['auth/needVerification'])
+                            this.$router.push({ name: 'verify' })
+                    }
                 })
         },
     },
@@ -75,6 +80,7 @@ export default {
 <i18n locale="ru" lang="yaml">
   email: "Электронная почта"
   warning: "Нужно будет подтвердить после изменения"
+  emailSaved: "Новая электронная почта сохранена. Подвердите ее с помощью ссылки в письме."
   errors:
     email:
         required: "Элетронная почта обезательно нужна"
@@ -85,6 +91,7 @@ export default {
 <i18n locale="en" lang="yaml">
   email: "Email"
   warning: "Verification will be required after change"
+  emailSaved: "New email was saved. Please verify it by link in email."
   errors:
     email:
         required: "Email is required"

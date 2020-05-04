@@ -56,7 +56,7 @@ export default {
           email: this.$route.query.email 
         })
         .then(() => {
-          if (! this.errorsHappened)
+          if (! this.errorsHappened) 
             this.goodToken = true
         })
     },
@@ -70,8 +70,10 @@ export default {
             password_confirmation: this.password_confirmation, 
           })
           .then(() => {
-            if (! this.errorsHappened)
+            if (! this.errorsHappened) {
+              this.$store.dispatch('message/show' , this.$t('passwordSaved'))
               this.$router.push({ name: 'login' })
+            }
           })
       },
     },
@@ -98,6 +100,7 @@ export default {
   password: "Пароль"
   passwordConfirmation: "Подтверждение пароля"
   save: "Сохранить пароль"
+  passwordSaved: "Новый пароль сохранен"
   errors:
     validation: "Исправьте ошибки, чтобы установить новый пароль"
     email: "Некорректная ссылка. Для установки пароля используйте ссылку, которую мы отправили вам на почту."
@@ -117,6 +120,7 @@ export default {
   password: "Password"
   passwordConfirmation: "Confirm password"
   save: "Save"
+  passwordSaved: "New password was saved"
   errors:
     validation: "Please verify provided input"
     email: "Incorrect link. Please use link we sent to your email"

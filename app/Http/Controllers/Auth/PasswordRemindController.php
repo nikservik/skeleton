@@ -28,7 +28,6 @@ class PasswordRemindController extends Controller
         if ($response == Password::RESET_LINK_SENT)
             return [
                 'status' => 'success', 
-                'message' => 'link.sent'
             ];
         else
             return [ 
@@ -74,7 +73,6 @@ class PasswordRemindController extends Controller
         if ($response == Password::PASSWORD_RESET) {
             return response()->json([
                 'status' => 'success',
-                'message' => $response
             ]);
         } else {
             return response()->json([

@@ -55,11 +55,14 @@ export default {
           })
           .then(() => {
             if (! this.errorsHappened) {
+              this.$store.dispatch('message/show' , this.$t('messages.verified'))
               if (this.loggedIn)
                 this.$store.dispatch('auth/fetch')
-              setTimeout(() => {
-                this.$router.push({ name: 'dashboard' })
-              }, 10000)
+                  .then(() => {
+                    this.$router.push({ name: 'dashboard' })
+                  })
+              else 
+                this.$router.push({ name: 'login' })
             }
           })
       }
@@ -68,6 +71,10 @@ export default {
       resend() {
         this.$store.dispatch('errors/clear')
         this.$store.dispatch('auth/resendVerification')
+          .then(() => {
+            if (! this.errorsHappened) 
+              this.$store.dispatch('message/show' , this.$t('messages.newLinkSent'))
+          })
       }
     },
     computed: {
@@ -98,7 +105,6 @@ export default {
     checkEmail: "Проверьте свою почту, мы уже отправили ссылку для подтверждения адреса."
     canResend: "Если письмо не нашлось, то ссылку для подтверждения можно отправить повторно."
     newLinkSent: "Ссылка для подтверждения электронной почты отправлена на адрес, указанный при регистрации."
-    alreadyVerified: "Вы подтвердили свою почту раньше. Теперь вы можете пользоваться программой."
     verified: "Ваша почта подтверждена! Теперь вы можете пользоваться программой."
     loginToSend: "Войдите, чтобы оптправить повторное проверочное письмо."
   errors:
@@ -115,7 +121,6 @@ export default {
     checkEmail: "Check your mailbox, we sent you a verification email."
     canResend: "If you don't get a mail, you can resend it with button below."
     newLinkSent: "We sent a new verification link to email provided while register"
-    alreadyVerified: "Your email is already verified. Enjoy!"
     verified: "Your email now is verified! Enjoy."
     loginToSend: "You need to sign in to resend verification email."
   errors:

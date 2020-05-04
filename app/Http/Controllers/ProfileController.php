@@ -31,20 +31,21 @@ class ProfileController extends Controller
         Auth::user()->name = $request->name;
         Auth::user()->save();
 
-        return ['status' => 'success', 'message' => 'nameSaved'];
+        return ['status' => 'success'];
     }
 
     public function email(ProfileEmailSaveRequest $request) 
     {
-        $reverify = Auth::user()->email != $request->email;
+        if (Auth::user()->email == $request->email)
+            return ['status' => 'success'];
 
         Auth::user()->email = $request->email;
+        Auth::user()->email_verified_at = null;
         Auth::user()->save();
 
-        if ($reverify) 
-            Mail::to(Auth::user()->email)->queue(new VerifyEmail(Auth::user()));
+        Mail::to(Auth::user()->email)->queue(new VerifyEmail(Auth::user()));
 
-        return ['status' => 'success', 'message' => 'emailSaved', 'needVerification' => $reverify];
+        return ['status' => 'success'];
     }
 
     public function password(ProfilePasswordSaveRequest $request) 
@@ -52,6 +53,6 @@ class ProfileController extends Controller
         Auth::user()->password = Hash::make($request->password);
         Auth::user()->save();
 
-        return ['status' => 'success', 'message' => 'passwordSaved'];
+        return ['status' => 'success'];
     }
 }

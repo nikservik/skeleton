@@ -94,9 +94,9 @@ export default {
         else 
           this.$store.dispatch('errors/set', result.messages)
       },
-      open3ds(data) {
+      open3ds(data, message) {
         this.$refs.secureframe.open(this.user.id, this.tariff.id, 
-          data.TransactionId, data.AcsUrl, data.PaReq)
+          data.TransactionId, data.AcsUrl, data.PaReq, message)
       },
       pay() {
         this.createCrypt()
@@ -109,9 +109,11 @@ export default {
           })
           .then(() => {
             if (this.for3ds)
-              return this.open3ds(this.for3ds)
-            if (! this.errorHappened)
+              return this.open3ds(this.for3ds, this.$t('paymentSuccessful'))
+            if (! this.errorHappened) {
+              this.$store.dispatch('message/show', this.$t('paymentSuccessful'))
               return this.$router.push({ name: 'profile' })
+            }
           })
       },
       authorize() {
@@ -124,9 +126,11 @@ export default {
           })
           .then(() => {
             if (this.for3ds)
-              return this.open3ds(this.for3ds)
-            if (! this.errorHappened)
+              return this.open3ds(this.for3ds, this.$t('authorizationSuccessful'))
+            if (! this.errorHappened) {
+              this.$store.dispatch('message/show', this.$t('authorizationSuccessful'))
               return this.$router.push({ name: 'profile' })
+            }
           })
       },
   },
@@ -156,6 +160,8 @@ export default {
 }
 </script>
 <i18n locale="ru" lang="yaml">
+  paymentSuccessful: "Поздравляем! Подписка оплачена. Все возможности тарифного плана уже включены."
+  authorizationSuccessful: "Новая платежная карта сохранена. Следующие автоматические платежи будут списываться с нее."
   errors: 
     form: "Проверьте все данные еще раз"
     failed: "Попытка не удалась, попробуйте позже"
@@ -176,6 +182,8 @@ export default {
     cvv-placeholder: "CVC"
 </i18n>
 <i18n locale="en" lang="yaml">
+  paymentSuccessful: "Congratulations! Subscription is activated. You can enjoy all features."
+  authorizationSuccessful: "New credit card was saved. It will be charged with next autopayments."
   errors: 
     form: "Please check entered data"
     failed: "Failed for unknown reason, please try later"

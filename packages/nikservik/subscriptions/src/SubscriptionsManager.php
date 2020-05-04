@@ -167,7 +167,8 @@ class SubscriptionsManager
         $subscription = $this->createSubscriptionFromTariff($tariff);
         $user->subscriptions()->save($subscription);
         $this->endPreviousSubscription($subscription);
-        Mail::to($subscription->user->email)->queue(new SubscriptionActivated($subscription));
+        if ($user->subscriptions()->count() > 1)
+            Mail::to($subscription->user->email)->queue(new SubscriptionActivated($subscription));
         return $subscription;
     }
 

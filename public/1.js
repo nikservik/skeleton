@@ -9,7 +9,7 @@
 
 module.exports = function (Component) {
   Component.options.__i18n = Component.options.__i18n || []
-  Component.options.__i18n.push('{"ru":{"pageTitle":"Подтверждение электронной почты","button":"Отправить еще раз","login":"Вход","messages":{"checkEmail":"Проверьте свою почту, мы уже отправили ссылку для подтверждения адреса.","canResend":"Если письмо не нашлось, то ссылку для подтверждения можно отправить повторно.","newLinkSent":"Ссылка для подтверждения электронной почты отправлена на адрес, указанный при регистрации.","alreadyVerified":"Вы подтвердили свою почту раньше. Теперь вы можете пользоваться программой.","verified":"Ваша почта подтверждена! Теперь вы можете пользоваться программой.","loginToSend":"Войдите, чтобы оптправить повторное проверочное письмо."},"errors":{"verification":"Не удалось подтвердить почту. Попробуйте позже.","connection":"Не удалось отправить письмо для продтверждения","verify":"Это некорректная ссылка для подтверждения почты. Используйте ссылку из письма, которое вам пришло на адрес, указанный при регистрации. <p>Вы можете отправить новое письмо со ссылкой для подтверждения.</p>"}}}')
+  Component.options.__i18n.push('{"ru":{"pageTitle":"Подтверждение электронной почты","button":"Отправить еще раз","login":"Вход","messages":{"checkEmail":"Проверьте свою почту, мы уже отправили ссылку для подтверждения адреса.","canResend":"Если письмо не нашлось, то ссылку для подтверждения можно отправить повторно.","newLinkSent":"Ссылка для подтверждения электронной почты отправлена на адрес, указанный при регистрации.","verified":"Ваша почта подтверждена! Теперь вы можете пользоваться программой.","loginToSend":"Войдите, чтобы оптправить повторное проверочное письмо."},"errors":{"verification":"Не удалось подтвердить почту. Попробуйте позже.","connection":"Не удалось отправить письмо для продтверждения","verify":"Это некорректная ссылка для подтверждения почты. Используйте ссылку из письма, которое вам пришло на адрес, указанный при регистрации. <p>Вы можете отправить новое письмо со ссылкой для подтверждения.</p>"}}}')
   delete Component.options._Ctor
 }
 
@@ -25,7 +25,7 @@ module.exports = function (Component) {
 
 module.exports = function (Component) {
   Component.options.__i18n = Component.options.__i18n || []
-  Component.options.__i18n.push('{"en":{"pageTitle":"Email verification","button":"Send again","login":"Sign in","messages":{"checkEmail":"Check your mailbox, we sent you a verification email.","canResend":"If you don\u0027t get a mail, you can resend it with button below.","newLinkSent":"We sent a new verification link to email provided while register","alreadyVerified":"Your email is already verified. Enjoy!","verified":"Your email now is verified! Enjoy.","loginToSend":"You need to sign in to resend verification email."},"errors":{"verification":"We can\u0027t verify your email right now. Please try again later.","connection":"Can\u0027t send a verification email right now. Please try later","verify":"You tried to use incorrect link. Please use a link from email you entered in registration form. <p>You can send a new mail with verification link.</p>"}}}')
+  Component.options.__i18n.push('{"en":{"pageTitle":"Email verification","button":"Send again","login":"Sign in","messages":{"checkEmail":"Check your mailbox, we sent you a verification email.","canResend":"If you don\u0027t get a mail, you can resend it with button below.","newLinkSent":"We sent a new verification link to email provided while register","verified":"Your email now is verified! Enjoy.","loginToSend":"You need to sign in to resend verification email."},"errors":{"verification":"We can\u0027t verify your email right now. Please try again later.","connection":"Can\u0027t send a verification email right now. Please try later","verify":"You tried to use incorrect link. Please use a link from email you entered in registration form. <p>You can send a new mail with verification link.</p>"}}}')
   delete Component.options._Ctor
 }
 
@@ -138,20 +138,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         hash: this.$route.params.hash
       }).then(function () {
         if (!_this.errorsHappened) {
-          if (_this.loggedIn) _this.$store.dispatch('auth/fetch');
-          setTimeout(function () {
+          _this.$store.dispatch('message/show', _this.$t('messages.verified'));
+
+          if (_this.loggedIn) _this.$store.dispatch('auth/fetch').then(function () {
             _this.$router.push({
               name: 'dashboard'
             });
-          }, 10000);
+          });else _this.$router.push({
+            name: 'login'
+          });
         }
       });
     }
   },
   methods: {
     resend: function resend() {
+      var _this2 = this;
+
       this.$store.dispatch('errors/clear');
-      this.$store.dispatch('auth/resendVerification');
+      this.$store.dispatch('auth/resendVerification').then(function () {
+        if (!_this2.errorsHappened) _this2.$store.dispatch('message/show', _this2.$t('messages.newLinkSent'));
+      });
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])('loading', ['disable']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])('auth', ['loggedIn', 'needVerification']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])('errors', {

@@ -45,7 +45,9 @@ export default {
                     if (this.hasError('name')) {
                         this.editable = true
                         document.getElementById('edit-name').focus()
-                    }
+                    } else
+                        this.$store.dispatch('message/show' , this.$t('nameSaved'))
+
                 })
         },
     },
@@ -65,6 +67,7 @@ export default {
 </script>
 
 <i18n locale="ru" lang="yaml">
+    nameSaved: "Имя сохранено"
     errors:
         name:
             required: "Имя обязательно нужно"
@@ -73,6 +76,7 @@ export default {
 </i18n>
 
 <i18n locale="en" lang="yaml">
+    nameSaved: "Name was saved"
     errors:
         name:
             required: "Name is required"

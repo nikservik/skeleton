@@ -93,9 +93,10 @@ export const auth = {
         .post('/user/email', { email: email })
         .then(({ data }) => {
           context.commit('UPDATE_USER_DATA', { email: email })
+          return context.dispatch('fetch')
         })
         .catch((error) => {
-          context.dispatch('errors/set', error.response.data.errors, { root: true })
+          return context.dispatch('errors/set', error.response.data.errors, { root: true })
         })
     },
     savePassword(context, passwords) {
@@ -108,9 +109,6 @@ export const auth = {
     remind(context, email) {
       return axios
         .post('/auth/remind', { email: email })
-        .then(({ data }) => {
-          context.dispatch('message/show', data.message, { root: true })
-        })
         .catch((error) => {
           context.dispatch('errors/set', error.response.data.errors, { root: true })
         })
@@ -118,8 +116,6 @@ export const auth = {
     checkToken(context, credentials) {
       return axios
         .post('/auth/checkToken', credentials)
-        .then(({ data }) => {
-        })
         .catch((error) => {
           context.dispatch('errors/set', error.response.data.errors, { root: true })
         })
@@ -127,9 +123,6 @@ export const auth = {
     newPassword(context, credentials) {
       return axios
         .post('/auth/newPassword', credentials)
-        .then(({ data }) => {
-          context.dispatch('message/show', data.message, { root: true })
-        })
         .catch((error) => {
           context.dispatch('errors/set', error.response.data.errors, { root: true })
         })
@@ -137,9 +130,6 @@ export const auth = {
     resendVerification(context) {
       return axios
         .get('/email/resend')
-        .then(({ data }) => {
-          context.dispatch('message/show', 'messages.newLinkSent', { root: true })
-        })
         .catch((error) => {
           context.dispatch('errors/set', { connection: 'failed' }, { root: true })
         })
@@ -147,9 +137,6 @@ export const auth = {
     verifyEmail(context, credentials) {
       return axios
         .post('/email/verify', credentials)
-        .then(({ data }) => {
-          context.dispatch('message/show', data.message, { root: true })
-        })
         .catch((error) => {
           if (error.response.status == 422)
             context.dispatch('errors/set', { verify: 'failed' }, { root: true })

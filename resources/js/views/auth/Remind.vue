@@ -44,6 +44,10 @@ export default {
       remind() {
         this.$store.dispatch('errors/clear')
         this.$store.dispatch('auth/remind', this.email)
+          .then(() => {
+            if (! this.errorsHappened) 
+              this.$store.dispatch('message/show' , this.$t('link.sent'))
+          })
       }
     },
     computed: {

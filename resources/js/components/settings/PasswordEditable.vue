@@ -77,6 +77,7 @@ export default {
                     if (this.hasError('password') || this.hasError('old_password')) 
                         this.edit()
                     else {
+                        this.$store.dispatch('message/show' , this.$t('passwordSaved'))
                         this.old_password = ''
                         this.password = ''
                         this.password_confirmation = ''
@@ -101,6 +102,7 @@ export default {
   newPassword: "Новый пароль"
   passwordConfirmation: "Подтверждение пароля"
   oldPassword: "Старый пароль"
+  passwordSaved: "Пароль сохранен"
   errors:
     password:
         required: "Пароль обязательно нужен"
@@ -116,6 +118,7 @@ export default {
   newPassword: "New password"
   passwordConfirmation: "Confirm password"
   oldPassword: "Old password"
+  passwordSaved: "Password was saved"
   errors:
     password:
         required: "Password is required"

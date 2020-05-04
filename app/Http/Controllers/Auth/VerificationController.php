@@ -31,10 +31,9 @@ class VerificationController extends Controller
         if ($user->hasVerifiedEmail()) 
             return [ 
                 'status' => 'success', 
-                'message' => 'messages.alreadyVerified',
             ];
 
-        if(! hash_equals((string) $hash, sha1($user->email)))
+        if(! hash_equals((string) $request->hash, sha1($user->email)))
             return response()->json([ 
                 'status' => 'error', 
                 'errors' => [ 'verify' => 'badLink' ],
@@ -45,7 +44,6 @@ class VerificationController extends Controller
 
         return [ 
             'status' => 'success', 
-            'message' => 'messages.verified',
         ];
     }
 

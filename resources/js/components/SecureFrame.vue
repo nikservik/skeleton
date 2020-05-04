@@ -10,6 +10,7 @@ export default {
     data() {
       return {
         opened: false,
+        message: '',
       }
     },
     mounted() {
@@ -18,6 +19,7 @@ export default {
         me.close() 
         me.$store.dispatch('auth/fetch')
           .then(() => {
+            me.$store.dispatch('message/show' , me.message)
             me.$router.push({ name: 'profile' })
           })
       }
@@ -27,8 +29,9 @@ export default {
       }
     },
     methods: {
-      open(userId, tariffId, transactionId, url, PaReq) {
+      open(userId, tariffId, transactionId, url, PaReq, message) {
         // создать форму и отправить
+        this.message = message
         var iframe = document.getElementById('secureframe');
         var doc = iframe.contentWindow.document;
         var termUrl = document.location.origin + '/api/subscriptions/'+userId;
