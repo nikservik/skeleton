@@ -180,7 +180,7 @@
 
 .bottom-menu {
     @apply fixed z-10 bottom-0 inset-x-0 w-full h-75 shadow-xl bg-white  
-        text-gray-500 flex items-center justify-between; 
+        text-gray-500 flex items-center justify-between rounded-t-lg; 
     .item {
         @apply mx-30; }
 }

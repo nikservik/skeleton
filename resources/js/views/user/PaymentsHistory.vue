@@ -9,7 +9,18 @@
           :class="{ 'bg-prime-100 dark:bg-prime-900' : index % 2 }">
             <td class="pl-20 py-20">{{ localizeDate(payment.created_at) }}</td>
             <td class="text-center">** {{ payment.card_last_digits }}</td>
-            <td class="text-right pr-20">{{ payment.amount + ' ' + $t('currency.' + payment.currency) }}</td>
+            <td class="text-right">
+              <span :class="{ 'line-through' : payment.status == 'Refunded'}">
+                {{ payment.amount + ' ' + $t('currency.' + payment.currency) }}</span>
+              <IconRefund height="16" classes="vertical-center inline-block text-gray-700" 
+                v-if="payment.status == 'Refunded'" />
+            </td>
+            <td class="pl-11 pr-11">
+              <a :href="payment.receipt_url" target="_blank">
+                <IconReceipt height="16" classes="vertical-center inline-block text-gray-700"
+                  v-if="payment.receipt_url" />
+              </a>
+            </td>
         </tr>
     </table>
 
@@ -18,14 +29,19 @@
 
 <script>
 import PageHeader from '@/components/visual/PageHeader'
+import IconRefund from '@/components/visual/icons/IconRefund'
+import IconReceipt from '@/components/visual/icons/IconReceipt'
 import Page from '@/components/visual/Page'
 import { mapState } from 'vuex'
 
   export default {
-    components: { Page, PageHeader },
+    components: { Page, PageHeader, IconRefund, IconReceipt },
     methods: {
       localizeDate(date) {
         return date ? this.$d(new Date(date), 'payment') : ''
+      },
+      openReceipt(url) {
+        window.open(url, '_blank')
       },
     },
     mounted() {
