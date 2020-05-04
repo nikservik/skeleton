@@ -176,7 +176,7 @@ export const auth = {
         return true
       if (meta.auth === false && ! getters.loggedIn)
         return true
-      if (meta.auth && getters.loggedIn) {
+      if (meta.auth === true && getters.loggedIn) {
         if (! meta.feature)
           return true
         if (getters.features.includes(meta.feature))

@@ -25,7 +25,7 @@ const routes = [
   { name: 'remind', path: '/remind', component: () => import('@/views/auth/Remind'), meta: { auth: undefined }, },
   { name: 'remind-new', path: '/remind/new', component: () => import('@/views/auth/RemindNewPassword'), meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: () => import('@/views/auth/Verify'), meta: { auth: true }, },
-  { name: 'verify', path: '/verify/:user/:hash', component: () => import('@/views/auth/Verify'), meta: { auth: undefined }, },
+  { name: 'verify-link', path: '/verify/:user/:hash', component: () => import('@/views/auth/Verify'), meta: { auth: undefined }, },
 
   { name: 'profile', path: '/profile', component: () => import('@/views/user/Profile'), meta: { auth: true } },
   { name: 'payments', path: '/subscription/payments', component: () => import('@/views/user/PaymentsHistory'), meta: { auth: true } },
@@ -43,7 +43,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   var checker = (to, from, next) => {
     if (store.getters['auth/canSee'](to.meta)) 
-      if (store.getters['auth/needVerification'])
+      if (store.getters['auth/needVerification'] && to.name != 'verify')
         next('/verify')
       else
         next()
