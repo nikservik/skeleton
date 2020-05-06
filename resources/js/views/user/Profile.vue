@@ -12,12 +12,16 @@
             <LoadingButton @clicked="logout">{{ $t('logout') }}</LoadingButton>
         </div>
         <div class="page-container double settings large" v-if="large">
-            <NameEditableLarge />
-            <SubscriptionEditable />
-            <EmailEditable />
-            <PaymentMethod />
-            <PasswordEditable />
-            <PaymentsHistory />
+            <div class="">
+                <NameEditableLarge />
+                <EmailEditable />
+                <PasswordEditable />
+            </div>
+            <div class="">
+                <SubscriptionEditable />
+                <PaymentMethod />
+                <PaymentsHistory />
+            </div>
         </div>
 
         <template v-slot:bottom>
