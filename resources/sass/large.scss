@@ -56,7 +56,7 @@
         .block {
             @apply block mx-11; 
             .change {
-                @apply block ml-auto font-bold text-prime-500; }
+                @apply block ml-auto font-bold text-prime-500 cursor-pointer; }
             .title {
                 @apply w-full; }
             .value {
