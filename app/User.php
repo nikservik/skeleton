@@ -10,12 +10,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
+use Nikservik\LaravelJwtAuth\Interfaces\RoleBased;
+use Nikservik\LaravelJwtAuth\Traits\JwtAuth;
 use Nikservik\Subscriptions\Traits\Subscription;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLocalePreference
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLocalePreference, RoleBased
 {
-    use Notifiable, Subscription;
+    use Notifiable, Subscription, JwtAuth;
 
     protected $fillable = [
         'name', 'email', 'password', 'role',
@@ -31,36 +33,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLo
     ];
     
     protected $appends = ['locale'];
-
-    public const ROLE_USER = 1;
-    public const ROLE_EDITOR = 2;
-    public const ROLE_ADMIN = 3;
-    public const ROLE_SUPERADMIN = 4;
-
-    public static $roles = [
-        self::ROLE_USER,
-        self::ROLE_EDITOR,
-        self::ROLE_ADMIN,
-        self::ROLE_SUPERADMIN,
-    ];
-
     
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-    
-    public function sendPasswordResetNotification($token)
-    {
-        $message = (new PasswordReset($this, $token))->onQueue('emails');
-        Mail::to($this->email)->queue($message);
-    }    
-
     public function getLocaleAttribute() 
     {
         return Arr::get($this->settings, 'locale', App::getLocale());
