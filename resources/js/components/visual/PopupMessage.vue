@@ -18,9 +18,9 @@ export default {
             this.$store.dispatch('message/clear')
         },
     },
-    created() {
-        this.$store.dispatch('message/show', 'Новая электронная почта сохранена. Подвердите ее с помощью ссылки в письме.')
-    },
+    // created() {
+    //     this.$store.dispatch('message/show', 'Новая электронная почта сохранена. Подвердите ее с помощью ссылки в письме.')
+    // },
     computed: {
         ...mapState('message', {
             message: state => state.message
