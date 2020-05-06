@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace Nikservik\LaravelJwtAuth;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;

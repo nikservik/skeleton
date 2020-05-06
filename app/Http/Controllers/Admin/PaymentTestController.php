@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Albakov\LaravelCloudPayments\LaravelCloudPayments;
-use Albakov\LaravelCloudPayments\Notifications;
 use App\Http\Controllers\Controller;
 use App\Subscriptions\Payment;
 use Illuminate\Http\Request;
@@ -15,7 +13,7 @@ use Nikservik\Subscriptions\Models\Tariff;
 
 class PaymentTestController extends Controller
 {
-    use Notifications; 
+    // use Notifications; 
 
     static function routes()
     {
@@ -56,11 +54,11 @@ class PaymentTestController extends Controller
         ];
 
         // Trying to do Payment
-        try {
-            (new LaravelCloudPayments)->tokensCharge($array);
-        } catch (\Exception $e) {
-            $result = $e->getMessage();
-        }
+        // try {
+        //     (new LaravelCloudPayments)->tokensCharge($array);
+        // } catch (\Exception $e) {
+        //     $result = $e->getMessage();
+        // }
 
         return redirect('/test');
     }
@@ -83,11 +81,11 @@ class PaymentTestController extends Controller
         ];
 
         // Trying to do Payment
-        try {
-            (new LaravelCloudPayments)->tokensCharge($array);
-        } catch (\Exception $e) {
-            $result = $e->getMessage();
-        }
+        // try {
+        //     (new LaravelCloudPayments)->tokensCharge($array);
+        // } catch (\Exception $e) {
+        //     $result = $e->getMessage();
+        // }
 
         return redirect('/test');
     }

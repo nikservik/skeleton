@@ -18,8 +18,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
-        "nikservik/subscriptions": "dev-master",
-        "tymon/jwt-auth": "dev-develop"
+        "nikservik/laravel-jwt-auth": "dev-master",
+        "nikservik/subscriptions": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -71,6 +71,10 @@
         {
             "type": "path",
             "url": "./packages/nikservik/subscriptions"
+        },
+        {
+            "type": "path",
+            "url": "./packages/nikservik/laravel-jwt-auth"
         }
     ]
 }

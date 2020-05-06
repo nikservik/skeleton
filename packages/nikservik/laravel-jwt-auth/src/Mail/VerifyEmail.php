@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace Nikservik\LaravelJwtAuth\Mail;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -37,8 +37,8 @@ class VerifyEmail extends Mailable
     {
         $this->verificationUrl = $this->verificationUrl($this->user);
         
-        return $this->subject(__('emails/verify-email.subject'))
-            ->view('emails.verify-email');
+        return $this->subject(__('laraveljwtauth::verify-email.subject'))
+            ->view('laraveljwtauth::verify-email');
     }
 
     protected function verificationUrl($user)

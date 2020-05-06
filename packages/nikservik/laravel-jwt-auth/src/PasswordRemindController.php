@@ -1,25 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Nikservik\LaravelJwtAuth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthNewPasswordRequest;
-use App\Http\Requests\AuthRemindRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use Nikservik\LaravelJwtAuth\Requests\AuthNewPasswordRequest;
+use Nikservik\LaravelJwtAuth\Requests\AuthRemindRequest;
 
 class PasswordRemindController extends Controller
 {
     public static function apiRoutes() 
     {
-        Route::prefix('auth')->namespace('Auth')->group(function () {
+        Route::prefix('api/auth')->namespace('Nikservik\LaravelJwtAuth')->group(function () {
             Route::post('remind', 'PasswordRemindController@remind');
             Route::post('checkToken', 'PasswordRemindController@checkToken');
             Route::post('newPassword', 'PasswordRemindController@newPassword');
         });
+    }
+
+    public function __construct()
+    {
+        $this->middleware(['api']);
     }
 
     public function remind(AuthRemindRequest $request)

@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Listeners;
+namespace Nikservik\LaravelJwtAuth;
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Nikservik\Subscriptions\Facades\Subscriptions;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Nikservik\LaravelJwtAuth\Mail\VerifyEmail;
 
-class SetDefaultSubscription
+class SendVerificationEmail
 {
     /**
      * Create the event listener.
@@ -27,6 +29,6 @@ class SetDefaultSubscription
      */
     public function handle(Registered $event)
     {
-        Subscriptions::activateDefault($event->user);
+        Mail::to($event->user->email)->queue(new VerifyEmail($event->user));
     }
 }

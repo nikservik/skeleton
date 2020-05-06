@@ -1,9 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\PaymentTestController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\PasswordRemindController;
-use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PlainContentController;
@@ -22,9 +19,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-VerificationController::apiRoutes();
-PasswordRemindController::apiRoutes();
-AuthController::apiRoutes();
 LocaleController::apiRoutes();
 ProfileController::apiRoutes();
 DemoController::apiRoutes();

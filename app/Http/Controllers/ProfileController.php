@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileEmailSaveRequest;
 use App\Http\Requests\ProfileNameSaveRequest;
 use App\Http\Requests\ProfilePasswordSaveRequest;
-use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Nikservik\LaravelJwtAuth\Mail\VerifyEmail;
 
 class ProfileController extends Controller
 {

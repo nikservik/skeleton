@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Nikservik\LaravelJwtAuth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthNewPasswordRequest;
-use App\Http\Requests\AuthRegisterRequest;
-use App\Http\Requests\AuthRemindRequest;
-use App\Mail\VerifyEmail;
 use App\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
@@ -18,13 +14,14 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Nikservik\LaravelJwtAuth\Requests\AuthRegisterRequest;
 
 class AuthController extends Controller
 {
 
     public static function apiRoutes() 
     { 
-        Route::prefix('auth')->namespace('Auth')->group(function () {
+        Route::prefix('api/auth')->namespace('Nikservik\LaravelJwtAuth')->group(function () {
             Route::post('register', 'AuthController@register');
             Route::post('login', 'AuthController@login');
             Route::group(['middleware' => 'auth:api'], function(){
@@ -33,6 +30,11 @@ class AuthController extends Controller
                 Route::post('logout', 'AuthController@logout');
             });
         });
+    }
+
+    public function __construct()
+    {
+        $this->middleware(['api']);
     }
 
     public function register(AuthRegisterRequest $request)

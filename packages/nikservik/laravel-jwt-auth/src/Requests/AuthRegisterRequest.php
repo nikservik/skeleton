@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace Nikservik\LaravelJwtAuth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

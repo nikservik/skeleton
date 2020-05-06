@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Listeners;
+namespace Nikservik\Subscriptions\Listeners;
 
-use App\Mail\VerifyEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use Nikservik\Subscriptions\Facades\Subscriptions;
 
-class SendVerificationEmail
+class SetDefaultSubscription
 {
     /**
      * Create the event listener.
@@ -29,6 +27,6 @@ class SendVerificationEmail
      */
     public function handle(Registered $event)
     {
-        Mail::to($event->user->email)->queue(new VerifyEmail($event->user));
+        Subscriptions::activateDefault($event->user);
     }
 }

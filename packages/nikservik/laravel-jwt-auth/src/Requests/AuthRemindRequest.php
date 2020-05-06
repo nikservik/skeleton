@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace Nikservik\LaravelJwtAuth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmailVerifyRequest extends FormRequest
+class AuthRemindRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,15 @@ class EmailVerifyRequest extends FormRequest
     public function rules()
     {
         return [
-            'user' => 'required|exists:users,id',
-            'hash' => 'required',
+            'email' => 'required|exists:users',
         ];
     }
 
     public function messages()
     {
         return [
-            'user.required' => 'user.required',
-            'user.exists' => 'user.exists',
-            'hash.required' => 'hash.required',
+            'email.required' => 'email.required',
+            'email.exists' => 'email.exists',
         ];
     }
 }

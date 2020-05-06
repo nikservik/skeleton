@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace Nikservik\LaravelJwtAuth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthNewPasswordRequest extends FormRequest
+class EmailVerifyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,20 +24,17 @@ class AuthNewPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required',
-            'token' => 'required',
-            'password'  => 'required|min:8|confirmed',
+            'user' => 'required|exists:users,id',
+            'hash' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'email.required' => 'errors.email',
-            'token.required' => 'errors.email',
-            'password.required' => 'password.required',
-            'password.min' => 'password.min',
-            'password.confirmed' => 'password.confirmed',
+            'user.required' => 'user.required',
+            'user.exists' => 'user.exists',
+            'hash.required' => 'hash.required',
         ];
     }
 }

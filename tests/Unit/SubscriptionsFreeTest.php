@@ -6,6 +6,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Mail;
 use Nikservik\Subscriptions\Facades\Subscriptions;
 use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
@@ -66,6 +67,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testSubscribe()
     {
+        Mail::fake();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffFree();
 
@@ -88,6 +90,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testSubscribePeriodic()
     {
+        Mail::fake();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffTrial();
 
@@ -103,6 +106,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testActivateSecondSubscription()
     {
+        Mail::fake();
         $user = factory(User::class)->create();
         $tariff1 = $this->createTariffFree();
         $tariff2 = $this->createTariffTrial();
@@ -119,6 +123,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testDefaultTariff()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $tariff1 = $this->createTariffFree();
         $tariff2 = $this->createTariffTrial();
@@ -129,6 +134,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testSubscribeOnRegister()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff1 = $this->createTariffFree();
@@ -142,6 +148,7 @@ class SubscriptionsFreeTest extends TestCase
 
     public function testEndOutdatedNonprolongable()
     {
+        Mail::fake();
         Tariff::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffTrial();

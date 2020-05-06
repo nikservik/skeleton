@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace Nikservik\LaravelJwtAuth\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,7 +32,7 @@ class PasswordReset extends Mailable
      */
     public function build()
     {
-        return $this->subject(__('emails/password-reset.subject'))
-            ->view('emails.password-reset');
+        return $this->subject(__('laraveljwtauth::password-reset.subject'))
+            ->view('laraveljwtauth::password-reset');
     }
 }

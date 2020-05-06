@@ -2,9 +2,11 @@
 
 namespace Nikservik\Subscriptions;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
 use Nikservik\Subscriptions\CloudPayments\CloudPaymentsManager;
+use Nikservik\Subscriptions\EventServiceProvider;
 use Nikservik\Subscriptions\Jobs\ChargePaid;
 use Nikservik\Subscriptions\Jobs\EndCancelled;
 use Nikservik\Subscriptions\Jobs\EndOutdated;
@@ -32,6 +34,7 @@ class SubscriptionsServiceProvider extends AuthServiceProvider
      */
     public function register()
     {
+        $this->app->register(EventServiceProvider::class);
         $this->app->bind('subscriptions',function() {
             return new SubscriptionsManager;
         });
