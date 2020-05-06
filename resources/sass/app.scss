@@ -207,7 +207,7 @@ body, input {
 .secure-frame {
     @apply fixed left-0 top-0 w-full h-full max-h-screen bg-white pb-75;
     .close {
-        @apply float-right p-11 text-gray-700 text-xl; }
+        @apply float-right p-11 text-gray-700 text-xl cursor-pointer; }
         .close:after {
             content: ""; display: table; clear: both; }
     iframe {
@@ -218,7 +218,7 @@ body, input {
     .block {
         @apply rounded bg-gray-300 text-gray-700 shadow px-20 py-30 m-5 flex items-start;
         .close {
-            @apply ml-auto pl-11 -mt-11; }
+            @apply ml-auto pl-11 -mt-11 cursor-pointer; }
     }
 }
 
