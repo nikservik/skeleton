@@ -4,14 +4,7 @@
             {{ $t('pageTitle') }}
         </PageHeader>
 
-        <div v-if="! large">
-            <div class="page-icon">
-                <IconProfile classes="mx-auto" height="75" />
-            </div>
-            <NameEditable />
-            <LoadingButton @clicked="logout">{{ $t('logout') }}</LoadingButton>
-        </div>
-        <div class="page-container double settings large" v-if="large">
+        <div class="page-container double settings large">
             <NameEditableLarge />
             <SubscriptionEditable />
             <EmailEditable />
@@ -21,23 +14,11 @@
         </div>
 
         <template v-slot:bottom>
-            <div class="settings" v-if="! large">
-                <EmailEditable />
-                <PasswordEditable />
+            <LoadingButton @clicked="logout">{{ $t('logout') }}</LoadingButton>
+            <div class="settings">
                 <LocaleEditable />
                 <NightMode />
-                <SubscriptionEditable />
-                <PaymentMethod />
-                <PaymentsHistory />
                 <Oferta />
-            </div>
-            <div v-if="large">
-                <LoadingButton @clicked="logout">{{ $t('logout') }}</LoadingButton>
-                <div class="settings">
-                    <LocaleEditable />
-                    <NightMode />
-                    <Oferta />
-                </div>
             </div>
         </template>
     </Page>
@@ -49,7 +30,6 @@ import LoadingButton from '@/components/visual/LoadingButton'
 import PageHeader from '@/components/visual/PageHeader'
 import Page from '@/components/visual/Page'
 import EmailEditable from '@/components/settings/EmailEditable'
-import NameEditable from '@/components/settings/NameEditable'
 import NameEditableLarge from '@/components/settings/NameEditableLarge'
 import NightMode from '@/components/settings/NightMode'
 import LocaleEditable from '@/components/settings/LocaleEditable'
@@ -61,7 +41,7 @@ import Oferta from '@/components/settings/Oferta'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-    components: { Page, PageHeader, EmailEditable, NameEditable, NameEditableLarge, LocaleEditable, PasswordEditable, IconProfile, SubscriptionEditable, PaymentMethod, PaymentsHistory, NightMode, LoadingButton, Oferta },
+    components: { Page, PageHeader, EmailEditable, NameEditableLarge, LocaleEditable, PasswordEditable, IconProfile, SubscriptionEditable, PaymentMethod, PaymentsHistory, NightMode, LoadingButton, Oferta },
     data() {
         return {
         }
@@ -75,9 +55,6 @@ export default {
         },
     },
     computed: {
-        large() {
-            return window.innerWidth > 1024
-        },
         ...mapGetters('errors', {
             errorsHappened: 'happened'
         }),

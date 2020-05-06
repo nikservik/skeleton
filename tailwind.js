@@ -54,6 +54,11 @@ module.exports = {
             'dark': {'raw': '(prefers-color-scheme: dark)'},
         },
         minHeight: {
+            '20': '20px',
+            '30': '30px',
+        },
+        minWidth: {
+            '20': '20px',
             '30': '30px',
         },
         borderWidth: {

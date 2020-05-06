@@ -1,24 +1,25 @@
 <template>
     <div>
-        <SaveButton :editing="editing" @save="save" />
         <div class="block with-errors" >
             <div class="title">
                 <IconEmail height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('email') }}</div>
+                <div class="change" @click="edit" v-if="! editing">{{ $t('change') }}</div>
             </div>
-            <div class="w-1/2 overflow-hidden" v-if="! editing" @click="edit">{{ user.email }}</div>
+            <div class="value" v-if="! editing" @click="edit">{{ user.email }}</div>
             <div class="bottom">
                 <div class="input-item text-right" :class="{ error : hasError('email') }" v-if="editing">
                     <input type="email" id="edit-email" 
                         :value="value" 
                         @focusout="unedit">
                 </div>
-                <div class="error-text" :class="{ hidden : ! hasError('email') }">
+                <div class="error-text" v-if="hasError('email')">
                     {{ $t('errors.' + getError('email')) }}
                 </div>
-                <div class="warning-text" :class="{ hidden : !editing || hasError('name') }">
+                <div class="warning-text" v-if="editing && !hasError('email')">
                     {{ $t('warning') }}
                 </div>
+                <SaveButton :editing="editing" @save="save" />
             </div>
         </div>
     </div>
@@ -50,7 +51,7 @@ export default {
             setTimeout(() => { this.editing = false }, 10)
         },
         save() {
-            if (this.value == this.user.name)
+            if (this.value == this.user.email)
                 return
             this.$store.dispatch('errors/clear')
             this.$store.dispatch('auth/saveEmail', this.value)
@@ -81,6 +82,7 @@ export default {
   email: "Электронная почта"
   warning: "Нужно будет подтвердить после изменения"
   emailSaved: "Новая электронная почта сохранена. Подвердите ее с помощью ссылки в письме."
+  change: "Изменить"
   errors:
     email:
         required: "Элетронная почта обезательно нужна"
@@ -92,6 +94,7 @@ export default {
   email: "Email"
   warning: "Verification will be required after change"
   emailSaved: "New email was saved. Please verify it by link in email."
+  change: "Change"
   errors:
     email:
         required: "Email is required"

@@ -4,15 +4,19 @@
           {{ $t('pageTitle') }}
       </PageHeader>
 
-      <PayForm ref="payform" :tariff="{ id: 0 }" @loaded="cpLoaded = true" />
+      <div class="page-container double">
+        <PageBlock>
+          <div v-html="$t('warning')"></div>
+        </PageBlock>
 
-      <PageBlock>
-        <div v-html="$t('warning')"></div>
-      </PageBlock>
+        <div class="element">
+          <PayForm ref="payform" :tariff="{ id: 0 }" @loaded="cpLoaded = true" />
 
-      <LoadingButton :disable="disable && ! cpLoaded"" @clicked="save">
-        {{ $t('save') }}
-      </LoadingButton>
+          <LoadingButton :disable="disable && ! cpLoaded"" @clicked="save">
+            {{ $t('save') }}
+          </LoadingButton>
+        </div>
+      </div>
     </Page>
 </template>
 

@@ -4,10 +4,11 @@
             <div class="title">
                 <IconMoney height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('method') }}</div>
+                <div class="change">{{ $t('change') }}</div>
             </div>
-            <div class="flex items-center text-black dark:text-gray-500">
+            <div class="value">
                 <div class="">** {{ user.cardLastFour }}</div>
-                <div class="w-20">
+                <div class="action">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />
                 </div>
             </div>
@@ -38,8 +39,10 @@ export default {
 
 <i18n locale="ru" lang="yaml">
     method: "Привязанная карта"
+    change: "Изменить"
 </i18n>
 
 <i18n locale="en" lang="yaml">
     method: "Saved credit card"
+    change: "Change"
 </i18n>

@@ -1,6 +1,6 @@
 <template>
-    <div class="save-button-holder">
-        <button :class="{ hidden : ! editing }" @click="$emit('save')">
+    <div class="save-button-holder" v-if="editing">
+        <button @click="$emit('save')">
             {{ save ? save : $t('save') }}
         </button>
     </div>

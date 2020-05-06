@@ -1,21 +1,16 @@
 <template>
-    <div>
+    <div v-if="visible">
         <div class="page-block" 
-            v-if="visible"
-            :class="{ 
-                'bg-prime-400 text-white dark:bg-prime-700 dark:text-gray-200' : active,
-                'bg-white dark:bg-gray-900' : ! active && ! selected,
-                'bg-prime-500 dark:bg-prime-600 dark:text-gray-200 text-white' : selected,
-            }"
+            :class="{ 'active' : active, 'selected' : selected, }"
             @click="select()">
             <div class="float-right">
-                <span class="rounded-sm bg-prime-400 dark:bg-prime-600 dark:text-gray-200 text-white text-xs p-5" v-if="selected">
+                <span class="marker" v-if="selected">
                     {{ $t('state.selected') }}
                 </span>
-                <span class="rounded-sm bg-prime-400 dark:bg-prime-600 dark:text-gray-200 text-white text-xs p-5" v-if="next">
+                <span class="marker" v-if="next">
                     {{ $t('state.next') }}
                 </span>
-                <span class="rounded-sm bg-prime-400 dark:bg-prime-700 dark:text-gray-200 text-white text-xs p-5" v-if="active">
+                <span class="marker" v-if="active">
                     {{ $t('state.active') }}
                 </span>
             </div>

@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <PageHeader back="home">
-        {{ $t('pageTitle') }}
-    </PageHeader>
-
-    <Page>
+    <Page type="no-helpers">
+        <PageHeader back="home">
+            {{ $t('pageTitle') }}
+        </PageHeader>
         <div class="page-icon">
             <IconProfile classes="mx-auto" height="75" />
         </div>
@@ -46,7 +44,6 @@
             </form>
         </template>
     </Page>
-  </div>
 </template>
 <script>
 import IconProfile from '@/components/visual/icons/IconProfile'

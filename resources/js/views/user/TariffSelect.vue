@@ -4,18 +4,21 @@
         {{ $t('pageTitle') }}
     </PageHeader>
 
-    <Tariff 
-      v-for="(tariff, index) in tariffs" 
-      :key="tariff.id"
-      :tariff="tariff"
-      :selected="selected === index"
-      :collapsed="collapsed"
-      v-on:select="select(index)" />
-
-    <TariffSwitch v-if="collapsed" 
-      :from="subscription"
-      :to="tariffs[selected]"
-    />
+    <div class="page-container double">
+      <Tariff 
+        v-for="(tariff, index) in tariffs" 
+        :key="tariff.id"
+        :tariff="tariff"
+        :selected="selected === index"
+        :collapsed="collapsed"
+        v-on:select="select(index)" />
+        
+      <div class="element">
+        <TariffSwitch v-if="collapsed" 
+          :from="subscription"
+          :to="tariffs[selected]" />
+      </div>
+    </div>
   </Page>
 </template>
 
@@ -45,6 +48,7 @@ import { mapState } from 'vuex'
     },
     mounted() {
         this.$store.dispatch('locale/loadTariffs')
+        this.$store.dispatch('locale/loadSubscriptions')
         this.$store.dispatch('subscription/loadFeatures')
         this.$store.dispatch('subscription/loadTariffs')
     },

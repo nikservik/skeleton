@@ -1,12 +1,12 @@
 <template>
     <div>
-        <SaveButton :editing="editing" @save="save" />
         <div class="block with-errors" >
             <div class="title">
                 <IconLock height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('password') }}</div>
+                <div class="change" @click="edit" v-if="! editing">{{ $t('change') }}</div>
             </div>
-            <div v-if="! editing" @click="edit">********</div>
+            <div class="value" v-if="! editing" @click="edit">********</div>
             <div class="bottom">
                 <div class="input-item" :class="{ error : hasError('old_password') }" v-if="editing">
                     <label>{{ $t('oldPassword') }}</label>
@@ -30,6 +30,7 @@
                         v-model="password_confirmation" 
                         @focusout="unedit">
                 </div>
+                <SaveButton :editing="editing" @save="save" />
             </div>
         </div>
     </div>
@@ -103,6 +104,7 @@ export default {
   passwordConfirmation: "Подтверждение пароля"
   oldPassword: "Старый пароль"
   passwordSaved: "Пароль сохранен"
+  change: "Изменить"
   errors:
     password:
         required: "Пароль обязательно нужен"
@@ -119,6 +121,7 @@ export default {
   passwordConfirmation: "Confirm password"
   oldPassword: "Old password"
   passwordSaved: "Password was saved"
+  change: "Change"
   errors:
     password:
         required: "Password is required"

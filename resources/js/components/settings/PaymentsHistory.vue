@@ -4,9 +4,12 @@
             <div class="title">
                 <IconHistory height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('history') }}</div>
+                <div class="change">{{ $t('view') }}</div>
             </div>
-            <div class="text-black dark:text-gray-500">
-                <IconRightChevron height="16" classes="vertical-center ml-auto" />
+            <div class="value">
+                <div class="action">
+                    <IconRightChevron height="16" classes="vertical-center ml-auto" />
+                </div>
             </div>
         </div>
     </div>
@@ -30,8 +33,10 @@ export default {
 
 <i18n locale="ru" lang="yaml">
     history: "История платежей"
+    view: "Посмотреть"
 </i18n>
 
 <i18n locale="en" lang="yaml">
     history: "Payments history"
+    view: "View"
 </i18n>

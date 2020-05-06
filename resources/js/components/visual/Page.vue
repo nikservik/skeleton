@@ -1,10 +1,13 @@
 <template>
     <div class="page" 
-        :class="{ 'pt-75' : type != 'no-header' }">
-        <div class="">
+        :class="{ 
+            'with-header' : type != 'no-header', 
+            'no-helpers' : type == 'no-helpers', 
+        }">
+        <div class="main">
             <slot></slot>
         </div>
-        <div>
+        <div class="helpers" v-if="!!$slots.bottom">
             <slot name="bottom"></slot>
         </div>
     </div>

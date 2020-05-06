@@ -1,14 +1,17 @@
 <template>
-    <div class="bottom-menu">
+    <div class="left-menu">
+        <div class="title">
+            {{ $t('title') }}
+        </div>
+        <div class="item">
+            <LoadingSign size="30" classes="text-prime-400" />
+        </div>
         <div class="item">
             <router-link :to="{ name: loggedIn ? 'dashboard' : 'home' }">
                 <IconHome height="24" :classes="
                     current == 'home' || current == 'dashboard' ? 'text-prime-400' : ''
                 " />
             </router-link>
-        </div>
-        <div class="item">
-            <LoadingSign size="30" classes="text-prime-400" />
         </div>
         <div class="item">
             <router-link :to="{ name: loggedIn ? 'profile' : 'settings' }">

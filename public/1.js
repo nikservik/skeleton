@@ -242,6 +242,7 @@ var render = function() {
   return _c(
     "Page",
     {
+      attrs: { type: "no-helpers" },
       scopedSlots: _vm._u([
         {
           key: "bottom",

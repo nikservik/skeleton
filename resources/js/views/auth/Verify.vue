@@ -1,5 +1,5 @@
 <template>
-    <Page>
+    <Page type="no-helpers">
         <PageHeader>
             {{ $t('pageTitle') }}
         </PageHeader>

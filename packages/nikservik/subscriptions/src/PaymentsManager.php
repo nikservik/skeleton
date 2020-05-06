@@ -48,7 +48,7 @@ class PaymentsManager
 
     public function authorizeByCrypt(User $user, string $cardholderName, string $ip,  string $crypt)
     {
-        $bill = new CardChargeRequest($tariff->price, $tariff->currency, 
+        $bill = new CardChargeRequest(10, 'RUB', 
             $cardholderName, $crypt, $ip, $user->id, $user->email,
             __('subscriptions::payments.authorization', ['app' => Str::after(config('app.url'), '//')])
         );

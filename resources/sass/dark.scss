@@ -8,6 +8,8 @@
         .title {
             @apply text-gray-200; }
     }
+    .page .helpers {
+        @apply border-l border-gray-900; }
 
     .page-text {
         @apply text-gray-300; 
@@ -16,6 +18,18 @@
     }
     .page-icon {
         @apply text-prime-600; }
+    .page-block {
+        @apply bg-gray-900; 
+        .marker {
+            @apply bg-prime-600 text-gray-200; }
+    }
+    .page-block.active {
+        @apply bg-prime-700 text-gray-200; 
+        .marker {
+            @apply bg-prime-700 text-gray-200; }
+    }
+    .page-block.selected {
+        @apply bg-prime-600 text-gray-200; }
 
     .settings-icon {
         @apply text-gray-400; }
@@ -78,7 +92,7 @@
 
     .form {
         .group input {
-            @apply border-gray-800; }
+            @apply border-gray-800 bg-gray-900; }
         .group.has-error {
             label {
                 @apply text-prime-500; }
@@ -110,8 +124,22 @@
     .pay-form-error {
         @apply text-prime-500; }
 
-    .bottom-menu {
+    .bottom-menu, .left-menu {
         @apply bg-gray-900 text-gray-500;
     }
+    .secure-frame {
+        @apply bg-gray-800;
+        .close {
+            @apply text-gray-300; }
+    }
+    .popup-message .block {
+        @apply bg-gray-800 text-gray-200; }
 
+    @media(min-width: theme('screens.lg')) {
+        .settings {
+            @apply bg-transparent;
+            .block {
+                @apply bg-gray-900; }
+        }
+    }
 }

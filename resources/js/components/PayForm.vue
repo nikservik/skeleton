@@ -1,5 +1,5 @@
 <template>
-  <div class="px-20">
+  <div class="px-20 max-w-sm mx-auto">
     <div class="pay-form">
       <form id="cardform">
         <input v-mask="'#### #### #### #### ###'" class="card-number field" 

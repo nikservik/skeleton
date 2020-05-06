@@ -5,8 +5,8 @@
                 <IconFile height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('history') }}</div>
             </div>
-            <div class="text-black dark:text-gray-500">
-                <IconRightChevron height="16" classes="vertical-center ml-auto" />
+            <div class="value">
+                    <IconRightChevron height="16" classes="vertical-center ml-auto" />
             </div>
         </div>
     </div>

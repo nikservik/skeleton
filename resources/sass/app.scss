@@ -4,10 +4,9 @@
 
 @import 'cera.css';
 // @import 'admin.css';
-@import 'spinner.scss';
-@import 'checkbox.scss';
-@import 'dark.scss';
 
+body, input {
+    background-color: #f7f8fb; }
 .header {
     @apply text-prime-400 pt-20 px-20 fixed top-0 inset-x-0 bg-white flex items-start justify-between; 
     .title {
@@ -19,7 +18,10 @@
 .page {
     min-height: 100vh;
     min-height: calc(var(--vh, 1vh) * 100);
-    @apply flex flex-col justify-between pb-75; }
+    @apply flex flex-col justify-between pb-75; 
+}
+.page.with-header {
+    @apply pt-75; }
     
 .page-text {
     @apply text-black mx-20 my-20; 
@@ -36,9 +38,16 @@
 .page-block-title {
     @apply font-medium mx-20; }
 .page-block {
-    @apply mx-20 px-16 my-16 py-20 shadow-lg rounded-md; }
-    .page-block p {
+    @apply mx-20 px-16 my-16 py-20 shadow-lg rounded-md bg-white; 
+    p {
         @apply mt-11 mx-0 mb-0; }
+    .marker {
+        @apply rounded-sm bg-prime-400 text-white text-xs p-5; }
+}
+.page-block.active {
+    @apply bg-prime-400 text-white; }
+.page-block.selected {
+    @apply bg-prime-500 text-white; }
 
 .vertical-center {
     margin-bottom: 1px; }
@@ -49,8 +58,15 @@
     @apply bg-gray-200 rounded-t-lg; 
     .block {
         @apply py-30 px-20 text-sm border-b border-gray-300 flex flex-wrap items-center justify-between; 
+        .change {
+            @apply hidden; }
         .title {
             @apply font-medium w-1/2 flex items-center; }
+        .value {
+            @apply w-1/2 overflow-hidden text-right flex items-center justify-end; 
+            .action {
+                @apply w-20; }
+        }
         .input-item {
             @apply text-base; 
             input {
@@ -129,7 +145,7 @@
         label {
             @apply text-sm ml-11; }
         input {
-            @apply w-full p-11 text-lg rounded border border-gray-300; }
+            @apply w-full p-11 text-lg rounded bg-white border border-gray-300; }
         input:focus {
             @apply outline-none; }
     }
@@ -147,7 +163,9 @@
 }
 
 .pay-form {
-    @apply px-16 my-16 py-20 max-w-full border rounded-md bg-prime-200 border-prime-200 shadow-lg; 
+    @apply px-16 my-16 py-20 max-w-full border rounded-md bg-prime-200 border-prime-200 shadow-lg;
+    input {
+        @apply bg-white; }
     .field {
         @apply p-5 text-lg; }
     .card-number {
@@ -184,6 +202,25 @@
     .item {
         @apply mx-30; }
 }
+.left-menu {
+    @apply hidden; }
+.secure-frame {
+    @apply fixed left-0 top-0 w-full h-full max-h-screen bg-white pb-75;
+    .close {
+        @apply float-right p-11 text-gray-700 text-xl; }
+        .close:after {
+            content: ""; display: table; clear: both; }
+    iframe {
+        @apply w-full h-full pb-50; }
+}
+.popup-message {
+    @apply fixed top-0 inset-x-0 z-30;
+    .block {
+        @apply rounded bg-gray-300 text-gray-700 shadow px-20 py-30 m-5 flex items-start;
+        .close {
+            @apply ml-auto pl-11 -mt-11; }
+    }
+}
 
 
 
@@ -191,4 +228,9 @@
     .settings-icon {
         @apply block; }
 }
+
+@import 'spinner.scss';
+@import 'checkbox.scss';
+@import 'large.scss';
+@import 'dark.scss';
 

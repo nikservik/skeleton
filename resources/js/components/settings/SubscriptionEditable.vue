@@ -4,16 +4,19 @@
             <div class="title">
                 <IconMoney height="20" classes="settings-icon vertical-center" />
                 <div>{{ $t('tariff') }}</div>
+                <div class="change" @click="$router.push({ name: 'select-tariff' })">
+                    {{ $t('change') }}
+                </div>
             </div>
-            <div class="flex items-center text-black dark:text-gray-500" 
+            <div class="value" 
                 @click="$router.push({ name: 'select-tariff' })">
                 <div class="">{{ subscription.name[$i18n.locale] }}</div>
-                <div class="w-20">
+                <div class="action">
                     <IconRightChevron height="16" classes="vertical-center ml-auto" />
                 </div>
             </div>
             <div class="bottom">
-                <div class="warning-text pr-16">
+                <div class="warning-text pr-16 lg:ml-30 lg:pl-px lg:text-left">
                     <div v-if="isEndless()">{{ $t('neverExpire') }}</div>
                     <div v-if="canExpire()" class="text-prime-500">
                         {{ $t('expire', { date: localizeNext() }) }}
@@ -69,6 +72,7 @@ export default {
 
 <i18n locale="ru" lang="yaml">
     tariff: "Тарифный план"
+    change: "Изменить"
     currency:
         RUB: "рублей"
     expire: "Закончится {date}"
@@ -78,6 +82,7 @@ export default {
 
 <i18n locale="en" lang="yaml">
     tariff: "Subscription plan"
+    change: "Change"
     currency:
         RUB: "RUB"
     expire: "Will expire {date}"

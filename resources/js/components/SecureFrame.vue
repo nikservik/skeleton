@@ -1,7 +1,7 @@
 <template>
-  <div class="fixed left-0 top-0 w-full h-full max-h-screen bg-white dark:bg-gray-800 pb-75" :class="opened ? 'block' : 'hidden'">
-    <a href="#" class="float-right p-11 text-gray-700 dark:text-gray-300 text-xl clearfix" @click.prevent="close()">×</a>
-    <iframe class="w-full h-full pb-50" id="secureframe"></iframe>
+  <div class="secure-frame" :class="opened ? 'block' : 'hidden'">
+    <a href="#" class="close" @click.prevent="close()">×</a>
+    <iframe class="" id="secureframe"></iframe>
   </div>
 </template>
 

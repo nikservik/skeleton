@@ -5,15 +5,17 @@
     <router-view/>
 
     <BottomMenu />
+    <LeftMenu />
     <div class="h-16 hidden"></div>
   </div>
 </template>
 
 <script>
   import BottomMenu from '@/components/visual/BottomMenu'
+  import LeftMenu from '@/components/visual/LeftMenu'
   import PopupMessage from '@/components/visual/PopupMessage'
   export default {
-    components: { BottomMenu, PopupMessage },
+    components: { BottomMenu, LeftMenu, PopupMessage },
     data() {
       return {
       }

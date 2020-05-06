@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <PageHeader back="home">
-        {{ $t('pageTitle') }}
-    </PageHeader>
-
-    <Page>
+    <Page type="no-helpers">
+        <PageHeader back="home">
+            {{ $t('pageTitle') }}
+        </PageHeader>
         <div class="page-icon">
             <IconProfile classes="mx-auto" height="75" />
         </div>
@@ -25,12 +23,11 @@
                     <div class="flex-grow-0">
                       <LoadingButton :disable="disable">{{ $t('loginButton') }}</LoadingButton>
                     </div>
-                    <a href="/remind" class="text-prime-500 hover:underline block mb-16">{{ $t('forgotPassword') }}</a>
+                    <div class="text-right"><a href="/remind" class="text-prime-500 hover:underline block mb-16">{{ $t('forgotPassword') }}</a></div>
                 </div>
             </form>
         </template>
     </Page>
-  </div>
 </template>
 <script>
 import IconProfile from '@/components/visual/icons/IconProfile'

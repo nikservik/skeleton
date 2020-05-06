@@ -27,7 +27,7 @@ const routes = [
   { name: 'verify-link', path: '/verify/:user/:hash', component: () => import('@/views/auth/Verify'), meta: { auth: undefined }, },
   { name: 'verify', path: '/verify', component: () => import('@/views/auth/Verify'), meta: { auth: true }, },
 
-  { name: 'profile', path: '/profile', component: () => import('@/views/user/Profile'), meta: { auth: true, noVerify: true } },
+  { name: 'profile', path: '/profile', component: () => import('@/views/user/Profile'), meta: { auth: true } },
   { name: 'payments', path: '/subscription/payments', component: () => import('@/views/user/PaymentsHistory'), meta: { auth: true } },
   { name: 'payment-card', path: '/subscription/payment-card', component: () => import('@/views/user/PaymentCard'), meta: { auth: true } },
   { name: 'select-tariff', path: '/subscription/select', component: () => import('@/views/user/TariffSelect'), meta: { auth: true } },
