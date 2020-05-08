@@ -23,5 +23,6 @@ module.exports = {
     autoprefixer,
     ...process.env.NODE_ENV === 'production'
       ? [purgecss]
-      : [],  ],
+      : [],  
+  ],
 };
