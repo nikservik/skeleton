@@ -8,6 +8,7 @@ import { errors } from './errors.module';
 import { subscription } from './subscription.module';
 import { nightmode } from './nightmode.module';
 import { loading } from './loading.module';
+import { support } from './support.module';
 
 Vue.use(Vuex);
 
@@ -20,5 +21,6 @@ export default new Vuex.Store({
     subscription,
     nightmode,
     loading,
+    support,
   }
 });

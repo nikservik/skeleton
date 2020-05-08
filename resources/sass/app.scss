@@ -144,9 +144,9 @@ body, input {
         @apply mx-20 my-16; 
         label {
             @apply text-sm ml-11; }
-        input {
+        input, textarea {
             @apply w-full p-11 text-lg rounded bg-white border border-gray-300; }
-        input:focus {
+        input:focus, textarea:focus {
             @apply outline-none; }
     }
     .group.has-error {
@@ -196,6 +196,26 @@ body, input {
 .pay-form-error {
     @apply text-prime-500 text-sm  text-center mx-20; }
 
+.support-message {
+    @apply my-16 mx-20 overflow-hidden;
+    .info {
+        @apply text-sm text-gray-500; }
+    .message {
+        @apply inline-block rounded-b px-16 py-20; 
+        a {
+            @apply underline; }
+    }
+    &.user {
+        @apply text-right; 
+        .message {
+            @apply ml-75 rounded-tl bg-white text-black; }
+    }
+    &.admin {
+        .message {
+            @apply mr-75 rounded-tr bg-prime-500 text-white; }
+    }
+}
+
 .bottom-menu {
     @apply fixed z-10 bottom-0 inset-x-0 w-full h-75 shadow-xl bg-white  
         text-gray-500 flex items-center justify-between rounded-t-lg; 
@@ -229,8 +249,8 @@ body, input {
         @apply block; }
 }
 
-@import 'spinner.scss';
-@import 'checkbox.scss';
-@import 'large.scss';
-@import 'dark.scss';
+// @import 'spinner.scss';
+// @import 'checkbox.scss';
+// @import 'large.scss';
+// @import 'dark.scss';
 

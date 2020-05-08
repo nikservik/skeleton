@@ -9,7 +9,12 @@
 <script>
 export default {
     mounted() {
-      document.getElementById('auto-scroll-block').scrollIntoView(true)
-    }
+        this.scroll()
+    },
+    methods: {
+        scroll() {
+            document.getElementById('auto-scroll-block').scrollIntoView(true)
+        },
+    },
 }
 </script>

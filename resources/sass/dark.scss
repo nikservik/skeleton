@@ -91,7 +91,7 @@
     }
 
     .form {
-        .group input {
+        .group input, .group textarea {
             @apply border-gray-800 bg-gray-900; }
         .group.has-error {
             label {
@@ -124,6 +124,14 @@
     .pay-form-error {
         @apply text-prime-500; }
 
+    .support-message {
+        .info {
+            @apply text-gray-500; }
+        &.user .message {
+            @apply ml-75 rounded-tl bg-gray-900 text-gray-200; }
+        &.admin .message {
+            @apply mr-75 rounded-tr bg-prime-500 text-white; }
+    }
     .bottom-menu, .left-menu {
         @apply bg-gray-900 text-gray-500;
     }

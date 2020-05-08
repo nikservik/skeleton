@@ -20,6 +20,9 @@
       return {
       }
     },
+    mounted() {
+      this.$store.dispatch('support/loadUnread')
+    },
     methods: {
       
     },

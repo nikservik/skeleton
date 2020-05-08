@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Nikservik\LaravelJwtAuth\Interfaces\RoleBased;
 use Nikservik\LaravelJwtAuth\Traits\JwtAuth;
+use Nikservik\SimpleSupport\Traits\SimpleSupport;
 use Nikservik\Subscriptions\Traits\Subscription;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasLocalePreference, RoleBased
 {
-    use Notifiable, Subscription, JwtAuth;
+    use Notifiable, Subscription, JwtAuth, SimpleSupport;
 
     protected $fillable = [
         'name', 'email', 'password', 'role',

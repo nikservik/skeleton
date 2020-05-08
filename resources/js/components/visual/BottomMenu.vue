@@ -8,7 +8,16 @@
             </router-link>
         </div>
         <div class="item">
+        </div>
+        <div class="item">
             <LoadingSign size="30" classes="text-prime-400" />
+        </div>
+        <div class="item">
+            <router-link :to="{ name: 'support' }">
+                <SupportSign :classes=" 
+                    (current == 'support' ? 'text-prime-400' : '') + ' w-6 h-6'
+                " />
+            </router-link>
         </div>
         <div class="item">
             <router-link :to="{ name: loggedIn ? 'profile' : 'settings' }">
@@ -22,11 +31,12 @@
 
 <script>
 import IconSettings from '@/components/visual/icons/IconSettings'
+import SupportSign from '@/components/visual/SupportSign'
 import IconHome from '@/components/visual/icons/IconHome'
 import LoadingSign from '@/components/visual/LoadingSign'
 import { mapGetters } from 'vuex'
 export default {
-    components: { IconSettings, IconHome, LoadingSign },
+    components: { IconSettings, SupportSign, IconHome, LoadingSign },
     computed: {
         current() {
             return this.$route.name

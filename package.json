@@ -30,9 +30,11 @@
     "dependencies": {
         "@fullhuman/postcss-purgecss": "^2.0.4",
         "autoprefixer": "^9.7.4",
+        "moment": "^2.25.3",
         "postcss": "^7.0.26",
         "postcss-loader": "^3.0.0",
         "vue-i18n": "^8.16.0",
+        "vue-router": "^3.1.6",
         "vue-the-mask": "^0.11.1",
         "vuex": "^3.3.0"
     }

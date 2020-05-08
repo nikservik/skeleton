@@ -76,6 +76,8 @@
 
     .subscription-switch {
         @apply my-16; }
+    .support-messages {
+        @apply max-w-screen-sm mx-auto; }
 
     .bottom-menu {
         @apply hidden; }

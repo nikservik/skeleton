@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "nikservik/laravel-jwt-auth": "dev-master",
+        "nikservik/simple-support": "dev-master",
         "nikservik/subscriptions": "dev-master"
     },
     "require-dev": {
@@ -71,6 +72,10 @@
         {
             "type": "path",
             "url": "./packages/nikservik/subscriptions"
+        },
+        {
+            "type": "path",
+            "url": "./packages/nikservik/simple-support"
         },
         {
             "type": "path",

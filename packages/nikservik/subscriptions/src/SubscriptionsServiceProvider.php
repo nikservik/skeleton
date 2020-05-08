@@ -54,9 +54,6 @@ class SubscriptionsServiceProvider extends AuthServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../config/subscriptions.php' => config_path('subscriptions.php'),
-        ], 'config');
         $this->loadFactoriesFrom(__DIR__.'/../factories');
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'subscriptions');
         $this->loadMigrationsFrom(__DIR__.'/../migrations');
@@ -70,5 +67,17 @@ class SubscriptionsServiceProvider extends AuthServiceProvider
             $schedule->job(new EndCancelled)->dailyAt('2:00');
             $schedule->job(new EndOutdated)->dailyAt('3:00');
         });
+        $this->publishes([
+            __DIR__.'/../config/subscriptions.php' => config_path('subscriptions.php')
+        ], 'config');
+        $this->publishes([
+            __DIR__.'/../migrations/' => database_path('migrations')
+        ], 'migrations');
+        $this->publishes([
+            __DIR__.'/../views' => resource_path('views/vendor/subscriptions'),
+        ], 'views');
+        $this->publishes([
+            __DIR__.'/../lang' => resource_path('lang/vendor/subscriptions'),
+        ], 'translations');
     }
 }
