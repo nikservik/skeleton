@@ -7,7 +7,8 @@ const purgecss = postcssPurgecss({
   content: [
     './public/**/*.html',
     './public/**/*.js',
-    './src/**/*.vue',
+    './resources/js/**/*.vue',
+    './resources/views/**/*.blade.php',
   ],
   // Include any special characters you're using in this regular expression.
   // See: https://tailwindcss.com/docs/controlling-file-size/#understanding-the-regex
@@ -21,8 +22,8 @@ module.exports = {
   plugins: [
     tailwindcss,
     autoprefixer,
-    ...process.env.NODE_ENV === 'production'
-      ? [purgecss]
-      : [],  
+    // ...process.env.NODE_ENV === 'production'
+    //   ? [purgecss]
+    //   : [],  
   ],
 };

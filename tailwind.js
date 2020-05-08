@@ -1,5 +1,11 @@
 module.exports = {
-  purge: false,
+  purge: [
+    './public/**/*.js',
+    './resources/js/**/*.js',
+    './resources/js/**/*.vue',
+    './resources/views/**/*.php',
+    './packages/**/*.php',
+  ],
   theme: {
     boxShadow: {
       xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
