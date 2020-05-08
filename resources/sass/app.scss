@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @import 'cera.css';
-// @import 'admin.css';
 
 body, input {
     background-color: #f7f8fb; }
@@ -249,8 +248,8 @@ body, input {
         @apply block; }
 }
 
-// @import 'spinner.scss';
-// @import 'checkbox.scss';
-// @import 'large.scss';
-// @import 'dark.scss';
+@import 'spinner.scss';
+@import 'checkbox.scss';
+@import 'large.scss';
+@import 'dark.scss';
 
