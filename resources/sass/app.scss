@@ -216,10 +216,10 @@ body, input {
 }
 
 .bottom-menu {
-    @apply fixed z-10 bottom-0 inset-x-0 w-full h-75 shadow-xl bg-white  
+    @apply fixed z-10 bottom-0 inset-x-0 w-full h-75 px-30 shadow-xl bg-white  
         text-gray-500 flex items-center justify-between rounded-t-lg; 
-    .item {
-        @apply mx-30; }
+    // .item {
+    //     @apply mx-30; }
 }
 .left-menu {
     @apply hidden; }

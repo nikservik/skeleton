@@ -13,7 +13,7 @@
               :key="message.id" class="support-message" 
               :class="message.type == 'userMessage' ? 'user' : 'admin'">
               <div class="info">
-                {{ format(new Date(message.created_at), 'dd.mm.yyyy hh:mm') }}
+                {{ format(new Date(message.created_at), 'dd.MM.yyyy HH:mm') }}
               </div>
               <div class="message" v-html="message.message"></div>
             </div>
@@ -52,6 +52,9 @@ export default {
     },
     mounted() {
       this.$store.dispatch('support/load')
+        .then(() => {
+          setTimeout(() => { window.scrollTo(0,document.body.scrollHeight) }, 100)
+        })
     },
     methods: {
     },
