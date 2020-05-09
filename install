@@ -1,0 +1,11 @@
+#!/bin/sh
+
+rm -fR ./packages
+
+composer install
+
+php artisan key:generate --ansi
+php artisan jwt:secret
+
+npm i
+
