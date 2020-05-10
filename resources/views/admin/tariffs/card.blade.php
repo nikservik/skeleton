@@ -5,7 +5,7 @@
                 <div>
                     <span class="text-sm text-gray-500">
                         {{ $tariff->price }} {{ $tariff->currency }}
-                        / @lang('admin/tariffs.'.$tariff->periodLocale)
+                        / @lang('subscriptions::periods.'.$tariff->period)
                         @if($tariff->prolongable)
                             / @lang('admin/tariffs.prolongable')
                         @endif

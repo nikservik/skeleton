@@ -3,7 +3,7 @@
     <div class="page-text">
       <h1>{{ $t('pageTitle') }}</h1>
 
-      {{ content }}
+      <div v-html="content"></div>
     </div>
   </Page>
 </template>

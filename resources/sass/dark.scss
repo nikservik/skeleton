@@ -4,7 +4,7 @@
     input {
         @apply bg-black text-gray-300; }
     .header {
-        @apply text-prime-600 bg-black; 
+        @apply text-prime-500 bg-black; 
         .title {
             @apply text-gray-200; }
     }
@@ -14,7 +14,7 @@
     .page-text {
         @apply text-gray-300; 
         h1 { 
-            @apply text-prime-600; }
+            @apply text-prime-500; }
     }
     .page-icon {
         @apply text-prime-600; }
@@ -22,6 +22,10 @@
         @apply bg-gray-900; 
         .marker {
             @apply bg-prime-600 text-gray-200; }
+        .icon {
+            @apply text-prime-500 bg-prime-900; }
+        input {
+            @apply border-gray-800; }
     }
     .page-block.active {
         @apply bg-prime-700 text-gray-200; 
@@ -30,6 +34,11 @@
     }
     .page-block.selected {
         @apply bg-prime-600 text-gray-200; }
+    .page-selector {
+        @apply bg-gray-900; 
+        .icon {
+            @apply text-prime-500 bg-prime-900; }
+    }
 
     .settings-icon {
         @apply text-gray-400; }

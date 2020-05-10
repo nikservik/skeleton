@@ -10,7 +10,7 @@
             div {
                 @apply hidden; }
             .title {
-                @apply block text-prime-600; }
+                @apply block text-prime-500; }
         }
     }
     .page.with-header {
@@ -32,7 +32,7 @@
     .page-text {
         @apply text-black ml-50 mr-50 my-0; 
         h1 { 
-            @apply text-3xl font-bold text-prime-600 ml-20 mt-30 mb-20; }
+            @apply text-3xl font-bold text-prime-500 ml-20 mt-30 mb-20; }
         h2 {
             @apply text-xl font-medium mt-20 mb-11; }
         p {

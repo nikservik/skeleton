@@ -17,12 +17,13 @@ export const support = {
     },
   },
   actions: {
-    loadUnread ({ commit }) {
-      axios
-        .get('/support/unread')
-        .then(({ data }) => {
-          commit('SET_UNREAD', data.unread)
-        })
+    loadUnread (context) {
+      if (context.rootGetters['auth/loggedIn'])
+        axios
+          .get('/support/unread')
+          .then(({ data }) => {
+            context.commit('SET_UNREAD', data.unread)
+          })
     },
     load({ commit }) {
       axios

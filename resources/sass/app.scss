@@ -25,11 +25,15 @@ body, input {
 .page-text {
     @apply text-black mx-20 my-20; 
     h1 { 
-        @apply text-3xl font-bold text-prime-600 mt-40 mb-20; }
+        @apply text-3xl font-bold text-prime-500 mt-40 mb-20; }
     h2 {
         @apply text-xl font-medium mt-20 mb-11; }
     p {
         @apply text-base my-11; }
+    ul {
+        @apply list-disc list-outside ml-20; }
+    a {
+        @apply underline; }
 }
 .page-icon {
     @apply text-prime-300; }
@@ -42,11 +46,24 @@ body, input {
         @apply mt-11 mx-0 mb-0; }
     .marker {
         @apply rounded-sm bg-prime-400 text-white text-xs p-5; }
+    .icon {
+        @apply text-prime-500 bg-prime-200 rounded p-5 mr-11; }
+    input {
+        @apply w-full px-11 py-5 text-lg rounded-sm bg-white border border-gray-300; }
+    input:focus {
+        @apply outline-none; }
 }
 .page-block.active {
     @apply bg-prime-400 text-white; }
 .page-block.selected {
     @apply bg-prime-500 text-white; }
+.page-selector {
+    @apply mx-20 p-16 my-16 shadow-lg rounded-md bg-white; 
+    .icon {
+        @apply text-prime-500 bg-prime-200 rounded p-5; }
+    .name {
+        @apply ml-16 font-bold; }
+}
 
 .vertical-center {
     margin-bottom: 1px; }

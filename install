@@ -1,11 +1,31 @@
-#!/bin/sh
+#!/bin/bash
+
+echo Создайте базу данных для проекта и пользователя с доступом к этой БД
+echo Название базы данных: 
+read database
+echo Имя пользователя:
+read username
+echo Пароль пользователя:
+read password
+echo 
+echo Введите url приложения:
+read url
+
+sed "s/DB_DATABASE=/DB_DATABASE=$database/g; s/DB_USERNAME=/DB_USERNAME=$username/g; s/DB_PASSWORD=/DB_PASSWORD=$password/g; s/APP_URL=/APP_URL=$url/g; " ./env.base > ./.env
+echo Файл настроек .env создан
 
 rm -fR ./packages
-
+jq 'del(.repositories)' ./composer.json
 composer install
 
 php artisan key:generate --ansi
-php artisan jwt:secret
+php artisan jwt:secret --force
+echo Ключи приложения сгенерированы
+
+php artisan migrate
+php artisan db:seed
+echo Создан бесплатный тариф и суперадминистратор с емейлом ser.nikiforov@gmail.com и паролем password
 
 npm i
+npm run dev
 
