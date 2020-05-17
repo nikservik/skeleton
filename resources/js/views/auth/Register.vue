@@ -101,7 +101,7 @@ export default {
   password: "Пароль"
   passwordConfirmation: "Подтверждение пароля"
   register: "Зарегистрироваться"
-  success: "Поздравляем с регистрацией!"
+  success: "Поздравляем с регистрацией! Мы отправили вам письмо для подтверждения электронной почты. Подтвердите ее, перейдя по ссылке в письме, чтобы пользоваться всеми возможностями программы."
   errors:
     validation: "Проверьте все данные еще раз"
     connection: "Невозможно зарегистрироваться сейчас, попробуйте позже."
@@ -126,7 +126,7 @@ export default {
   password: "Password"
   passwordConfirmation: "Confirm password"
   register: "Register"
-  success: "Congratulations! You've been registered"
+  success: "Congratulations! You've been registered. We sent you a mail with confirmation link. Please comfirm your email by clickin a link to use all the features."
   errors:
     validation: "Please provide correct data"
     connection: "Can't register right now, please try later"

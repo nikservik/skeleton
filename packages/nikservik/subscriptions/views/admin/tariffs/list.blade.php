@@ -10,7 +10,7 @@
 </div>
 
 @forelse ($tariffs as $tariff)
-    @include('admin.tariffs.card', ['tariff' => $tariff])
+    @include('subscriptions::admin.tariffs.card', ['tariff' => $tariff])
 @empty
     <div class="p-4 m-4 border rounded-lg border-gray-200 text-center text-gray-700">
         @lang('admin/tariffs.listEmpty')

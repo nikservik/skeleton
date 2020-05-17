@@ -3,8 +3,6 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PaymentTestController;
-use App\Http\Controllers\Admin\TariffController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,8 +20,6 @@ use Illuminate\Support\Facades\Route;
 // Admin routes
 LoginController::routes();
 DashboardController::routes();
-UserController::routes();
-TariffController::routes();
 PaymentTestController::routes();
 
 // SPA route

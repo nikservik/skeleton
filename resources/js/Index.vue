@@ -6,7 +6,6 @@
 
     <BottomMenu />
     <LeftMenu />
-    <div class="h-16 hidden"></div>
   </div>
 </template>
 

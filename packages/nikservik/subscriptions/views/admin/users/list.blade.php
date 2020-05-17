@@ -31,7 +31,7 @@
 </div>
 
 @forelse ($users as $user)
-    @include('admin.users.card', ['user' => $user])
+    @include('subscriptions::admin.users.card', ['user' => $user])
 @empty
     <div class="p-4 m-4 border rounded-lg border-gray-200 text-center text-gray-700">
         @lang('admin/users.listEmpty')

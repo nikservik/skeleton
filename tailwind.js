@@ -4,7 +4,7 @@ module.exports = {
     './resources/js/**/*.js',
     './resources/js/**/*.vue',
     './resources/views/**/*.php',
-    './packages/**/*.php',
+    './vendor/nikservik/**/*.php',
   ],
   theme: {
     boxShadow: {

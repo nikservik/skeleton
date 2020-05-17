@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace Nikservik\Subscriptions\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TariffCreateRequest;
@@ -10,20 +10,22 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Nikservik\Subscriptions\Models\Tariff;
 
-class TariffController extends Controller
+class AdminTariffController extends Controller
 {
 
     static function routes()
     {
-        Route::domain('admin.'.Str::after(config('app.url'),'//'))->namespace('Admin')->group(function () {
-            Route::get('tariffs/{tariff}/default', 'TariffController@default')->middleware('can:update,tariff');
-            Route::resource('tariffs', 'TariffController');
+        Route::domain('admin.'.Str::after(config('app.url'),'//'))
+            ->namespace('Nikservik\Subscriptions\Controllers')
+            ->group(function () {
+            Route::get('tariffs/{tariff}/default', 'AdminTariffController@default')->middleware('can:update,tariff');
+            Route::resource('tariffs', 'AdminTariffController');
         });
     }
 
     public function __construct()
     {
-        $this->middleware(['auth:web', 'isAdmin']);
+        $this->middleware(['web', 'auth:web', 'isAdmin']);
         $this->authorizeResource(Tariff::class, 'tariff');
     }
     /**
@@ -34,7 +36,7 @@ class TariffController extends Controller
     public function index()
     {
         $tariffs = Tariff::all();
-        return view('admin.tariffs.list', ['tariffs' => $tariffs]);
+        return view('subscriptions::admin.tariffs.list', ['tariffs' => $tariffs]);
     }
 
     /**
@@ -44,7 +46,7 @@ class TariffController extends Controller
      */
     public function create()
     {
-        return view('admin.tariffs.create');
+        return view('subscriptions::admin.tariffs.create');
     }
 
     /**
@@ -73,7 +75,7 @@ class TariffController extends Controller
      */
     public function show(Tariff $tariff)
     {
-        return view('admin.tariffs.show', ['tariff' => $tariff]);
+        return view('subscriptions::admin.tariffs.show', ['tariff' => $tariff]);
     }
 
     /**
@@ -84,7 +86,7 @@ class TariffController extends Controller
      */
     public function edit(Tariff $tariff)
     {
-        return view('admin.tariffs.edit', ['tariff' => $tariff]);
+        return view('subscriptions::admin.tariffs.edit', ['tariff' => $tariff]);
     }
 
     /**

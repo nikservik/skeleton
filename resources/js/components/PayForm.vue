@@ -38,7 +38,7 @@
         <input class="card-holder field" :class="{ 
             'border border-prime-500': hasError('name'), 
           }"
-          autocomplete="cc-name" type="tel" data-cp="name" 
+          autocomplete="cc-name" type="text" data-cp="name" 
           :placeholder="$t('card.name')" v-model="cardholder" />
       </form>
     </div>
