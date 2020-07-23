@@ -1,0 +1,162 @@
+.mode-dark {
+    body { 
+        @apply bg-black text-gray-300; }
+    input {
+        @apply bg-black text-gray-300; }
+    .header {
+        @apply text-prime-500 bg-black; 
+        .title {
+            @apply text-gray-200; }
+    }
+    .page .helpers {
+        @apply border-l border-gray-900; }
+
+    .page-text {
+        @apply text-gray-300; 
+        h1 { 
+            @apply text-prime-500; }
+    }
+    .page-icon {
+        @apply text-prime-600; }
+    .page-block {
+        @apply bg-gray-900; 
+        .marker {
+            @apply bg-prime-600 text-gray-200; }
+        .icon {
+            @apply text-prime-500 bg-prime-900; }
+        input {
+            @apply border-gray-800; }
+    }
+    .page-block.active {
+        @apply bg-prime-700 text-gray-200; 
+        .marker {
+            @apply bg-prime-700 text-gray-200; }
+    }
+    .page-block.selected {
+        @apply bg-prime-600 text-gray-200; }
+    .page-selector {
+        @apply bg-gray-900; 
+        .icon {
+            @apply text-prime-500 bg-prime-900; }
+    }
+
+    .settings-icon {
+        @apply text-gray-400; }
+
+    .settings {
+        @apply bg-gray-900 text-gray-500; 
+        .block {
+            @apply border-gray-800; 
+            .input-item {
+                input {
+                    @apply bg-black; }
+                .error input {
+                    @apply border-prime-600; }
+                .error label {
+                    @apply text-prime-600; }
+            }
+            .bottom {
+                .error-text {
+                    @apply text-prime-500; }
+                .warning-text {
+                    @apply text-gray-600; }
+            }
+        }
+    }
+
+    .input-name {
+        input {
+            @apply text-gray-300; }
+            input:focus {
+                @apply bg-black border-gray-700; }
+        .error-text {
+            @apply text-prime-500; }
+    }
+    .input-name.error input:focus {
+        @apply border-prime-500; }
+    .save-button-holder button {
+        @apply text-prime-500; }
+
+    .button-holder {
+        button {
+            @apply text-white bg-prime-500; }
+        button:focus {
+            @apply bg-prime-500; }
+        button:hover {
+            @apply bg-prime-400; }
+        button:disabled {
+            @apply bg-prime-700; }
+    }
+
+    .big-button-holder {
+        button {
+            @apply text-white bg-prime-500; }
+        button:focus {
+            @apply bg-prime-500; }
+        button:hover {
+            @apply bg-prime-400; }
+        button:disabled {
+            @apply bg-prime-700; }
+    }
+
+    .form {
+        .group input, .group textarea {
+            @apply border-gray-800 bg-gray-900; }
+        .group.has-error {
+            label {
+                @apply text-prime-500; }
+            input {
+                @apply border-prime-500; }
+            .error-description {
+                @apply text-prime-500; }
+        }
+        .error {
+            @apply text-prime-500;
+        }
+    }
+
+    .pay-form {
+        @apply bg-prime-500 border-prime-500; 
+        input {
+            @apply bg-prime-700; }
+        ::placeholder, :-ms-input-placeholder, ::-webkit-input-placeholder {
+            @apply text-prime-300; }
+        .field {
+            @apply p-5 text-lg; }
+        .expire {
+            @apply bg-prime-700; }
+        .cvv {
+            .description {
+                @apply text-prime-300; }
+        }
+    }
+    .pay-form-error {
+        @apply text-prime-500; }
+
+    .support-message {
+        .info {
+            @apply text-gray-500; }
+        &.user .message {
+            @apply ml-75 rounded-tl bg-gray-900 text-gray-200; }
+        &.admin .message {
+            @apply mr-75 rounded-tr bg-prime-500 text-white; }
+    }
+    .bottom-menu, .left-menu {
+        @apply bg-gray-900 text-gray-500;
+    }
+    .secure-frame {
+        @apply bg-gray-800;
+        .close {
+            @apply text-gray-300; }
+    }
+    .popup-message .block {
+        @apply bg-gray-800 text-gray-200; }
+
+    @media(min-width: theme('screens.lg')) {
+        .settings {
+            @apply bg-transparent;
+            .block {
+                @apply bg-gray-900; }
+        }
+    }
+}
