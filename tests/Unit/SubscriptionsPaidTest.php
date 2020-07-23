@@ -15,6 +15,7 @@ use Nikservik\Subscriptions\Mail\SubscriptionEnded;
 use Nikservik\Subscriptions\Mail\SubscriptionPastDue;
 use Nikservik\Subscriptions\Mail\SubscriptionRejected;
 use Nikservik\Subscriptions\Mail\SubscriptionRenewed;
+use Nikservik\Subscriptions\Models\Subscription;
 use Nikservik\Subscriptions\Models\Tariff;
 use Tests\TestCase;
 
@@ -109,6 +110,7 @@ class SubscriptionsPaidTest extends TestCase
     {
         Mail::fake();
         Tariff::where('id', '>', 0)->delete();
+        Subscription::where('id', '>', 0)->delete();
         $user = factory(User::class)->create();
         $tariff = $this->createTariffPaid();
         $default = $this->createTariffFree();
