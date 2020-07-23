@@ -1,0 +1,13 @@
+@-webkit-keyframes spin {
+  100% { -webkit-transform:rotate(360deg); transform:rotate(360deg); } }
+@keyframes spin {
+  100% { -webkit-transform:rotate(360deg); transform:rotate(360deg); } }
+.spinner {
+    margin-bottom: 3px;
+    transform: translateX(0); /* Crisp fix for non-retina */
+    -ms-transform: translate(0.5px, -0.3px); /* Crisp fix for IE */
+    @apply relative overflow-hidden; }
+    .spinner .spin {
+        pointer-events: none; /* Do not catch pointer events */
+        -webkit-animation: spin 1.5s linear infinite; animation: spin 1.5s linear infinite;
+        @apply absolute top-0 left-0 w-full h-full; }
